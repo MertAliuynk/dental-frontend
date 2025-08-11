@@ -1,0 +1,130 @@
+/* Sidebar ana menü stilleri */
+.sidebar-menu-item {
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px 10px 18px;
+  margin: 2px 0;
+  border-radius: 8px;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+  color: #f8fafc;
+  position: relative;
+}
+.sidebar-menu-item.selected {
+  background: linear-gradient(90deg, #e3eafc 0%, #b6c6e3 100%);
+  color: #2a3a5e;
+  box-shadow: 0 2px 8px #0001;
+}
+.sidebar-menu-item:hover:not(.selected) {
+  background: rgba(255,255,255,0.08);
+  color: #e0e7ef;
+}
+.sidebar-menu-item .menu-arrow {
+  margin-left: auto;
+  font-size: 13px;
+  transition: transform 0.18s;
+}
+.sidebar-menu-item .menu-arrow.open {
+  transform: rotate(90deg);
+}
+.sidebar-submenu {
+  margin-left: 16px;
+  margin-top: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.22s cubic-bezier(.4,0,.2,1), transform 0.22s cubic-bezier(.4,0,.2,1);
+}
+
+.sidebar-menu-item + .sidebar-submenu {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sidebar-submenu-item {
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 14px;
+  padding: 7px 14px 7px 20px;
+  border-radius: 7px;
+  color: #e0e7ef;
+  background: transparent;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+  margin: 1px 0;
+}
+.sidebar-submenu-item.selected {
+  background: linear-gradient(90deg, #e3eafc 0%, #b6c6e3 100%);
+  color: #2a3a5e;
+  box-shadow: 0 2px 8px #0001;
+}
+.sidebar-submenu-item:hover:not(.selected) {
+  background: rgba(255,255,255,0.13);
+  color: #fff;
+  box-shadow: 0 2px 8px #0002;
+}
+.sidebar-submenu-item {
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 14px;
+  padding: 6px 12px 6px 16px;
+  border-radius: 6px;
+  color: #e0e7ef;
+  transition: background 0.16s, color 0.16s;
+}
+.sidebar-submenu-item.selected {
+  background: #e3eafc;
+  color: #2a3a5e;
+}
+.sidebar-submenu-item:hover:not(.selected) {
+  background: rgba(255,255,255,0.10);
+  color: #fff;
+}
+/* Çıkış Yap butonu için özel stil */
+.logout-btn {
+  width: 100%;
+  background: #d32f2f !important; /* Daha koyu ve belirgin kırmızı */
+  color: #fff !important;
+  border: none !important;
+  border-radius: 8px;
+  padding: 10px 0;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: background 0.2s;
+}
+.logout-btn:hover {
+  background: #b71c1c !important;
+}
+/* Sidebar ve Topbar için soft mavi ve modern görünüm */
+.sidebar {
+  background: #3b5998 !important; /* Daha soft mavi */
+  color: #f8fafc !important;
+  border-right: 1px solid #dbeafe !important;
+  box-shadow: 2px 0 12px #0001;
+}
+.sidebar .sidebar-mobile-header {
+  color: #3b5998 !important;
+}
+.sidebar select {
+  border: 1px solid #b6c6e3 !important;
+}
+.sidebar button:not(.logout-btn) {
+  background: linear-gradient(90deg, #5b7bd5 0%, #3b5998 100%) !important;
+  color: #fff !important;
+  border: none !important;
+}
+.sidebar button:not(.logout-btn):hover {
+  background: #4a6bb1 !important;
+}
+.sidebar [style*="background: white"] {
+  background: #eaf1fb !important;
+  color: #3b5998 !important;
+}
+.sidebar [style*="background: #e53935"] {
+  background: #e53935 !important;
+}

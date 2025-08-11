@@ -1,0 +1,21 @@
+/* MiniAppointmentCalendar slot yüksekliğini azaltır */
+/* Slot yüksekliği 4 kat daha kısa */
+.mini-calendar-custom-slots .rbc-time-slot {
+  min-height: 21px !important;
+  height: 21px !important;
+  line-height: 21px !important;
+  font-size: 13px !important;
+  padding: 0 !important;
+}
+.mini-calendar-custom-slots .rbc-timeslot-group {
+  min-height: 21px !important;
+  height: 21px !important;
+  padding: 0 !important;
+}
+.mini-calendar-custom-slots .rbc-time-content {
+  min-height: 0 !important;
+  height: auto !important;
+}
+.mini-calendar-custom-slots .rbc-time-content > * {
+  min-height: 0 !important;
+}

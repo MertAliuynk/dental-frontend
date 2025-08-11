@@ -1,0 +1,134 @@
+// ...existing code...
+"use client";
+// import Topbar kaldırıldı
+import AppLayout from "../../components/AppLayout";
+import { useState, useEffect } from "react";
+import "./bulk-patient.css";
+
+const MAX_ROWS = 25;
+
+export default function BulkPatientAddPageClient() {
+  const [rows, setRows] = useState(
+    Array.from({ length: MAX_ROWS }, () => ({
+      firstName: "",
+      lastName: "",
+      tc: "",
+      phone: "",
+      birthDate: "",
+      doctor: ""
+    }))
+  );
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [doctors, setDoctors] = useState<any[]>([]);
+
+  useEffect(() => {
+  fetch("https://dentalapi.karadenizdis.com/api/user/doctors")
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) setDoctors(data.data);
+        else setDoctors([]);
+      })
+      .catch(() => setDoctors([]));
+  }, []);
+
+  const handleChange = (idx: number, field: string, value: string) => {
+    setRows(prev => prev.map((row, i) => i === idx ? { ...row, [field]: value } : row));
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    setMessage(null);
+    setLoading(true);
+    // Zorunlu alan kontrolü
+    for (let i = 0; i < rows.length; i++) {
+      const { firstName, lastName, tc, phone, birthDate, doctor } = rows[i];
+      if ((firstName || lastName || tc || phone || birthDate || doctor) && (!firstName || !lastName || !tc || !phone || !birthDate || !doctor)) {
+        setMessage(`${i + 1}. satırda eksik bilgi var. Tüm alanlar zorunlu.`);
+        setLoading(false);
+        return;
+      }
+    }
+    // Sadece dolu satırları gönder
+    const validRows = rows.filter(r => r.firstName && r.lastName && r.tc && r.phone && r.birthDate && r.doctor);
+    if (validRows.length === 0) {
+      setMessage("En az bir hasta bilgisi girilmelidir.");
+      setLoading(false);
+      return;
+    }
+    try {
+      // Token'ı localStorage'dan al
+      const token = localStorage.getItem('token');
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+
+  const res = await fetch("https://dentalapi.karadenizdis.com/api/patient/bulk", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ patients: validRows })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setMessage("Tüm hastalar başarıyla eklendi!");
+        setRows(Array.from({ length: MAX_ROWS }, () => ({ firstName: "", lastName: "", tc: "", phone: "", birthDate: "", doctor: "" })));
+      } else {
+        setMessage(data.message || "Kayıt sırasında hata oluştu.");
+      }
+    } catch (err) {
+      setMessage("Sunucu hatası. Lütfen tekrar deneyin.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <AppLayout>
+  {/* <Topbar /> kaldırıldı, AppLayout kullanılmalı */}
+  <main className="bulk-patient-container">
+    <h2 className="bulk-patient-title">Toplu Hasta Ekleme</h2>
+    <form onSubmit={handleSubmit} className="bulk-patient-form">
+      {message && <div className={"bulk-patient-message" + (message.includes("başarı") ? " success" : "")}>{message}</div>}
+      <div className="bulk-patient-table-wrapper">
+        <table className="bulk-patient-table">
+          <thead>
+            <tr>
+              <th>Adı</th>
+              <th>Soyadı</th>
+              <th>Tc kimlik</th>
+              <th>Tel no</th>
+              <th>Doğum tarihi</th>
+              <th>İlgili Doktor</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, i) => (
+              <tr key={i}>
+                <td><input className="bulk-patient-input" value={row.firstName} onChange={e => handleChange(i, "firstName", e.target.value)} required={false} /></td>
+                <td><input className="bulk-patient-input" value={row.lastName} onChange={e => handleChange(i, "lastName", e.target.value)} required={false} /></td>
+                <td><input className="bulk-patient-input" value={row.tc} onChange={e => handleChange(i, "tc", e.target.value)} required={false} /></td>
+                <td><input className="bulk-patient-input" value={row.phone} onChange={e => handleChange(i, "phone", e.target.value)} required={false} /></td>
+                <td><input className="bulk-patient-input" type="date" value={row.birthDate} onChange={e => handleChange(i, "birthDate", e.target.value)} required={false} /></td>
+                <td>
+                  <select className="bulk-patient-select" value={row.doctor} onChange={e => handleChange(i, "doctor", e.target.value)} required={false}>
+                    <option value="">Doktor seçiniz</option>
+                    {doctors.map((d: any) => (
+                      <option key={d.user_id} value={d.user_id}>{d.first_name} {d.last_name}</option>
+                    ))}
+                  </select>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <button type="submit" className="bulk-patient-btn" disabled={loading}>{loading ? "Kaydediliyor..." : "Tüm Hastaları Kaydet"}</button>
+    </form>
+  </main>
+    </AppLayout>
+  );
+}
+
+

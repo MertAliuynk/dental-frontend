@@ -1,0 +1,315 @@
+/* Calendar Responsive Styles */
+
+/* Custom styles for drag-and-drop operations */
+.custom-event {
+  position: relative;
+}
+
+/* Drag handle visual indicator */
+.drag-handle {
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.custom-event:hover .drag-handle {
+  opacity: 1;
+}
+
+/* Visual feedback for dragging and resizing operations */
+.rbc-addons-dnd-dragging {
+  cursor: grabbing !important;
+  opacity: 0.8 !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+  transform: scale(1.02) !important;
+  z-index: 1000 !important;
+}
+
+.rbc-addons-dnd-resizing {
+  cursor: ew-resize !important;
+  opacity: 0.9 !important;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4) !important;
+  z-index: 1000 !important;
+}
+
+/* Base styles for all mobile/tablet devices */
+@media (max-width: 768px) {
+  /* Main container adjustments */
+  .app-content {
+    padding: 10px !important;
+  }
+
+  /* Calendar container */
+  div[style*="background: #f5f6fa"] {
+    padding: 12px !important;
+    margin: 0 !important;
+    border-radius: 8px !important;
+    min-height: auto !important; /* Remove excessive height */
+  }
+
+  /* Toolbar layout */
+  div.cal-toolbar {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    margin-bottom: 10px !important;
+    gap: 8px !important;
+  }
+
+  /* Calendar title */
+  div.cal-toolbar h2 {
+    margin-bottom: 5px !important;
+    font-size: 20px !important;
+  }
+
+  /* Calendar filters */
+  div.cal-filters {
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    gap: 8px !important;
+    justify-content: flex-start !important;
+    margin-bottom: 5px !important;
+  }
+
+  /* Calendar navigation buttons */
+  div.cal-nav {
+    width: 100% !important;
+    justify-content: space-between !important;
+    margin-top: 0 !important;
+    flex-wrap: nowrap !important;
+  }
+
+  /* Select dropdowns */
+  select {
+    font-size: 14px !important;
+    max-width: 120px !important;
+  }
+}
+
+/* Improve drag and resize handles for events */
+.rbc-event {
+  touch-action: none !important; /* Better touch handling */
+}
+
+/* Make the drag handle larger and more obvious */
+.rbc-event-content {
+  cursor: move !important; /* Show move cursor */
+  min-height: 24px !important; /* Taller for better grabbing */
+  position: relative !important;
+}
+
+/* Enhanced styles for mobile touch interaction */
+@media (max-width: 768px) {
+  .rbc-event {
+    padding: 4px !important; /* Add some padding for better touch targets */
+    min-height: 32px !important; /* Taller events on mobile */
+    border: 2px solid rgba(255, 255, 255, 0.3) !important; /* More visible borders */
+  }
+  
+  /* Visual indicator when being dragged */
+  .rbc-addons-dnd-dragging {
+    opacity: 0.8 !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4) !important;
+    z-index: 100 !important;
+  }
+}
+
+/* Resize handles - make them easier to grab on touch devices */
+.rbc-event .rbc-resizable {
+  touch-action: none !important;
+}
+
+/* Enhanced resize handles - much larger and more obvious */
+.rbc-event .rbc-resizable-handle {
+  width: 14px !important;  /* Wider handle */
+  height: 100% !important;
+  cursor: ew-resize !important; /* Show resize cursor */
+  position: absolute !important;
+  z-index: 10 !important; /* Make sure it's above the event content */
+}
+
+/* Visual indicators for resize handles */
+.rbc-event .rbc-resizable-handle:before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 14px !important;
+  background-color: rgba(0, 0, 0, 0.2) !important; /* More visible handle */
+}
+
+.rbc-event .rbc-resizable-handle.rbc-resizable-handle-left {
+  left: 0 !important;
+}
+
+.rbc-event .rbc-resizable-handle.rbc-resizable-handle-left:before {
+  left: 0 !important;
+  border-left: 3px dotted rgba(255, 255, 255, 0.6) !important; /* More visible */
+}
+
+.rbc-event .rbc-resizable-handle.rbc-resizable-handle-right {
+  right: 0 !important;
+}
+
+.rbc-event .rbc-resizable-handle.rbc-resizable-handle-right:before {
+  right: 0 !important;
+  border-right: 3px dotted rgba(255, 255, 255, 0.6) !important; /* More visible */
+}
+
+/* Extra styles for mobile resize handles */
+@media (max-width: 768px) {
+  .rbc-event .rbc-resizable-handle {
+    width: 20px !important; /* Even wider on mobile */
+    background-color: rgba(255, 255, 255, 0.1) !important; /* Subtle background */
+  }
+  
+  .rbc-event .rbc-resizable-handle:before {
+    width: 20px !important;
+  }
+  
+  /* More visible indicator while resizing */
+  .rbc-addons-dnd-resizing {
+    z-index: 100 !important;
+    box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.3) !important;
+    opacity: 0.9 !important;
+  }
+}
+
+.rbc-event .rbc-resizable-handle.rbc-resizable-handle-right:before {
+  right: 0 !important;
+  border-right: 2px dotted rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Add a drag handle visual */
+.custom-event {
+  position: relative !important;
+}
+
+.custom-event::before {
+  content: "⋮⋮" !important;
+  position: absolute !important;
+  left: 4px !important;
+  top: 3px !important;
+  font-size: 12px !important;
+  opacity: 0.6 !important;
+  color: white !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+}
+
+/* Make events look interactive */
+.rbc-event {
+  transition: box-shadow 0.1s ease-in-out !important;
+}
+
+.rbc-event:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.rbc-event:active {
+  opacity: 0.8 !important; /* Visual feedback when dragging */
+}
+
+/* Smaller mobile devices (below 550px) */
+@media (max-width: 550px) {
+  /* Extra small screen specific adjustments */
+  
+  /* Filter and navigation containers - make them horizontal */
+  div.cal-filters {
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
+    gap: 5px !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+  }
+  
+  /* Put labels and selects closer */
+  div.cal-filters > div {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    margin-right: 2px !important;
+  }
+  
+  /* Make dropdown labels smaller */
+  div.cal-filters span {
+    font-size: 11px !important;
+    white-space: nowrap !important;
+  }
+  
+  /* Smaller selects for filters */
+  div.cal-filters select {
+    font-size: 11px !important;
+    padding: 4px !important;
+    max-width: 80px !important;
+  }
+  
+  /* Navigation buttons */
+  div.cal-nav {
+    width: 100% !important;
+    justify-content: space-between !important;
+    gap: 2px !important;
+  }
+  
+  /* Optimize navigation buttons */
+  div.cal-nav button {
+    padding: 5px !important;
+    font-size: 11px !important;
+    flex: 1 !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 33% !important;
+  }
+  
+  /* Today button shouldn't be larger than others */
+  div.cal-nav button:nth-child(2) {
+    flex: 1 !important;
+  }
+  
+  /* Make the outer container padding smaller */
+  div[style*="background: #f5f6fa"] {
+    padding: 8px !important;
+  }
+  
+  /* Reduce title size */
+  div.cal-toolbar h2 {
+    font-size: 18px !important;
+    margin-bottom: 6px !important;
+  }
+  
+  /* Make sure doctor dropdown doesn't overflow */
+  div[style*="display: \"flex\""][style*="alignItems: \"center\""] select {
+    max-width: 85px !important;
+  }
+  
+  /* Enhanced mobile event interactions */
+  .rbc-event {
+    touch-action: none !important;
+  }
+
+  /* Even larger drag and resize handles on very small screens */
+  .rbc-event .rbc-resizable-handle {
+    width: 14px !important; /* Extra wide for small screens */
+  }
+
+  .rbc-event .rbc-resizable-handle:before {
+    width: 14px !important;
+    background-color: rgba(0, 0, 0, 0.15) !important; /* More visible on small screens */
+  }
+  
+  /* Add more space for touch interaction */
+  .custom-event {
+    padding-left: 16px !important; /* Make space for the drag handle */
+  }
+  
+  .custom-event::before {
+    font-size: 14px !important; /* Larger drag indicator */
+    left: 3px !important;
+  }
+  
+  /* Ensure events are high enough for touch targets */
+  .rbc-event {
+    min-height: 28px !important;
+  }
+}

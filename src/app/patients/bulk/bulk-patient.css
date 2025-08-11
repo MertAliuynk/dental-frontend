@@ -1,0 +1,160 @@
+/* Tabloyu saran div için kaydırılabilirlik */
+.bulk-patient-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+/* Toplu Hasta Ekleme için modern ve ferah tasarım */
+.bulk-patient-container {
+  padding: 24px 8px 32px 8px;
+  min-height: 100vh;
+  background: #f5f6fa;
+}
+.bulk-patient-form {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px #0001;
+  padding: 28px 18px 32px 18px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.bulk-patient-title {
+  font-weight: 800;
+  font-size: 2rem;
+  margin-bottom: 32px;
+  color: #0a2972;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+.bulk-patient-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  min-width: 800px;
+  margin-bottom: 32px;
+}
+.bulk-patient-table th {
+  font-weight: 800;
+  color: #111827;
+  font-size: 1.08rem;
+  padding: 14px 16px;
+  border-bottom: 2px solid #b6c2e1;
+  background: #e3eafc;
+  text-align: left;
+  letter-spacing: 0.5px;
+}
+.bulk-patient-table tr {
+  background: #f8fafc;
+  transition: box-shadow 0.18s, background 0.18s;
+}
+.bulk-patient-table tr:nth-child(even) {
+  background: #eaf1fb;
+}
+.bulk-patient-table tr:hover {
+  background: #dbeafe;
+  box-shadow: 0 2px 12px #0001;
+}
+.bulk-patient-table td {
+  padding: 8px 10px;
+  vertical-align: middle;
+}
+.bulk-patient-input, .bulk-patient-select {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #b6c2e1;
+  font-size: 1rem;
+  background: #fff;
+  color: #22292f;
+  font-weight: 500;
+  transition: border 0.18s, box-shadow 0.18s;
+  outline: none;
+  margin: 0;
+}
+.bulk-patient-input:focus, .bulk-patient-select:focus {
+  border: 1.5px solid #1976d2;
+  box-shadow: 0 0 0 2px #e3eafc;
+  background: #f0f6ff;
+}
+  .bulk-patient-btn {
+    background: linear-gradient(90deg, #0a2972 0%, #1976d2 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 32px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-top: 8px;
+    box-shadow: 0 2px 8px #0001;
+    transition: background 0.18s, box-shadow 0.18s, font-size 0.18s, padding 0.18s;
+  }
+
+  @media (max-width: 900px) {
+    .bulk-patient-btn {
+      font-size: 1rem;
+      padding: 10px 20px;
+    }
+  }
+  @media (max-width: 600px) {
+    .bulk-patient-btn {
+      font-size: 0.92rem;
+      padding: 8px 10px;
+      border-radius: 6px;
+    }
+  }
+.bulk-patient-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.bulk-patient-btn:hover:not(:disabled) {
+  background: #1976d2;
+  box-shadow: 0 4px 16px #1976d233;
+}
+.bulk-patient-message {
+  color: #b91c1c;
+  font-weight: 700;
+  margin-bottom: 18px;
+  text-align: center;
+}
+.bulk-patient-message.success {
+  color: #15803d;
+}
+@media (max-width: 900px) {
+  .bulk-patient-table, .bulk-patient-table th, .bulk-patient-table td {
+    font-size: 0.85rem;
+    min-width: 80px;
+    padding: 6px 4px;
+  }
+  .bulk-patient-input, .bulk-patient-select {
+    font-size: 0.92rem;
+    padding: 7px 7px;
+    border-radius: 6px;
+  }
+  .bulk-patient-title {
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+  }
+  .bulk-patient-form {
+    padding: 6px 0 10px 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .bulk-patient-table, .bulk-patient-table th, .bulk-patient-table td {
+    font-size: 0.75rem;
+    min-width: 60px;
+    padding: 3px 1px;
+  }
+  .bulk-patient-input, .bulk-patient-select {
+    font-size: 0.8rem;
+    padding: 5px 4px;
+    border-radius: 5px;
+  }
+  .bulk-patient-title {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+  .bulk-patient-form {
+    padding: 2px 0 6px 0;
+  }
+}
