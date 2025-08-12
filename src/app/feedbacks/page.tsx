@@ -421,11 +421,13 @@ export default function FeedbacksPage() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={{
-          width: "100%",
+                  width: "100%",
                   padding: "8px 12px",
                   border: "1px solid #ddd",
                   borderRadius: "4px",
-                  marginRight: "12px"
+                  marginRight: "12px",
+                  color: "#222",
+                  fontWeight: 700
                 }}
               />
               <button
@@ -499,7 +501,9 @@ export default function FeedbacksPage() {
               <label style={{ 
                 display: "block", 
                 marginBottom: "8px", 
-                fontWeight: "600" 
+                fontWeight: 700,
+                color: "#222",
+                fontSize: 15
               }}>
                 Geri Dönüş Notları:
               </label>
@@ -516,7 +520,8 @@ export default function FeedbacksPage() {
                   resize: "vertical",
                   fontFamily: "inherit",
                   color: "#222",
-                  fontWeight: 700
+                  fontWeight: 700,
+                  fontSize: "15px"
                 }}
               />
             </div>
@@ -628,19 +633,6 @@ function PatientHistoryCard({ patient }: { patient: FeedbackHistory }) {
             }}>
               {patient.patient_name}
             </h3>
-            <p style={{ 
-              margin: "0", 
-              color: "#666",
-              fontSize: "14px"
-            }}>
-              📞 {patient.phone} | 📊 {patient.total_feedbacks} geri dönüş
-            </p>
-          </div>
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px"
-          }}>
             <div style={{
               fontSize: "12px",
               color: "#666",

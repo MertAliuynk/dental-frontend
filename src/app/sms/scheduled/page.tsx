@@ -1,10 +1,9 @@
-  // Sayfa açıldığında zamanı gelmiş planlı SMS'leri gönder
-  useEffect(() => {
-    fetch('/api/sms/send-due-scheduled', { method: 'POST' });
-  }, []);
+
 "use client";
 import React, { useState, useEffect } from "react";
 import AppLayout from "../../components/AppLayout";
+
+
 
 interface Patient {
   patient_id: number;
@@ -23,6 +22,10 @@ interface SmsTemplate {
 
 
 export default function ScheduledSmsPage() {
+  // Sayfa açıldığında zamanı gelmiş planlı SMS'leri gönder
+  useEffect(() => {
+    fetch('/api/sms/send-due-scheduled', { method: 'POST' });
+  }, []);
   const [patients, setPatients] = useState<Patient[]>([]);
   const [templates, setTemplates] = useState<SmsTemplate[]>([]);
   const [selectedPatient, setSelectedPatient] = useState<number | null>(null);
@@ -104,7 +107,9 @@ export default function ScheduledSmsPage() {
                 borderRadius: 8,
                 fontSize: 16,
                 outline: "none",
-                background: "white"
+                background: "white",
+                color: "#222",
+                fontWeight: 700
               }}
             >
               <option value="">Hasta seçiniz...</option>
@@ -129,7 +134,9 @@ export default function ScheduledSmsPage() {
                 borderRadius: 8,
                 fontSize: 16,
                 outline: "none",
-                background: "white"
+                background: "white",
+                color: "#222",
+                fontWeight: 700
               }}
             >
               <option value="">Şablon seçiniz...</option>
@@ -163,7 +170,7 @@ export default function ScheduledSmsPage() {
                 type="date"
                 value={selectedDate}
                 onChange={e => setSelectedDate(e.target.value)}
-                style={{ width: "100%", padding: "12px 16px", borderRadius: 8, border: "2px solid #e1e5e9", fontSize: 16 }}
+                style={{ width: "100%", padding: "12px 16px", borderRadius: 8, border: "2px solid #e1e5e9", fontSize: 16, color: "#222", fontWeight: 700 }}
               />
             </div>
             <div style={{ flex: 1 }}>
@@ -172,7 +179,7 @@ export default function ScheduledSmsPage() {
                 type="time"
                 value={selectedTime}
                 onChange={e => setSelectedTime(e.target.value)}
-                style={{ width: "100%", padding: "12px 16px", borderRadius: 8, border: "2px solid #e1e5e9", fontSize: 16 }}
+                style={{ width: "100%", padding: "12px 16px", borderRadius: 8, border: "2px solid #e1e5e9", fontSize: 16, color: "#222", fontWeight: 700 }}
               />
             </div>
           </div>

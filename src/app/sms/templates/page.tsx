@@ -293,7 +293,9 @@ export default function SmsTemplatesPage() {
                     borderRadius: 8,
                     fontSize: 16,
                     outline: "none",
-                    boxSizing: "border-box"
+                    boxSizing: "border-box",
+                    color: "#222",
+                    fontWeight: 700
                   }}
                   required
                 />
@@ -561,7 +563,9 @@ export default function SmsTemplatesPage() {
                     fontSize: 16,
                     outline: "none",
                     resize: "vertical",
-                    boxSizing: "border-box"
+                    boxSizing: "border-box",
+                    color: "#222",
+                    fontWeight: 700
                   }}
                   required
                 />
@@ -586,10 +590,12 @@ export default function SmsTemplatesPage() {
                   style={{
                     padding: "10px 20px",
                     border: "2px solid #e1e5e9",
-                    background: "white",
+                    background: "#f5f5f5",
                     borderRadius: 8,
                     fontSize: 16,
-                    cursor: "pointer"
+                    cursor: "pointer",
+                    fontWeight: 700,
+                    color: "#222"
                   }}
                 >
                   İptal

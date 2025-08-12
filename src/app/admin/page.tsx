@@ -292,21 +292,21 @@ function UserManagement() {
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ borderBottom: "2px solid #e0e0e0" }}>
-              <th style={{ padding: "12px", textAlign: "left", color: "#666" }}>Ad Soyad</th>
-              <th style={{ padding: "12px", textAlign: "left", color: "#666" }}>Kullanıcı Adı</th>
-              <th style={{ padding: "12px", textAlign: "left", color: "#666" }}>Yetki</th>
-              <th style={{ padding: "12px", textAlign: "left", color: "#666" }}>Şube</th>
-              <th style={{ padding: "12px", textAlign: "left", color: "#666" }}>Oluşturma</th>
-              <th style={{ padding: "12px", textAlign: "center", color: "#666" }}>İşlemler</th>
+              <th style={{ padding: "12px", textAlign: "left", color: "#222", fontWeight: 700 }}>Ad Soyad</th>
+              <th style={{ padding: "12px", textAlign: "left", color: "#222", fontWeight: 700 }}>Kullanıcı Adı</th>
+              <th style={{ padding: "12px", textAlign: "left", color: "#222", fontWeight: 700 }}>Yetki</th>
+              <th style={{ padding: "12px", textAlign: "left", color: "#222", fontWeight: 700 }}>Şube</th>
+              <th style={{ padding: "12px", textAlign: "left", color: "#222", fontWeight: 700 }}>Oluşturma</th>
+              <th style={{ padding: "12px", textAlign: "center", color: "#222", fontWeight: 700 }}>İşlemler</th>
             </tr>
           </thead>
           <tbody>
             {users.map((user) => (
               <tr key={user.user_id} style={{ borderBottom: "1px solid #f0f0f0" }}>
-                <td style={{ padding: "12px", fontWeight: 600 }}>
+                <td style={{ padding: "12px", fontWeight: 700, color: "#222" }}>
                   {user.first_name} {user.last_name}
                 </td>
-                <td style={{ padding: "12px", color: "#666" }}>
+                <td style={{ padding: "12px", fontWeight: 600, color: "#222" }}>
                   {user.username}
                 </td>
                 <td style={{ padding: "12px" }}>
@@ -316,15 +316,15 @@ function UserManagement() {
                     color: user.role === 'admin' ? '#2e7d32' : user.role === 'doctor' ? '#1565c0' : '#ef6c00',
                     borderRadius: 4,
                     fontSize: 12,
-                    fontWeight: 600
+                    fontWeight: 700
                   }}>
                     {roleLabels[user.role] || user.role}
                   </span>
                 </td>
-                <td style={{ padding: "12px", color: "#666" }}>
+                <td style={{ padding: "12px", fontWeight: 600, color: "#222" }}>
                   {user.branch_name || '-'}
                 </td>
-                <td style={{ padding: "12px", color: "#666", fontSize: 12 }}>
+                <td style={{ padding: "12px", fontWeight: 600, color: "#222", fontSize: 12 }}>
                   {new Date(user.created_at).toLocaleDateString('tr-TR')}
                 </td>
                 <td style={{ padding: "12px", textAlign: "center" }}>
@@ -753,18 +753,18 @@ function TreatmentManagement() {
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ borderBottom: "2px solid #e0e0e0" }}>
-              <th style={{ padding: "12px", textAlign: "left", color: "#666" }}>Tedavi Adı</th>
-              <th style={{ padding: "12px", textAlign: "left", color: "#666" }}>Kategori</th>
-              <th style={{ padding: "12px", textAlign: "center", color: "#666" }}>Diş Bazlı</th>
-              <th style={{ padding: "12px", textAlign: "center", color: "#666" }}>Çene Bazlı</th>
-              <th style={{ padding: "12px", textAlign: "left", color: "#666" }}>Takip Süreleri</th>
-              <th style={{ padding: "12px", textAlign: "center", color: "#666" }}>İşlemler</th>
+              <th style={{ padding: "12px", textAlign: "left", color: "#222", fontWeight: 700 }}>Tedavi Adı</th>
+              <th style={{ padding: "12px", textAlign: "left", color: "#222", fontWeight: 700 }}>Kategori</th>
+              <th style={{ padding: "12px", textAlign: "center", color: "#222", fontWeight: 700 }}>Diş Bazlı</th>
+              <th style={{ padding: "12px", textAlign: "center", color: "#222", fontWeight: 700 }}>Çene Bazlı</th>
+              <th style={{ padding: "12px", textAlign: "left", color: "#222", fontWeight: 700 }}>Takip Süreleri</th>
+              <th style={{ padding: "12px", textAlign: "center", color: "#222", fontWeight: 700 }}>İşlemler</th>
             </tr>
           </thead>
           <tbody>
             {treatments.map((treatment) => (
               <tr key={treatment.treatment_type_id} style={{ borderBottom: "1px solid #f0f0f0" }}>
-                <td style={{ padding: "12px", fontWeight: 600 }}>
+                <td style={{ padding: "12px", fontWeight: 700, color: "#222" }}>
                   {treatment.name}
                 </td>
                 <td style={{ padding: "12px" }}>
@@ -774,26 +774,26 @@ function TreatmentManagement() {
                     color: "#2e7d32",
                     borderRadius: 4,
                     fontSize: 12,
-                    fontWeight: 600
+                    fontWeight: 700
                   }}>
                     {categoryLabels[treatment.category] || treatment.category}
                   </span>
                 </td>
-                <td style={{ padding: "12px", textAlign: "center" }}>
+                <td style={{ padding: "12px", textAlign: "center", fontWeight: 600, color: "#222" }}>
                   {treatment.is_per_tooth ? (
-                    <span style={{ color: "#4caf50", fontSize: 16 }}>✓</span>
+                    <span style={{ color: "#4caf50", fontSize: 16, fontWeight: 700 }}>✓</span>
                   ) : (
-                    <span style={{ color: "#ccc", fontSize: 16 }}>✗</span>
+                    <span style={{ color: "#ccc", fontSize: 16, fontWeight: 700 }}>✗</span>
                   )}
                 </td>
-                <td style={{ padding: "12px", textAlign: "center" }}>
+                <td style={{ padding: "12px", textAlign: "center", fontWeight: 600, color: "#222" }}>
                   {treatment.is_jaw_specific ? (
-                    <span style={{ color: "#4caf50", fontSize: 16 }}>✓</span>
+                    <span style={{ color: "#4caf50", fontSize: 16, fontWeight: 700 }}>✓</span>
                   ) : (
-                    <span style={{ color: "#ccc", fontSize: 16 }}>✗</span>
+                    <span style={{ color: "#ccc", fontSize: 16, fontWeight: 700 }}>✗</span>
                   )}
                 </td>
-                <td style={{ padding: "12px", color: "#666", fontSize: 12 }}>
+                <td style={{ padding: "12px", color: "#222", fontWeight: 600, fontSize: 12 }}>
                   {treatment.feedback_intervals?.length > 0 
                     ? treatment.feedback_intervals.map((interval: string) => (
                         feedbackOptions.find(opt => opt.value === interval)?.label || interval
@@ -1272,18 +1272,18 @@ function PriceListManagement() {
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ borderBottom: "2px solid #e0e0e0" }}>
-              <th style={{ padding: "12px", textAlign: "left", color: "#666" }}>Liste Adı</th>
-              <th style={{ padding: "12px", textAlign: "left", color: "#666" }}>Şube</th>
-              <th style={{ padding: "12px", textAlign: "center", color: "#666" }}>Durum</th>
-              <th style={{ padding: "12px", textAlign: "center", color: "#666" }}>Kalem Sayısı</th>
-              <th style={{ padding: "12px", textAlign: "left", color: "#666" }}>Oluşturulma</th>
-              <th style={{ padding: "12px", textAlign: "center", color: "#666" }}>İşlemler</th>
+              <th style={{ padding: "12px", textAlign: "left", color: "#222", fontWeight: 700 }}>Liste Adı</th>
+              <th style={{ padding: "12px", textAlign: "left", color: "#222", fontWeight: 700 }}>Şube</th>
+              <th style={{ padding: "12px", textAlign: "center", color: "#222", fontWeight: 700 }}>Durum</th>
+              <th style={{ padding: "12px", textAlign: "center", color: "#222", fontWeight: 700 }}>Kalem Sayısı</th>
+              <th style={{ padding: "12px", textAlign: "left", color: "#222", fontWeight: 700 }}>Oluşturulma</th>
+              <th style={{ padding: "12px", textAlign: "center", color: "#222", fontWeight: 700 }}>İşlemler</th>
             </tr>
           </thead>
           <tbody>
             {priceLists.map((priceList) => (
               <tr key={priceList.price_list_id} style={{ borderBottom: "1px solid #f0f0f0" }}>
-                <td style={{ padding: "12px", fontWeight: 600 }}>
+                <td style={{ padding: "12px", fontWeight: 700, color: "#222" }}>
                   {priceList.name}
                 </td>
                 <td style={{ padding: "12px" }}>
@@ -1293,36 +1293,36 @@ function PriceListManagement() {
                     color: "#1565c0",
                     borderRadius: 4,
                     fontSize: 12,
-                    fontWeight: 600
+                    fontWeight: 700
                   }}>
                     {branches.find(b => b.branch_id === priceList.branch_id)?.name || 'Bilinmiyor'}
                   </span>
                 </td>
-                <td style={{ padding: "12px", textAlign: "center" }}>
+                <td style={{ padding: "12px", textAlign: "center", fontWeight: 700, color: "#222" }}>
                   <span style={{
                     padding: "4px 8px",
                     background: priceList.is_active ? "#e8f5e8" : "#ffebee",
                     color: priceList.is_active ? "#2e7d32" : "#c62828",
                     borderRadius: 4,
                     fontSize: 12,
-                    fontWeight: 600
+                    fontWeight: 700
                   }}>
                     {priceList.is_active ? "Aktif" : "Pasif"}
                   </span>
                 </td>
-                <td style={{ padding: "12px", textAlign: "center" }}>
+                <td style={{ padding: "12px", textAlign: "center", fontWeight: 700, color: "#222" }}>
                   <span style={{
                     padding: "4px 8px",
                     background: "#f3e5f5",
                     color: "#7b1fa2",
                     borderRadius: 4,
                     fontSize: 12,
-                    fontWeight: 600
+                    fontWeight: 700
                   }}>
                     {priceList.item_count || 0} kalem
                   </span>
                 </td>
-                <td style={{ padding: "12px", color: "#666", fontSize: 12 }}>
+                <td style={{ padding: "12px", color: "#222", fontWeight: 600, fontSize: 12 }}>
                   {new Date(priceList.created_at).toLocaleDateString('tr-TR')}
                 </td>
                 <td style={{ padding: "12px", textAlign: "center" }}>
@@ -1337,7 +1337,7 @@ function PriceListManagement() {
                       cursor: "pointer",
                       marginRight: 4,
                       fontSize: 12,
-                      fontWeight: 600
+                      fontWeight: 700
                     }}
                     title={priceList.is_active ? "Deaktif Et" : "Aktif Et"}
                   >
@@ -1532,7 +1532,7 @@ function PriceListManagement() {
                         
                         <div style={{ display: "grid", gap: 12 }}>
                           <div>
-                            <label style={{ display: "block", marginBottom: 4, fontWeight: 600, fontSize: 12 }}>
+                            <label style={{ display: "block", marginBottom: 4, fontWeight: 700, fontSize: 13, color: "#222" }}>
                               Tedavi Türü *
                             </label>
                             <select
@@ -1562,7 +1562,7 @@ function PriceListManagement() {
                           {selectedTreatment?.is_jaw_specific ? (
                             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12 }}>
                               <div>
-                                <label style={{ display: "block", marginBottom: 4, fontWeight: 600, fontSize: 12 }}>
+                                <label style={{ display: "block", marginBottom: 4, fontWeight: 700, fontSize: 13, color: "#222" }}>
                                   Üst Çene Fiyatı (₺) *
                                 </label>
                                 <input
@@ -1584,7 +1584,7 @@ function PriceListManagement() {
                                 />
                               </div>
                               <div>
-                                <label style={{ display: "block", marginBottom: 4, fontWeight: 600, fontSize: 12 }}>
+                                <label style={{ display: "block", marginBottom: 4, fontWeight: 700, fontSize: 13, color: "#222" }}>
                                   Alt Çene Fiyatı (₺) *
                                 </label>
                                 <input
@@ -1608,7 +1608,7 @@ function PriceListManagement() {
                             </div>
                           ) : (
                             <div>
-                              <label style={{ display: "block", marginBottom: 4, fontWeight: 600, fontSize: 12 }}>
+                              <label style={{ display: "block", marginBottom: 4, fontWeight: 700, fontSize: 13, color: "#222" }}>
                                 {selectedTreatment?.is_per_tooth ? 'Diş Başına Fiyat (₺)' : 'Fiyat (₺)'} *
                               </label>
                               <input
@@ -1770,18 +1770,18 @@ function BranchManagement() {
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '2px solid #e0e0e0' }}>
-              <th style={{ padding: 12, textAlign: 'left', color: '#666' }}>Ad</th>
-              <th style={{ padding: 12, textAlign: 'left', color: '#666' }}>Adres</th>
-              <th style={{ padding: 12, textAlign: 'left', color: '#666' }}>Oluşturma</th>
-              <th style={{ padding: 12, textAlign: 'center', color: '#666' }}>İşlemler</th>
+              <th style={{ padding: 12, textAlign: 'left', color: '#222', fontWeight: 700 }}>Ad</th>
+              <th style={{ padding: 12, textAlign: 'left', color: '#222', fontWeight: 700 }}>Adres</th>
+              <th style={{ padding: 12, textAlign: 'left', color: '#222', fontWeight: 700 }}>Oluşturma</th>
+              <th style={{ padding: 12, textAlign: 'center', color: '#222', fontWeight: 700 }}>İşlemler</th>
             </tr>
           </thead>
           <tbody>
             {branches.map((b) => (
               <tr key={b.branch_id} style={{ borderBottom: '1px solid #f0f0f0' }}>
-                <td style={{ padding: 12, fontWeight: 600 }}>{b.name}</td>
-                <td style={{ padding: 12, color: '#666' }}>{b.address || '-'}</td>
-                <td style={{ padding: 12, color: '#666', fontSize: 12 }}>{b.created_at ? new Date(b.created_at).toLocaleDateString('tr-TR') : '-'}</td>
+                <td style={{ padding: 12, fontWeight: 700, color: '#222' }}>{b.name}</td>
+                <td style={{ padding: 12, fontWeight: 600, color: '#222' }}>{b.address || '-'}</td>
+                <td style={{ padding: 12, fontWeight: 600, color: '#222', fontSize: 12 }}>{b.created_at ? new Date(b.created_at).toLocaleDateString('tr-TR') : '-'}</td>
                 <td style={{ padding: 12, textAlign: 'center' }}>
                   <button onClick={() => handleEdit(b)} style={{ padding: '6px 10px', background: '#1976d2', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', marginRight: 8, fontSize: 12 }}>Düzenle</button>
                   <button onClick={() => handleDelete(b)} style={{ padding: '6px 10px', background: '#e53935', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 12 }}>Sil</button>
@@ -1811,7 +1811,7 @@ function BranchManagement() {
                 </div>
               </div>
               <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
-                <button type="button" onClick={reset} style={{ padding: '8px 14px', background: '#eee', border: 'none', borderRadius: 6, cursor: 'pointer' }}>Vazgeç</button>
+                <button type="button" onClick={reset} style={{ padding: '8px 14px', background: '#eee', border: 'none', borderRadius: 6, cursor: 'pointer', color: '#222', fontWeight: 700 }}>Vazgeç</button>
                 <button type="submit" disabled={loading} style={{ padding: '8px 14px', background: loading ? '#9e9e9e' : '#1976d2', color: '#fff', border: 'none', borderRadius: 6, cursor: loading ? 'not-allowed' : 'pointer', fontWeight: 600 }}>
                   {editing ? 'Güncelle' : 'Kaydet'}
                 </button>

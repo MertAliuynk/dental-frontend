@@ -139,7 +139,7 @@ export default function QuickSmsPage() {
 
           {/* Hasta Arama */}
           <div className="wrap-when-narrow" style={{ marginBottom: 24 }}>
-            <label style={{ display: "block", marginBottom: 8, fontWeight: 600, color: "#333" }}>
+            <label style={{ display: "block", marginBottom: 8, fontWeight: 700, color: "#222", fontSize: 15 }}>
               Hasta Ara:
             </label>
             <input
@@ -155,6 +155,8 @@ export default function QuickSmsPage() {
                 fontSize: 16,
                 outline: "none",
                 transition: "border-color 0.2s",
+                color: "#222",
+                fontWeight: 700
               }}
               onFocus={(e) => e.target.style.borderColor = "#0066cc"}
               onBlur={(e) => e.target.style.borderColor = "#e1e5e9"}
@@ -229,7 +231,7 @@ export default function QuickSmsPage() {
 
           {/* SMS Şablon Seçimi */}
           <div style={{ marginBottom: 24 }}>
-            <label style={{ display: "block", marginBottom: 8, fontWeight: 600, color: "#333" }}>
+            <label style={{ display: "block", marginBottom: 8, fontWeight: 700, color: "#222", fontSize: 15 }}>
               SMS Şablonu Seçin:
             </label>
             <select
@@ -242,7 +244,9 @@ export default function QuickSmsPage() {
                 borderRadius: 8,
                 fontSize: 16,
                 outline: "none",
-                background: "white"
+                background: "white",
+                color: "#222",
+                fontWeight: 700
               }}
             >
               <option value="">Şablon seçiniz...</option>
