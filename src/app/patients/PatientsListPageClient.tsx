@@ -103,9 +103,9 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
   };
 
   const sorted = getSortedPatients();
-  const filtered = sorted.filter(p =>
-    (p.first_name + " " + p.last_name).toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = search.trim() === ""
+    ? sorted
+    : sorted.filter(p => (p.first_name + " " + p.last_name).toLowerCase().includes(search.toLowerCase()));
 
   // Sıralama okları için yardımcı fonksiyon
   const getSortIcon = (column: string) => {
@@ -179,7 +179,7 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
           <div style={{ width: "100%", height: "100%" }}>
             <AutoSizer>
                {({ height, width }) => (
-                 <table style={{ width: width, borderCollapse: "collapse", tableLayout: "fixed" }}>
+                 <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
                   <colgroup>
                     <col style={{ width: `${width * 0.16}px` }} />
                     <col style={{ width: `${width * 0.14}px` }} />
@@ -221,13 +221,13 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
                                onMouseOver={e => (e.currentTarget.style.background = "#e3eafc")}
                                onMouseOut={e => (e.currentTarget.style.background = "")}
                              >
-                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px", width: `${width * 0.16}px` }}>{p.first_name}</td>
-                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px", width: `${width * 0.14}px` }}>{p.last_name}</td>
-                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px", width: `${width * 0.16}px` }}>{role === 'doctor' ? '•••' : (p.phone || '-')}</td>
-                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px", width: `${width * 0.16}px` }}>{role === 'doctor' ? '•••' : (p.tc_number || '-')}</td>
-                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px", width: `${width * 0.12}px` }}>{p.branch_name || '-'}</td>
-                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px", width: `${width * 0.16}px` }}>{p.created_at ? new Date(p.created_at).toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
-                                 <td style={{ ...tdStyle, textAlign: "center", verticalAlign: "middle", minWidth: 120, fontSize: 15, padding: "10px 8px", width: '120px' }}>
+                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px" }}>{p.first_name}</td>
+                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px" }}>{p.last_name}</td>
+                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px" }}>{role === 'doctor' ? '•••' : (p.phone || '-')}</td>
+                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px" }}>{role === 'doctor' ? '•••' : (p.tc_number || '-')}</td>
+                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px" }}>{p.branch_name || '-'}</td>
+                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px" }}>{p.created_at ? new Date(p.created_at).toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
+                                 <td style={{ ...tdStyle, textAlign: "center", verticalAlign: "middle", minWidth: 120, fontSize: 15, padding: "10px 8px" }}>
                                  <div style={{ display: "flex", gap: 8, justifyContent: "center", alignItems: "center" }}>
                                    <button
                                      onClick={(e) => handleEditClick(e, p)}
