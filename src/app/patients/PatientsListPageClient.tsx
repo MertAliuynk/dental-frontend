@@ -178,8 +178,8 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
         <div style={{ background: "#fff", borderRadius: 12, boxShadow: "0 2px 8px #0001", overflow: "hidden", height: "70vh", minHeight: 400 }}>
           <div style={{ width: "100%", height: "100%" }}>
             <AutoSizer>
-              {({ height, width }) => (
-                <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 720, tableLayout: "fixed" }}>
+               {({ height, width }) => (
+                 <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 900, tableLayout: "fixed" }}>
                   <thead>
                     <tr style={{ background: "#e3eafc" }}>
                       <th style={thStyle}>
