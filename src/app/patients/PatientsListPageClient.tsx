@@ -180,20 +180,21 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
             <AutoSizer>
                {({ height, width }) => (
                  <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 900, tableLayout: "fixed" }}>
+                  <colgroup>
+                    <col style={{ width: '16%' }} />
+                    <col style={{ width: '16%' }} />
+                    <col style={{ width: '16%' }} />
+                    <col style={{ width: '16%' }} />
+                    <col style={{ width: '12%' }} />
+                    <col style={{ width: '16%' }} />
+                    <col style={{ width: '8%' }} />
+                  </colgroup>
                   <thead>
                     <tr style={{ background: "#e3eafc" }}>
-                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle" }}>
-                        Ad-Soyad{getSortIcon("name")}
-                      </th>
-                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle" }}>
-                        Soyad{getSortIcon("surname")}
-                      </th>
-                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle" }}>
-                        Telefon
-                      </th>
-                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle" }}>
-                        TC Kimlik No
-                      </th>
+                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle" }}>Ad-Soyad{getSortIcon("name")}</th>
+                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle" }}>Soyad{getSortIcon("surname")}</th>
+                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle" }}>Telefon</th>
+                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle" }}>TC Kimlik No</th>
                       <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle" }}>Şube</th>
                       <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle" }}>Oluşturma Tarihi</th>
                       <th style={{ ...thStyle, textAlign: "center", verticalAlign: "middle", minWidth: 120 }}>İşlemler</th>
@@ -220,7 +221,7 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
                                onMouseOver={e => (e.currentTarget.style.background = "#e3eafc")}
                                onMouseOut={e => (e.currentTarget.style.background = "")}
                              >
-                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle" }}>{p.first_name}</td>
+                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle" }}>{p.first_name + ' ' + p.last_name}</td>
                                <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle" }}>{p.last_name}</td>
                                <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle" }}>{role === 'doctor' ? '•••' : (p.phone || '-')}</td>
                                <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle" }}>{role === 'doctor' ? '•••' : (p.tc_number || '-')}</td>
