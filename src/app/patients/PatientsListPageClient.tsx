@@ -175,28 +175,28 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
             </select>
           </div>
         </div>
-        <div style={{ background: "#fff", borderRadius: 12, boxShadow: "0 2px 8px #0001", overflow: "hidden", height: "70vh", minHeight: 400 }}>
+        <div style={{ background: "#fff", borderRadius: 12, boxShadow: "0 2px 8px #0001", overflow: "auto", height: "70vh", minHeight: 400, width: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
           <div style={{ width: "100%", height: "100%" }}>
             <AutoSizer>
                {({ height, width }) => (
                  <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 900, tableLayout: "fixed" }}>
                   <thead>
                     <tr style={{ background: "#e3eafc" }}>
-                      <th style={thStyle}>
+                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle" }}>
                         Ad-Soyad{getSortIcon("name")}
                       </th>
-                      <th style={thStyle}>
+                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle" }}>
                         Soyad{getSortIcon("surname")}
                       </th>
-                      <th style={thStyle}>
+                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle" }}>
                         Telefon
                       </th>
-                      <th style={thStyle}>
+                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle" }}>
                         TC Kimlik No
                       </th>
-                      <th style={thStyle}>Şube</th>
-                      <th style={thStyle}>Oluşturma Tarihi</th>
-                      <th style={thStyle}>İşlemler</th>
+                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle" }}>Şube</th>
+                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle" }}>Oluşturma Tarihi</th>
+                      <th style={{ ...thStyle, textAlign: "center", verticalAlign: "middle", minWidth: 120 }}>İşlemler</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -220,57 +220,58 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
                                onMouseOver={e => (e.currentTarget.style.background = "#e3eafc")}
                                onMouseOut={e => (e.currentTarget.style.background = "")}
                              >
-                               <td style={tdStyle}>{p.first_name}</td>
-                               <td style={tdStyle}>{p.last_name}</td>
-                               <td style={tdStyle}>{role === 'doctor' ? '•••' : (p.phone || '-')}</td>
-                               <td style={tdStyle}>{role === 'doctor' ? '•••' : (p.tc_number || '-')}</td>
-                               <td style={tdStyle}>{p.branch_name || '-'}</td>
-                               <td style={tdStyle}>{p.created_at ? new Date(p.created_at).toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
-                               <td style={tdStyle}>
-                                 <button
-                                   onClick={(e) => handleEditClick(e, p)}
-                                   style={{
-                                     padding: "6px 12px",
-                                     backgroundColor: "#0a2972",
-                                     color: "white",
-                                     border: "none",
-                                     borderRadius: 6,
-                                     cursor: "pointer",
-                                     fontSize: 14,
-                                     fontWeight: 600,
-                                     transition: "background 0.2s",
-                                     marginRight: 8
-                                   }}
-                                   onMouseOver={e => (e.currentTarget.style.backgroundColor = "#1a237e")}
-                                   onMouseOut={e => (e.currentTarget.style.backgroundColor = "#0a2972")}
-                                 >
-                                   Düzenle
-                                 </button>
-                                 <button
-                                   onClick={(e) => handleDelete(e, p)}
-                                   title="Sil"
-                                   style={{
-                                     padding: "6px 10px",
-                                     backgroundColor: "#e53935",
-                                     color: "white",
-                                     border: "none",
-                                     borderRadius: 6,
-                                     cursor: "pointer",
-                                     fontSize: 16,
-                                     fontWeight: 700,
-                                     display: 'inline-flex',
-                                     alignItems: 'center',
-                                     justifyContent: 'center',
-                                     transition: "background 0.2s"
-                                   }}
-                                   onMouseOver={e => (e.currentTarget.style.backgroundColor = "#b71c1c")}
-                                   onMouseOut={e => (e.currentTarget.style.backgroundColor = "#e53935")}
-                                 >
-                                   <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                     <path d="M6 8V15M10 8V15M14 8V15M3 5H5H17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                     <path d="M8 5V3C8 2.44772 8.44772 2 9 2H11C11.5523 2 12 2.44772 12 3V5M5 5V17C5 17.5523 5.44772 18 6 18H14C14.5523 18 15 17.5523 15 17V5H5Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                   </svg>
-                                 </button>
+                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle" }}>{p.first_name}</td>
+                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle" }}>{p.last_name}</td>
+                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle" }}>{role === 'doctor' ? '•••' : (p.phone || '-')}</td>
+                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle" }}>{role === 'doctor' ? '•••' : (p.tc_number || '-')}</td>
+                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle" }}>{p.branch_name || '-'}</td>
+                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle" }}>{p.created_at ? new Date(p.created_at).toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
+                               <td style={{ ...tdStyle, textAlign: "center", verticalAlign: "middle", minWidth: 120 }}>
+                                 <div style={{ display: "flex", gap: 8, justifyContent: "center", alignItems: "center" }}>
+                                   <button
+                                     onClick={(e) => handleEditClick(e, p)}
+                                     style={{
+                                       padding: "6px 12px",
+                                       backgroundColor: "#0a2972",
+                                       color: "white",
+                                       border: "none",
+                                       borderRadius: 6,
+                                       cursor: "pointer",
+                                       fontSize: 14,
+                                       fontWeight: 600,
+                                       transition: "background 0.2s"
+                                     }}
+                                     onMouseOver={e => (e.currentTarget.style.backgroundColor = "#1a237e")}
+                                     onMouseOut={e => (e.currentTarget.style.backgroundColor = "#0a2972")}
+                                   >
+                                     Düzenle
+                                   </button>
+                                   <button
+                                     onClick={(e) => handleDelete(e, p)}
+                                     title="Sil"
+                                     style={{
+                                       padding: "6px 10px",
+                                       backgroundColor: "#e53935",
+                                       color: "white",
+                                       border: "none",
+                                       borderRadius: 6,
+                                       cursor: "pointer",
+                                       fontSize: 16,
+                                       fontWeight: 700,
+                                       display: 'inline-flex',
+                                       alignItems: 'center',
+                                       justifyContent: 'center',
+                                       transition: "background 0.2s"
+                                     }}
+                                     onMouseOver={e => (e.currentTarget.style.backgroundColor = "#b71c1c")}
+                                     onMouseOut={e => (e.currentTarget.style.backgroundColor = "#e53935")}
+                                   >
+                                     <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                       <path d="M6 8V15M10 8V15M14 8V15M3 5H5H17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                       <path d="M8 5V3C8 2.44772 8.44772 2 9 2H11C11.5523 2 12 2.44772 12 3V5M5 5V17C5 17.5523 5.44772 18 6 18H14C14.5523 18 15 17.5523 15 17V5H5Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                     </svg>
+                                   </button>
+                                 </div>
                                </td>
                              </tr>
                            );
