@@ -1,4 +1,83 @@
 "use client";
+// SMS Gönderme Bölümü Bileşeni
+function SmsSendSection({ createForm, patients, currentUser }: any) {
+  const [sending, setSending] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  // Hasta ve şube bilgilerini bul
+  const patient = patients.find((p: any) => p.patient_id == createForm.patientId);
+  const branchName = currentUser?.branch_name || currentUser?.branch || "";
+  const fullName = patient ? `${patient.first_name} ${patient.last_name}` : "";
+  // Tarih ve saat formatlama
+  let dateStr = "";
+  let timeStr = "";
+  if (createForm.selectedTime) {
+    const dateObj = new Date(createForm.selectedTime);
+    dateStr = dateObj.toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' });
+    timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+  }
+  // Mesaj şablonu
+  const smsText =
+    `Sayın ${fullName} Karadeniz Diş Ağız ve diş sağlığı poliklinikleri tarafından ${dateStr} günü saat ${timeStr}'de ${branchName} şubesinde randevunuz oluşturulmuştur.`;
+
+  // SMS gönderme fonksiyonu
+  const sendSms = async () => {
+    setSending(true);
+    setSuccess(null);
+    setError(null);
+    try {
+      const response = await fetch("/api/sms/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: patient?.phone,
+          message: smsText
+        })
+      });
+      if (response.ok) {
+        setSuccess("SMS başarıyla gönderildi.");
+      } else {
+        setError("SMS gönderilemedi.");
+      }
+    } catch (e) {
+      setError("SMS gönderilemedi.");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    <div style={{
+      background: "#f8f9fa",
+      border: "1px solid #e3eafc",
+      borderRadius: 8,
+      padding: 16,
+      marginBottom: 8
+    }}>
+      <div style={{ fontWeight: 800, color: "#1a237e", marginBottom: 8 }}>SMS Önizleme:</div>
+      <div style={{ fontSize: 15, color: "#222", marginBottom: 8 }}>{smsText}</div>
+      <button
+        onClick={sendSms}
+        disabled={sending || !patient?.phone}
+        style={{
+          padding: "10px 20px",
+          background: sending ? "#bdbdbd" : "#1976d2",
+          color: "white",
+          border: "none",
+          borderRadius: 8,
+          cursor: sending ? "not-allowed" : "pointer",
+          fontWeight: 600,
+          fontSize: 14
+        }}
+      >
+        {sending ? "Gönderiliyor..." : `SMS Gönder (${patient?.phone ? patient.phone : "Numara yok"})`}
+      </button>
+      {success && <div style={{ color: "#388e3c", marginTop: 8 }}>{success}</div>}
+      {error && <div style={{ color: "#d32f2f", marginTop: 8 }}>{error}</div>}
+    </div>
+  );
+}
 import { Calendar, dateFnsLocalizer, Event } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -218,8 +297,8 @@ export default function FullAppointmentCalendar() {
       if (data.success) {
         const mapped = data.data.map((item: any) => ({
             title:
-              (item.doctor_first_name || item.doctor_last_name
-                ? `Dr. ${item.doctor_first_name || ''} ${item.doctor_last_name || ''}`.trim() + (item.notes ? ` - ${item.notes}` : '')
+              (item.patient_name
+                ? `${item.patient_name} - Dr. ${item.doctor_first_name || ''} ${item.doctor_last_name || ''}`.trim() + (item.notes ? ` - ${item.notes}` : '')
                 : (item.notes || "Randevu")),
             start: new Date(item.appointment_time),
             end: new Date(new Date(item.appointment_time).getTime() + (item.duration_minutes || 30) * 60000),
@@ -235,10 +314,16 @@ export default function FullAppointmentCalendar() {
     }
   }
 
-  useEffect(() => { 
+
+  useEffect(() => {
     loadUserInfo();
-    fetchAvailableDoctors();
-  }, []); // İlk yüklemede çalış
+  }, []); // İlk yüklemede sadece kullanıcıyı yükle
+
+  useEffect(() => {
+    if (currentUser) {
+      fetchAvailableDoctors();
+    }
+  }, [currentUser]); // currentUser değişince doktorları getir
 
   useEffect(() => { 
     fetchAppointments(); 
@@ -278,10 +363,16 @@ export default function FullAppointmentCalendar() {
   // Mevcut doktorları getir (admin/manager/receptionist için)
   const fetchAvailableDoctors = async () => {
     try {
-  const res = await fetch("https://dentalapi.karadenizdis.com/api/user/doctors");
+      const res = await fetch("https://dentalapi.karadenizdis.com/api/user/doctors");
       const data = await res.json();
       if (data.success) {
-        setAvailableDoctors(data.data);
+        // Giriş yapan kullanıcının şube bilgisini tek bir değişkende topla
+        const userBranch = currentUser?.branch_id || currentUser?.branchId || currentUser?.branch;
+        // Sadece o şubedeki doktorları getir
+        const filtered = data.data.filter((doc: any) => {
+          return doc.branch_id == userBranch || doc.branch == userBranch || doc.branchId == userBranch;
+        });
+        setAvailableDoctors(filtered);
       }
     } catch (err) {
       console.error('Doktorlar alınamadı:', err);
@@ -759,11 +850,17 @@ export default function FullAppointmentCalendar() {
                 }}
               >
                 <option value="all">Tüm Doktorlar</option>
-                {availableDoctors.map(doctor => (
-                  <option key={doctor.user_id} value={doctor.user_id.toString()}>
-                    Dr. {doctor.first_name} {doctor.last_name}
-                  </option>
-                ))}
+                {availableDoctors
+                  .filter(doc => {
+                    if (!currentUser?.branch_id) return true;
+                    // branch_id hem string hem number olabilir, ikili kontrol
+                    return doc.branch_id == currentUser.branch_id;
+                  })
+                  .map(doctor => (
+                    <option key={doctor.user_id} value={doctor.user_id.toString()}>
+                      Dr. {doctor.first_name} {doctor.last_name}
+                    </option>
+                  ))}
               </select>
             </div>
           )}
@@ -1131,7 +1228,17 @@ export default function FullAppointmentCalendar() {
                 <div style={{ display: "grid", gap: 8 }}>
                   <div>
                     <strong style={{ color: "#495057" }}>👤 Hasta:</strong>
-                    <span style={{ marginLeft: 8, color: "#212529" }}>{editForm.patient_name}</span>
+                    <span
+                      style={{ marginLeft: 8, color: "#1976d2", fontWeight: 700, cursor: "pointer", textDecoration: "underline dotted" }}
+                      onClick={() => {
+                        if (editingAppointment?.rawData?.patient_id) {
+                          window.open(`/patients/card?id=${editingAppointment.rawData.patient_id}`, '_blank');
+                        }
+                      }}
+                      title="Hasta kartını aç"
+                    >
+                      {editForm.patient_name}
+                    </span>
                   </div>
                   <div>
                     <strong style={{ color: "#495057" }}>👨‍⚕️ Doktor:</strong>
@@ -1632,38 +1739,46 @@ export default function FullAppointmentCalendar() {
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div style={{ display: "flex", gap: 12, marginTop: 24, justifyContent: "flex-end" }}>
-              <button
-                onClick={closeCreateModal}
-                style={{
-                  padding: "12px 24px",
-                  background: "#6c757d",
-                  color: "white",
-                  border: "none",
-                  borderRadius: 8,
-                  cursor: "pointer",
-                  fontWeight: 600,
-                  fontSize: 14
-                }}
-              >
-                İptal
-              </button>
-              <button
-                onClick={createAppointment}
-                style={{
-                  padding: "12px 24px",
-                  background: "#28a745",
-                  color: "white",
-                  border: "none",
-                  borderRadius: 8,
-                  cursor: "pointer",
-                  fontWeight: 600,
-                  fontSize: 14
-                }}
-              >
-                ➕ Randevu Oluştur
-              </button>
+            {/* Action Buttons & SMS Gönderme */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 24 }}>
+              {/* SMS Preview & Button */}
+              <SmsSendSection 
+                createForm={createForm}
+                patients={patients}
+                currentUser={currentUser}
+              />
+              <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
+                <button
+                  onClick={closeCreateModal}
+                  style={{
+                    padding: "12px 24px",
+                    background: "#6c757d",
+                    color: "white",
+                    border: "none",
+                    borderRadius: 8,
+                    cursor: "pointer",
+                    fontWeight: 600,
+                    fontSize: 14
+                  }}
+                >
+                  İptal
+                </button>
+                <button
+                  onClick={createAppointment}
+                  style={{
+                    padding: "12px 24px",
+                    background: "#28a745",
+                    color: "white",
+                    border: "none",
+                    borderRadius: 8,
+                    cursor: "pointer",
+                    fontWeight: 600,
+                    fontSize: 14
+                  }}
+                >
+                  ➕ Randevu Oluştur
+                </button>
+              </div>
             </div>
           </div>
         </div>

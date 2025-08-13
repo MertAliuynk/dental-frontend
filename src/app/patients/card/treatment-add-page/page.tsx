@@ -112,42 +112,32 @@ function TreatmentAddPageClient() {
   }, [patientId]);
 
   const handleUpperJaw = () => {
+    const upperNumbers = toothType === "sürekli"
+      ? [18,17,16,15,14,13,12,11,21,22,23,24,25,26,27,28]
+      : [55,54,53,52,51,61,62,63,64,65];
     if (isUpperJawSelected) {
       setIsUpperJawSelected(false);
-      setSelectedTeeth([]);
-      return;
-    }
-    setIsUpperJawSelected(true);
-    setIsLowerJawSelected(false);
-    if (toothType === "sürekli") {
-      const ids: string[] = [];
-      for (let i = 16; i >= 1; i--) ids.push(`Tooth${i}_1_`);
-      setSelectedTeeth(ids);
+      // Üst çene kapatılırsa, üst çene dişlerini seçili dişlerden çıkar
+      setSelectedTeeth((prev) => prev.filter((t) => !upperNumbers.map(String).includes(t)));
     } else {
-      const ids: string[] = [];
-      for (let i = 51; i <= 55; i++) ids.push(`milk-tooth-${i}`);
-      for (let i = 61; i <= 65; i++) ids.push(`milk-tooth-${i}`);
-      setSelectedTeeth(ids);
+      setIsUpperJawSelected(true);
+      // Üst çene açılırsa, üst çene dişlerini seçili dişlere ekle (tekrar yok)
+      setSelectedTeeth((prev) => Array.from(new Set([...prev, ...upperNumbers.map(String)])));
     }
   };
 
   const handleLowerJaw = () => {
+    const lowerNumbers = toothType === "sürekli"
+      ? [48,47,46,45,44,43,42,41,31,32,33,34,35,36,37,38]
+      : [75,74,73,72,71,81,82,83,84,85];
     if (isLowerJawSelected) {
       setIsLowerJawSelected(false);
-      setSelectedTeeth([]);
-      return;
-    }
-    setIsLowerJawSelected(true);
-    setIsUpperJawSelected(false);
-    if (toothType === "sürekli") {
-      const ids: string[] = [];
-      for (let i = 32; i >= 17; i--) ids.push(`Tooth${i}_1_`);
-      setSelectedTeeth(ids);
+      // Alt çene kapatılırsa, alt çene dişlerini seçili dişlerden çıkar
+      setSelectedTeeth((prev) => prev.filter((t) => !lowerNumbers.map(String).includes(t)));
     } else {
-      const ids: string[] = [];
-      for (let i = 71; i <= 75; i++) ids.push(`milk-tooth-${i}`);
-      for (let i = 81; i <= 85; i++) ids.push(`milk-tooth-${i}`);
-      setSelectedTeeth(ids);
+      setIsLowerJawSelected(true);
+      // Alt çene açılırsa, alt çene dişlerini seçili dişlere ekle (tekrar yok)
+      setSelectedTeeth((prev) => Array.from(new Set([...prev, ...lowerNumbers.map(String)])));
     }
   };
 
@@ -275,7 +265,7 @@ function TreatmentAddPageClient() {
     loadPrices();
   }, [branchId, treatmentTypes]);
 
-  const showTotals = role !== 'doctor' && role !== 'receptionist';
+  const showTotals = role === 'admin';
 
   const getUnitPrice = (treatmentTypeId: number, isUpper: boolean, isLower: boolean) => {
     const pm = priceMap[treatmentTypeId];
@@ -441,10 +431,14 @@ function TreatmentAddPageClient() {
                 style={{
                   width: "100%",
                   height: 80,
-                  border: "1px solid #b6c6e6",
+                  border: "1.5px solid #1976d2",
                   borderRadius: 10,
-                  padding: 10,
+                  padding: 12,
                   resize: "vertical",
+                  fontSize: 15,
+                  color: '#0d1333',
+                  background: '#f8fafc',
+                  fontWeight: 500
                 }}
               />
             </div>
@@ -551,6 +545,7 @@ function TreatmentAddPageClient() {
                     setIsUpperJawSelected(false);
                     setIsLowerJawSelected(false);
                   }}
+                  selectedTeeth={selectedTeeth}
                 />
               ) : (
                 <MilkTeethSvg
@@ -560,12 +555,20 @@ function TreatmentAddPageClient() {
                     setIsUpperJawSelected(false);
                     setIsLowerJawSelected(false);
                   }}
+                  selectedTeeth={selectedTeeth}
                 />
               )}
             </div>
 
             <div style={{ color: "#0a2972", fontWeight: 600 }}>
-              Seçili Dişler: {selectedTeeth.length === 0 ? "Yok" : selectedTeeth.join(", ")}
+              Seçili Dişler: {selectedTeeth.length === 0 ? "Yok" :
+                selectedTeeth
+                  .map((id) => {
+                    // Eğer id Tooth_21 gibi ise, sadece sonundaki sayıyı al
+                    const match = id.match(/(\d{2})$/);
+                    return match ? match[1] : id;
+                  })
+                  .join(", ")}
             </div>
           </div>
         </div>
@@ -598,13 +601,13 @@ function TreatmentAddPageClient() {
                   }}
                 >
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                    <b>{it.treatmentName}</b>
+                    <span style={{ fontWeight: 800, color: '#0a2972', fontSize: 15 }}>{it.treatmentName}</span>
                     {it.toothNumbers?.length > 0 && (
-                      <span>Dişler: {it.toothNumbers.join(", ")}</span>
+                      <span style={{ fontWeight: 700, color: '#1976d2', fontSize: 14 }}>Dişler: {it.toothNumbers.join(", ")}</span>
                     )}
-                    {it.isUpperJaw && <span>Üst çene</span>}
-                    {it.isLowerJaw && <span>Alt çene</span>}
-                    {it.notes && <span>• {it.notes}</span>}
+                    {it.isUpperJaw && <span style={{ fontWeight: 600, color: '#0a2972' }}>Üst çene</span>}
+                    {it.isLowerJaw && <span style={{ fontWeight: 600, color: '#0a2972' }}>Alt çene</span>}
+                    {it.notes && <span style={{ color: '#0d1333', fontWeight: 600 }}>• {it.notes}</span>}
                   </div>
           {showTotals && (
                     <div style={{ fontWeight: 700, color: "#0a2972" }}>

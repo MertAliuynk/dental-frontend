@@ -1,6 +1,7 @@
 "use client";
 // import Topbar from "../../components/Topbar";
 import { useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 import { useSearchParams, useRouter } from "next/navigation";
 
 export default function NewPatientPageClient() {
@@ -11,12 +12,31 @@ export default function NewPatientPageClient() {
   const router = useRouter();
   const editingPatientId = searchParams.get('id');
   // Hasta Bilgileri state
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<{
+    firstName: string;
+    lastName: string;
+    phone: string;
+    tc: string;
+    doctors: string[];
+    birthDate: string;
+    anamnez: {
+      tedavi: string;
+      hastalik: string;
+      hastalikList: boolean;
+      radyoterapi: string;
+      kanama: string;
+      ilacAlerji: string;
+      digerSorun: string;
+      kadinBilgi: string;
+      kotuAliskanlik: string;
+      disMuayene: string;
+    };
+  }>({
     firstName: "",
     lastName: "",
     phone: "",
     tc: "",
-    doctor: "",
+    doctors: [],
     birthDate: "",
     anamnez: {
       tedavi: "",
@@ -35,13 +55,43 @@ export default function NewPatientPageClient() {
   // Doktorlar state
   const [doctors, setDoctors] = useState<any[]>([]);
   useEffect(() => {
-  fetch("https://dentalapi.karadenizdis.com/api/user/doctors")
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    let branchId = null;
+    let decoded = null;
+    if (token) {
+      try {
+        decoded = jwtDecode(token);
+        branchId = decoded.branch_id || decoded.branchId || null;
+      } catch (e) {
+        console.log("JWT decode error:", e);
+      }
+    }
+    console.log("TOKEN:", token);
+    console.log("DECODED:", decoded);
+    console.log("BRANCH_ID:", branchId);
+    fetch("https://dentalapi.karadenizdis.com/api/user/doctors")
       .then(res => res.json())
       .then(data => {
-        if (data.success) setDoctors(data.data);
-        else setDoctors([]);
+        console.log("API DOCTORS:", data.data);
+        if (data.success) {
+          // branchId ve doktorların branch_id değerlerini logla
+          console.log("branchId (type):", typeof branchId, branchId);
+          data.data.forEach((d: any) => {
+            console.log(`doctor_id: ${d.user_id}, branch_id (type):`, typeof d.branch_id, d.branch_id);
+          });
+          if (branchId !== null && branchId !== undefined && branchId !== "") {
+            const filtered = data.data.filter((d: any) => String(d.branch_id) === String(branchId));
+            console.log("FILTERED DOCTORS:", filtered);
+            setDoctors(filtered);
+          } else {
+            setDoctors(data.data);
+          }
+        } else setDoctors([]);
       })
-      .catch(() => setDoctors([]));
+      .catch((err) => {
+        console.log("API ERROR:", err);
+        setDoctors([]);
+      });
   }, []);
 
   // Edit modunda hasta bilgisini çek ve formu doldur
@@ -59,7 +109,7 @@ export default function NewPatientPageClient() {
             lastName: p.last_name || "",
             phone: p.phone || "",
             tc: p.tc_number || "",
-            doctor: p.doctor_id ? String(p.doctor_id) : "",
+            doctors: p.doctors ? p.doctors.map((d: any) => String(d.doctor_id)) : [],
             birthDate: p.birth_date ? p.birth_date.split('T')[0] : "",
             // Not: anamnez ayrı tabloda; basitçe boş bırakıyoruz veya ileride doldurulabilir
           }));
@@ -98,6 +148,13 @@ export default function NewPatientPageClient() {
       }
       return;
     }
+    if (name === "doctors") {
+      // Çoklu select için
+      const options = e.target.options as HTMLOptionsCollection;
+      const selected: string[] = Array.from(options).filter((o: any) => o.selected).map((o: any) => o.value);
+      setForm(f => ({ ...f, doctors: selected }));
+      return;
+    }
     if (name.startsWith("anamnez.")) {
       const key = name.replace("anamnez.", "");
       setForm(f => ({ ...f, anamnez: { ...f.anamnez, [key]: type === "checkbox" ? checked : value } }));
@@ -114,8 +171,8 @@ export default function NewPatientPageClient() {
     setLoading(true);
     setMessage(null);
     // Zorunlu alan kontrolü (frontend)
-    if (!form.firstName || !form.lastName || !form.phone || !form.tc || !form.doctor || !form.birthDate) {
-      setMessage("Lütfen tüm hasta bilgilerini doldurun.");
+    if (!form.firstName || !form.lastName || !form.phone || !form.tc || !form.birthDate || !Array.isArray(form.doctors) || form.doctors.length === 0) {
+      setMessage("Lütfen tüm hasta bilgilerini ve en az bir doktoru seçin.");
       setLoading(false);
       return;
     }
@@ -149,7 +206,7 @@ export default function NewPatientPageClient() {
           lastName: form.lastName,
           phone: form.phone,
           tc: form.tc,
-          doctor: form.doctor,
+          doctors: form.doctors,
           birthDate: form.birthDate,
           anamnez: form.anamnez
         })
@@ -167,7 +224,7 @@ export default function NewPatientPageClient() {
           lastName: "",
           phone: "",
           tc: "",
-          doctor: "",
+          doctors: [],
           birthDate: "",
           anamnez: {
             tedavi: "",
@@ -240,22 +297,31 @@ export default function NewPatientPageClient() {
               </label>
             </div>
             <div className="col" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              <label style={labelStyle}>İlgili Doktor Seç:*
-                <select
-                  name="doctor"
-                  value={form.doctor}
-                  onChange={handleChange}
-                  required
-                  style={{ ...inputStyle, padding: "8px 12px" }}
-                >
-                  <option value="">Doktor seçiniz</option>
-                  {doctors.map((d: any) => (
-                    <option key={d.user_id} value={d.user_id}>
-                      {d.first_name} {d.last_name}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <label style={labelStyle}>İlgili Doktor(lar) Seç:*</label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 8 }}>
+                {doctors.map((d: any) => (
+                  <label key={d.user_id} style={{ fontWeight: 500, fontSize: 15, color: '#222', display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <input
+                      type="checkbox"
+                      name="doctors"
+                      value={d.user_id}
+                      checked={form.doctors.includes(String(d.user_id))}
+                      onChange={e => {
+                        const checked = e.target.checked;
+                        const value = String(d.user_id);
+                        setForm(f => ({
+                          ...f,
+                          doctors: checked
+                            ? [...f.doctors, value]
+                            : f.doctors.filter(id => id !== value)
+                        }));
+                      }}
+                      required={form.doctors.length === 0}
+                    />
+                    {d.first_name} {d.last_name}
+                  </label>
+                ))}
+              </div>
               <label style={labelStyle}>Doğum Tarihi:*
                 <input name="birthDate" type="date" value={form.birthDate} onChange={handleChange} required style={inputStyle} />
               </label>

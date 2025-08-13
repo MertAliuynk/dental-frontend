@@ -41,6 +41,22 @@ const menu = [
   { label: "Geri Dönüşler", path: "/feedbacks" },
 ];
 
+// Rolü Türkçeye çeviren yardımcı fonksiyon
+const getRoleLabel = (role: string) => {
+  switch (role) {
+    case "admin":
+      return "Yönetici";
+    case "doctor":
+      return "Doktor";
+    case "receptionist":
+      return "Bankocu";
+    case "branch_manager":
+      return "Şube Müdürü";
+    default:
+      return role;
+  }
+};
+
 export default function Sidebar({ open = false, onClose, onOpenPatientSelect }: { open?: boolean; onClose?: () => void; onOpenPatientSelect?: () => void }) {
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
   const router = useRouter();
@@ -118,8 +134,14 @@ export default function Sidebar({ open = false, onClose, onOpenPatientSelect }: 
   };
 
   // Rol bazlı menü filtreleme
+  // Raporlar menüsünü doktor ve resepsiyonist için gizle
   const filteredMenu = menu
-    .filter(item => !(item.label === "Raporlar" && role === "doctor"))
+    .filter(item => {
+      if (item.label === "Raporlar" && (role === "doctor" || role === "receptionist")) {
+        return false;
+      }
+      return true;
+    })
     .map(item => {
       // SMS Şablonları'nı doktor ve receptionist için gizle
       if (item.label === "SMS" && item.children && (role === "doctor" || role === "receptionist")) {
@@ -174,7 +196,7 @@ export default function Sidebar({ open = false, onClose, onOpenPatientSelect }: 
   {role === "doctor" || role === "branch_manager" || role === "receptionist" ? (
         <>
           <div style={{ fontWeight: 600, marginBottom: 16 }}>{branch || "Şube Bilgisi Yok"}</div>
-          <div style={{ fontSize: 14, marginBottom: 16 }}>{userName || "Kullanıcı"} <span style={{ fontWeight: 500, fontSize: 13 }}>({role})</span></div>
+          <div style={{ fontSize: 14, marginBottom: 16 }}>{userName || "Kullanıcı"} <span style={{ fontWeight: 500, fontSize: 13 }}>({getRoleLabel(role)})</span></div>
         </>
       ) : role === "admin" ? (
         <>
@@ -226,7 +248,7 @@ export default function Sidebar({ open = false, onClose, onOpenPatientSelect }: 
           </div>
           
           <div style={{ fontSize: 13, marginBottom: 16, color: "#ddd" }}>
-            {userName || "Admin Kullanıcı"} <span style={{ fontWeight: 500, fontSize: 11 }}>({role || "admin"})</span>
+            {userName || "Admin Kullanıcı"} <span style={{ fontWeight: 500, fontSize: 11 }}>({getRoleLabel(role || "admin")})</span>
           </div>
         </>
       ) : (

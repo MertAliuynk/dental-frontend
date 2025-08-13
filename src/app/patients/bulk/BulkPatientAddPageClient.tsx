@@ -40,11 +40,23 @@ export default function BulkPatientAddPageClient() {
     e.preventDefault();
     setMessage(null);
     setLoading(true);
-    // Zorunlu alan kontrolü
+    // Zorunlu alan ve format kontrolü
     for (let i = 0; i < rows.length; i++) {
       const { firstName, lastName, tc, phone, birthDate, doctor } = rows[i];
       if ((firstName || lastName || tc || phone || birthDate || doctor) && (!firstName || !lastName || !tc || !phone || !birthDate || !doctor)) {
         setMessage(`${i + 1}. satırda eksik bilgi var. Tüm alanlar zorunlu.`);
+        setLoading(false);
+        return;
+      }
+      // TC kimlik kontrolü (11 hane, sadece rakam)
+      if (tc && (!/^\d{11}$/.test(tc))) {
+        setMessage(`${i + 1}. satırda TC kimlik numarası 11 haneli olmalı ve sadece rakam içermeli.`);
+        setLoading(false);
+        return;
+      }
+      // Telefon kontrolü (en az 10, en fazla 11 hane, sadece rakam)
+      if (phone && (!/^\d{10,11}$/.test(phone))) {
+        setMessage(`${i + 1}. satırda telefon numarası 10 veya 11 haneli olmalı ve sadece rakam içermeli.`);
         setLoading(false);
         return;
       }

@@ -159,53 +159,60 @@ function AppointmentCard({ doctor, appointment, onStatusUpdate, role }: Appointm
         Dr. {doctor.first_name} {doctor.last_name}
       </div>
       
-      <div style={{ fontWeight: 600, marginBottom: 8, fontSize: isDoctor ? 14 : 14 }}>
-        Hasta: {appointment.patient_first_name} {appointment.patient_last_name}
+
+      <div style={{ fontWeight: 700, marginBottom: 8, fontSize: isDoctor ? 15 : 15, color: '#0d1333', letterSpacing: 0.2 }}>
+        Hasta: <span style={{ color: '#1976d2' }}>{appointment.patient_first_name} {appointment.patient_last_name}</span>
       </div>
-      
-      <div style={{ fontSize: isDoctor ? 12 : 11, color: "#444", marginBottom: 8 }}>
-        Randevu: {new Date(appointment.appointment_time).toLocaleString('tr-TR')}
+
+      <div style={{ fontSize: isDoctor ? 13 : 12, color: '#222', marginBottom: 8, fontWeight: 500 }}>
+        Randevu: <span style={{ color: '#0d47a1' }}>{new Date(appointment.appointment_time).toLocaleString('tr-TR')}</span>
       </div>
-      
-      <div style={{ fontSize: isDoctor ? 14 : 13, color: "#333", marginBottom: 8 }}>
-        Biten Tedavi: <span style={{ color: "#1976d2" }}>OPSİYONEL</span>
+
+      <div style={{ fontSize: isDoctor ? 15 : 14, color: '#333', marginBottom: 8, fontWeight: 500 }}>
+        Biten Tedavi: <span style={{ color: '#1976d2', fontWeight: 700 }}>OPSİYONEL</span>
       </div>
-      
+
       <div style={{ marginBottom: 8 }}>
-        <select 
-          value={selectedTreatment || ""} 
+        <select
+          value={selectedTreatment || ""}
           onChange={(e) => setSelectedTreatment(e.target.value ? parseInt(e.target.value) : null)}
-          style={{ 
-            width: "100%", 
-            padding: isDoctor ? 8 : 6, 
-            borderRadius: 6, 
-            border: "1px solid #dbeafe", 
-            fontSize: isDoctor ? 14 : 13 
+          style={{
+            width: "100%",
+            padding: isDoctor ? 9 : 7,
+            borderRadius: 6,
+            border: "1.5px solid #1976d2",
+            fontSize: isDoctor ? 15 : 14,
+            color: '#0d1333',
+            background: '#f8fafc',
+            fontWeight: 500
           }}
         >
-          <option value="">Tedavi seç (opsiyonel)</option>
+          <option value="" style={{ color: '#888' }}>Tedavi seç (opsiyonel)</option>
           {availableTreatments.map(treatment => (
-            <option key={treatment.treatment_id} value={treatment.treatment_id}>
+            <option key={treatment.treatment_id} value={treatment.treatment_id} style={{ color: '#0d1333' }}>
               {treatment.treatment_type_name}
               {treatment.tooth_numbers.length > 0 && ` (Dişler: ${treatment.tooth_numbers.join(', ')})`}
             </option>
           ))}
         </select>
       </div>
-      
+
       <div style={{ marginBottom: isDoctor ? 12 : 10 }}>
-        <input 
-          type="text" 
-          placeholder="NOT : (Zorunlu)" 
+        <input
+          type="text"
+          placeholder="NOT : (Zorunlu)"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          style={{ 
-            width: "100%", 
-            padding: isDoctor ? 8 : 6, 
-            borderRadius: 6, 
-            border: notes.trim() ? "1px solid #4caf50" : "1px solid #f44336", 
-            fontSize: isDoctor ? 14 : 13 
-          }} 
+          style={{
+            width: "100%",
+            padding: isDoctor ? 9 : 7,
+            borderRadius: 6,
+            border: notes.trim() ? "1.5px solid #4caf50" : "1.5px solid #f44336",
+            fontSize: isDoctor ? 15 : 14,
+            color: '#0d1333',
+            background: '#f8fafc',
+            fontWeight: 500
+          }}
         />
       </div>
       

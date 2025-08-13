@@ -34,15 +34,30 @@ export default function PatientSearchCard() {
 
   return (
     <div style={{ background: "white", borderRadius: 12, padding: 20, boxShadow: "0 2px 8px #0001", minWidth: 280, maxWidth: 320, minHeight: 420, height: 420, display: "flex", flexDirection: "column" }}>
-      <div style={{ display: "flex", alignItems: "center", marginBottom: 12 }}>
+      <div style={{ display: "flex", alignItems: "center", marginBottom: 12, gap: 8 }}>
         <input
           type="text"
           placeholder="Hasta ara..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          style={{ flex: 1, padding: 8, borderRadius: 6, border: "1px solid #dbeafe", fontWeight: 500, color: "#222" }}
+          style={{ flex: 1, padding: 8, borderRadius: 6, border: "1.5px solid #dbeafe", fontWeight: 500, color: "#222", fontSize: 15, background: '#f8fafc' }}
         />
-        <span style={{ marginLeft: 8, color: "#444" }}>🔍</span>
+        <span style={{
+          minWidth: 48,
+          textAlign: 'center',
+          fontSize: 13,
+          color: '#1976d2',
+          background: '#e3eafc',
+          borderRadius: 6,
+          padding: '4px 10px',
+          fontWeight: 700,
+          border: '1.5px solid #b6c6e6',
+          boxShadow: '0 1px 4px #e3eaff33',
+          whiteSpace: 'nowrap',
+          lineHeight: 1.2
+        }}>
+          {patients.length} kişi
+        </span>
       </div>
       <div style={{ flex: 1, overflowY: "auto" }}>
         {loading && <div style={{ color: "#888", textAlign: "center", fontWeight: 500 }}>Yükleniyor...</div>}

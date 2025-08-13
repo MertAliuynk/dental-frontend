@@ -2,10 +2,12 @@ import React, { useEffect, useRef } from "react";
 
 export default function TeethSvg({ 
   onSelect, 
-  onIndividualSelect 
+  onIndividualSelect, 
+  selectedTeeth: externalSelectedTeeth 
 }: { 
   onSelect?: (selected: string[]) => void;
   onIndividualSelect?: () => void;
+  selectedTeeth?: string[];
 }) {
   // Seçili dişlerin id'lerini tutan dizi
   const selectedTeeth = useRef<string[]>([]);
@@ -83,17 +85,12 @@ export default function TeethSvg({
   }, []);
 
   // Diş seçme fonksiyonu (kırmızıya boyar, tekrar tıklanırsa beyaza döner)
+  // Her zaman sadece textteki sayı döndür (id fallback yok)
   const getToothKey = (toothGroup: Element | null): string | null => {
     if (!toothGroup) return null;
     const textEl = toothGroup.querySelector('.tooth-number') as SVGTextElement | null;
     const label = textEl?.textContent?.trim();
-    if (label && /^\d+$/.test(label)) return label; // visible number text
-    const id = (toothGroup as any).id as string | undefined;
-    if (id) {
-      const m = id.match(/Tooth(\d+)_/);
-      if (m) return m[1];
-      return id; // last resort
-    }
+    if (label && /^\d+$/.test(label)) return label;
     return null;
   };
 
@@ -110,11 +107,11 @@ export default function TeethSvg({
     const allWhitePaths = toothGroup.querySelectorAll("path.st1");
     const toothNumber = toothGroup.querySelector(".tooth-number") as SVGTextElement | null;
     
-    // İlk path'in mevcut fill rengine bak
+    // Seçili mi kontrolü: ilk path'in fill rengine bak
     const currentFill = path.getAttribute("fill") || window.getComputedStyle(path).fill;
     const isRed = currentFill === "rgb(255, 0, 0)" || currentFill === "#ff0000" || currentFill === "#FF0000";
     
-    // Tüm st1 path'lerinin rengini değiştir
+    // Tüm st1 path'lerini ve numara text'ini kırmızıya/beyaza boya
     allWhitePaths.forEach((p: any) => {
       if (isRed) {
         p.setAttribute("fill", "#FFFFFF");
@@ -124,8 +121,6 @@ export default function TeethSvg({
         p.style.fill = "#FF0000";
       }
     });
-    
-    // Numara rengini değiştir
     if (toothNumber) {
       if (isRed) {
         toothNumber.setAttribute("fill", "#000");
@@ -134,26 +129,20 @@ export default function TeethSvg({
       }
     }
     
-    // Seçili dişler dizisini güncelle
-    if (isRed) {
-      // Kırmızıdan beyaza döndü, diziden çıkar
-      selectedTeeth.current = selectedTeeth.current.filter((id) => id !== toothKey);
-    } else {
-      // Beyazdan kırmızıya döndü, diziye ekle (tekrar eklenmesin)
-      if (!selectedTeeth.current.includes(toothKey)) {
-        selectedTeeth.current.push(toothKey);
+    // Seçili dişler dizisini güncelle (her zaman sadece textteki sayı)
+    if (toothKey) {
+      if (isRed) {
+        selectedTeeth.current = selectedTeeth.current.filter((id) => id !== toothKey);
+      } else {
+        if (!selectedTeeth.current.includes(toothKey)) {
+          selectedTeeth.current.push(toothKey);
+        }
       }
     }
     
     // Parent componentten gelen callback'i çağır
     if (onSelect) onSelect([...selectedTeeth.current]);
-    
-    // Bireysel seçim yapıldığında çene seçimlerini sıfırla
     if (onIndividualSelect) onIndividualSelect();
-    
-    // Konsola yazdır (debug için)
-    console.log("Seçili diş sayısı:", selectedTeeth.current.length);
-    console.log("Seçili dişler:", selectedTeeth.current);
   };
 
   // Grup seviyesinde tıklama: dişin herhangi bir yerine basılınca çalışır
@@ -626,7 +615,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="535" y="300" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            25
+            41
           </text>
         </g>
 
@@ -667,7 +656,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="605" y="300" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            24
+            31
           </text>
         </g>
 
@@ -726,7 +715,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="1105" y="300" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            17
+            38
           </text>
         </g>
 
@@ -784,7 +773,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="1025" y="300" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            18
+            37
           </text>
         </g>
 
@@ -852,7 +841,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="925" y="300" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            19
+            36
           </text>
         </g>
 
@@ -903,7 +892,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="845" y="300" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            20
+            35
           </text>
         </g>
 
@@ -953,7 +942,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="785" y="300" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            21
+            34
           </text>
         </g>
 
@@ -997,7 +986,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="705" y="300" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            22
+            33
           </text>
         </g>
 
@@ -1057,7 +1046,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="1015" y="120" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            15
+            27
           </text>
         </g>
 
@@ -1236,7 +1225,7 @@ export default function TeethSvg({
             C718.78,31.59,718.64,31.18,718.29,30.66z"/>
         </g>
           <text x="716" y="200" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            11
+            23
           </text>
 
         {/* Tooth12 - On İkinci Diş - Tamamen Otantik SVG Verisiyle */}
@@ -1284,7 +1273,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="780" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            12
+            24
           </text>
         </g>
 
@@ -1329,7 +1318,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="660" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            10
+            22
           </text>
         </g>
 
@@ -1385,7 +1374,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="600" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            9
+            21
           </text>
         </g>
 
@@ -1433,7 +1422,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="530" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            8
+            11
           </text>
         </g>
 
@@ -1480,7 +1469,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="470" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            7
+            12
           </text>
         </g>
 
@@ -1548,7 +1537,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="410" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            6
+            13
           </text>
         </g>
 
@@ -1601,7 +1590,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="350" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            5
+            14
           </text>
         </g>
 
@@ -1685,7 +1674,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="210" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            3
+            16
           </text>
         </g>
 
@@ -1748,7 +1737,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="120" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            2
+            17
           </text>
         </g>
 
@@ -1818,7 +1807,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="30" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            1
+            18
           </text>
         </g>
 
@@ -1869,7 +1858,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="290" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            4
+            15
           </text>
         </g>
 
@@ -1910,7 +1899,7 @@ export default function TeethSvg({
 
           {/* Diş numarası */}
           <text x="840" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            13
+            25
           </text>
         </g>
 
@@ -1998,7 +1987,7 @@ export default function TeethSvg({
 
           {/* Diş numarası */}
           <text x="915" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            14
+            26
           </text>
         </g>
 
@@ -2059,7 +2048,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="1105" y="120" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            16
+            28
           </text>
         </g>
 
@@ -2108,7 +2097,7 @@ export default function TeethSvg({
           
           {/* Diş numarası */}
           <text x="650" y="300" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            23
+            32
           </text>
         </g>
       </svg>

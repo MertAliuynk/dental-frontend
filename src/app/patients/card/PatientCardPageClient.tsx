@@ -1,10 +1,12 @@
+
+
 "use client";
-
-
 import AppLayout from "../../components/AppLayout";
 // import Topbar kaldırıldı
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+
+
 
 
 export default function PatientCardPageClient() {
@@ -26,6 +28,42 @@ export default function PatientCardPageClient() {
   const [role, setRole] = useState<string>("");
   const [branchId, setBranchId] = useState<number>(1);
   const [priceMap, setPriceMap] = useState<Record<number, { base: number; upper: number; lower: number; isPerTooth: boolean; isJawSpecific: boolean }>>({});
+
+  // Onaylanan tedavileri tekrar önerilen olarak güncelleyen fonksiyon
+  const handleRevertToSuggested = async () => {
+    if (selectedApprovedTreatments.length === 0) {
+      alert("Lütfen önerilene döndürülecek tedavileri seçin");
+      return;
+    }
+    if (!window.confirm(`${selectedApprovedTreatments.length} tedavi tekrar önerilen olarak işaretlenecek. Emin misiniz?`)) return;
+    try {
+      const promises = selectedApprovedTreatments.map((treatmentId: number) =>
+        fetch(`https://dentalapi.karadenizdis.com/api/treatment/${treatmentId}/status`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'önerilen' })
+        }).then(res => res.json())
+      );
+      const results = await Promise.all(promises);
+      const allSuccessful = results.every((result: any) => result.success);
+      if (allSuccessful) {
+        alert(`${selectedApprovedTreatments.length} tedavi tekrar önerilen olarak işaretlendi!`);
+        // Tedavi listesini yenile
+        const treatmentsRes = await fetch(`https://dentalapi.karadenizdis.com/api/treatment/patient/${patientId}`);
+        const treatmentsData = await treatmentsRes.json();
+        if (treatmentsData.success) {
+          setTreatments(treatmentsData.data);
+        }
+        setSelectedApprovedTreatments([]);
+      } else {
+        alert("Bazı tedaviler güncellenemedi. Lütfen tekrar deneyin.");
+      }
+    } catch (error) {
+      console.error('Revert to suggested error:', error);
+      alert("Tedaviler güncellenirken hata oluştu");
+    }
+  };
+
 
   useEffect(() => {
     if (!patientId) return;
@@ -106,7 +144,7 @@ export default function PatientCardPageClient() {
     loadPrices();
   }, [branchId, treatmentTypes]);
 
-  const showTotals = role !== 'doctor';
+  const showTotals = role === 'admin';
   const getUnitPrice = (treatmentTypeId: number, upper: boolean, lower: boolean) => {
     const pm = priceMap[treatmentTypeId];
     if (!pm) return 0;
@@ -152,7 +190,39 @@ export default function PatientCardPageClient() {
   };
   const suggestedTotal = suggestedTreatments.reduce((sum, tr) => sum + getLineTotal(tr), 0);
 
-  // Tedavi onaylama fonksiyonu
+  // Tedavi silme fonksiyonu
+  const handleDeleteTreatments = async () => {
+    if (selectedTreatments.length === 0) {
+      alert("Lütfen silinecek tedavileri seçin");
+      return;
+    }
+    if (!window.confirm(`${selectedTreatments.length} tedavi silinecek. Emin misiniz?`)) return;
+    try {
+      // Seçilen tedavileri sil
+      const promises = selectedTreatments.map(treatmentId =>
+        fetch(`https://dentalapi.karadenizdis.com/api/treatment/${treatmentId}`, {
+          method: 'DELETE',
+        }).then(res => res.json())
+      );
+      const results = await Promise.all(promises);
+      const allSuccessful = results.every(result => result.success);
+      if (allSuccessful) {
+        alert(`${selectedTreatments.length} tedavi başarıyla silindi!`);
+        // Tedavi listesini yenile
+        const treatmentsRes = await fetch(`https://dentalapi.karadenizdis.com/api/treatment/patient/${patientId}`);
+        const treatmentsData = await treatmentsRes.json();
+        if (treatmentsData.success) {
+          setTreatments(treatmentsData.data);
+        }
+        setSelectedTreatments([]);
+      } else {
+        alert("Bazı tedaviler silinemedi. Lütfen tekrar deneyin.");
+      }
+    } catch (error) {
+      console.error('Delete treatments error:', error);
+      alert("Tedaviler silinirken hata oluştu");
+    }
+  };
   const handleApproveTreatments = async () => {
     if (selectedTreatments.length === 0) {
       alert("Lütfen onaylanacak tedavileri seçin");
@@ -459,9 +529,9 @@ export default function PatientCardPageClient() {
                     </div>
                   )}
                   
-                  {/* Onayla Butonu - En altta sabit */}
+                  {/* Onayla ve Sil Butonları - En altta sabit */}
                   {suggestedTreatments.length > 0 && (
-                    <div style={{ width: "100%", paddingTop: 16, borderTop: "1px solid #e0e0e0" }}>
+                    <div style={{ width: "100%", paddingTop: 16, borderTop: "1px solid #e0e0e0", display: 'flex', gap: 8 }}>
                       <button
                         onClick={handleApproveTreatments}
                         disabled={selectedTreatments.length === 0 || approvingTreatments}
@@ -478,6 +548,23 @@ export default function PatientCardPageClient() {
                         }}
                       >
                         {approvingTreatments ? "Onaylanıyor..." : `Onayla (${selectedTreatments.length})`}
+                      </button>
+                      <button
+                        onClick={handleDeleteTreatments}
+                        disabled={selectedTreatments.length === 0}
+                        style={{
+                          background: selectedTreatments.length === 0 ? "#ccc" : "#d32f2f",
+                          color: "white",
+                          border: "none",
+                          borderRadius: 8,
+                          padding: "10px 20px",
+                          fontSize: 14,
+                          fontWeight: 600,
+                          cursor: selectedTreatments.length === 0 ? "not-allowed" : "pointer",
+                          width: "100%"
+                        }}
+                      >
+                        {`Sil (${selectedTreatments.length})`}
                       </button>
                     </div>
                   )}
@@ -573,9 +660,9 @@ export default function PatientCardPageClient() {
                     )}
                   </div>
                   
-                  {/* Tamamla Butonu - En altta sabit */}
+                  {/* Tamamla ve Önerilene Geri Al Butonları - En altta sabit */}
                   {approvedTreatments.length > 0 && (
-                    <div style={{ width: "100%", paddingTop: 16, borderTop: "1px solid #e0e0e0" }}>
+                    <div style={{ width: "100%", paddingTop: 16, borderTop: "1px solid #e0e0e0", display: 'flex', gap: 8 }}>
                       <button
                         onClick={handleCompleteTreatments}
                         disabled={selectedApprovedTreatments.length === 0 || completingTreatments}
@@ -593,6 +680,23 @@ export default function PatientCardPageClient() {
                       >
                         {completingTreatments ? "Tamamlanıyor..." : `Tamamla (${selectedApprovedTreatments.length})`}
                       </button>
+                      <button
+                        onClick={handleRevertToSuggested}
+                        disabled={selectedApprovedTreatments.length === 0}
+                        style={{
+                          background: selectedApprovedTreatments.length === 0 ? "#ccc" : "#1976d2",
+                          color: "white",
+                          border: "none",
+                          borderRadius: 8,
+                          padding: "10px 20px",
+                          fontSize: 14,
+                          fontWeight: 600,
+                          cursor: selectedApprovedTreatments.length === 0 ? "not-allowed" : "pointer",
+                          width: "100%"
+                        }}
+                      >
+                        {`Önerilene Geri Al (${selectedApprovedTreatments.length})`}
+                      </button>
                     </div>
                   )}
                 </div>
@@ -604,27 +708,19 @@ export default function PatientCardPageClient() {
                       <div style={{ color: "#888", textAlign: "center" }}>Yok</div>
                     ) : (
                       <ul style={{ fontSize: 15, color: "#2d3a4a", paddingLeft: 12 }}>
-                        {completedTreatments.flatMap((tr: any) => {
+                        {completedTreatments.map((tr: any) => {
                           const type = treatmentTypes.find((tt: any) => tt.treatment_type_id === tr.treatment_type_id);
                           const treatmentName = type ? type.name : "Bilinmeyen Tedavi";
-                          
-                          // Diş numaralarını kontrol et
                           const toothNumbers = tr.tooth_numbers || tr.toothNumbers || [];
-                          
-                          // Eğer diş bazlı tedavi ve diş numaraları varsa, her diş için ayrı satır
-                          if (tr.is_per_tooth && Array.isArray(toothNumbers) && toothNumbers.length > 0) {
-                            return toothNumbers.map((toothNum: number, index: number) => (
-                              <li key={`${tr.treatment_id}-${toothNum}-${index}`}>
-                                {treatmentName} (Diş: {toothNum})
-                              </li>
-                            ));
-                          } else {
-                            return [
-                              <li key={tr.treatment_id}>
-                                {treatmentName}
-                              </li>
-                            ];
-                          }
+                          // Onaylanan/önerilenlerdeki gibi: varsa diş(ler) bilgisini tek satırda göster
+                          return (
+                            <li key={tr.treatment_id}>
+                              {treatmentName}
+                              {Array.isArray(toothNumbers) && toothNumbers.length > 0 && (
+                                <span style={{ color: "#666", fontSize: 13 }}> (Dişler: {toothNumbers.join(", ")})</span>
+                              )}
+                            </li>
+                          );
                         })}
                       </ul>
                     )}
@@ -646,26 +742,30 @@ export default function PatientCardPageClient() {
                 .pc-list-total { font-size: 13px !important; }
               }
             `}</style>
-            {/* Randevu Geçmişi ve Geleceği */}
+            {/* Randevu Geçmişi */}
             <div style={{ marginTop: 40, width: "100%" }}>
-              <div style={{ fontWeight: 700, color: "#2d3a4a", marginBottom: 10, fontSize: 18 }}>Randevu Listesi</div>
+              <div style={{ fontWeight: 700, color: "#2d3a4a", marginBottom: 10, fontSize: 18 }}>Randevu Geçmişi</div>
               <div style={{ background: "#fffbe9", border: "1px solid #b6c6e6", borderRadius: 12, padding: 16, minHeight: 40 }}>
                 {appointments.length === 0 ? (
                   <div style={{ color: "#888" }}>Kayıt yok</div>
                 ) : (
                   <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
                     {appointments
-                      .sort((a: any, b: any) => new Date(b.appointment_time).getTime() - new Date(a.appointment_time).getTime())
-                      .map((ap: any) => {
+                      .slice() // kopya
+                      .sort((a: any, b: any) => new Date(a.appointment_time).getTime() - new Date(b.appointment_time).getTime()) // en eski en altta
+                      .map((ap: any, idx: number, arr: any[]) => {
+                        // Seans numarası: en alttan yukarı doğru 1.seans, 2.seans...
+                        const seansNo = arr.length - idx;
                         let bg = "#fff";
                         let color = "#2d3a4a";
-                        if (ap.status === "gelmedi") { bg = "#ffeaea"; color = "#d32f2f"; }
-                        else if (ap.status === "geldi") { bg = "#e6f4c8"; color = "#388e3c"; }
-                        else if (ap.status === "planlandı") { bg = "#e3eafc"; color = "#1976d2"; }
+                        if (ap.status_tr === "Gelmedi") { bg = "#ffeaea"; color = "#d32f2f"; }
+                        else if (ap.status_tr === "Geldi") { bg = "#e6f4c8"; color = "#388e3c"; }
+                        else if (ap.status_tr === "Planlandı") { bg = "#e3eafc"; color = "#1976d2"; }
+                        else if (ap.status_tr === "İptal") { bg = "#f8d7da"; color = "#b71c1c"; }
                         return (
                           <li key={ap.appointment_id} style={{ background: bg, color, borderRadius: 8, marginBottom: 8, padding: "10px 14px", display: "flex", flexDirection: "column", boxShadow: "0 1px 4px #e3eaff33" }}>
                             <div style={{ fontWeight: 600, fontSize: 15 }}>
-                              {new Date(ap.appointment_time).toLocaleString("tr-TR")} - {ap.status?.charAt(0).toUpperCase() + ap.status?.slice(1)}
+                              {seansNo}. Seans | {new Date(ap.appointment_time).toLocaleString("tr-TR")} - {ap.status_tr || (ap.status?.charAt(0).toUpperCase() + ap.status?.slice(1))}
                             </div>
                             {ap.notes && <div style={{ fontSize: 14, color: "#555", marginTop: 2 }}>Not: {ap.notes}</div>}
                           </li>

@@ -1,12 +1,47 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 
 export default function MilkTeethSvg({ 
   onSelect, 
-  onIndividualSelect 
+  onIndividualSelect, 
+  selectedTeeth: externalSelectedTeeth 
 }: { 
   onSelect?: (selected: string[]) => void;
   onIndividualSelect?: () => void;
+  selectedTeeth?: string[];
 }) {
+  useEffect(() => {
+    if (!externalSelectedTeeth) return;
+    const svg = document.querySelector('svg');
+    if (!svg) return;
+    // Tüm dişleri önce beyazla
+    const allGroups = Array.from(svg.querySelectorAll('g'));
+    allGroups.forEach((g) => {
+      const textEl = g.querySelector('text');
+      const paths = g.querySelectorAll('path');
+      paths.forEach((p) => {
+        p.setAttribute('fill', 'none');
+        p.style.fill = 'none';
+      });
+      if (textEl) textEl.setAttribute('fill', '#000');
+    });
+    // Seçili dişleri kırmızıya boya
+    externalSelectedTeeth.forEach((num: string) => {
+      // num: "51" gibi
+      const group = Array.from(svg.querySelectorAll('g')).find((g) => {
+        const textEl = g.querySelector('text');
+        return textEl && textEl.textContent?.trim() === num;
+      });
+      if (group) {
+        const textEl = group.querySelector('text');
+        const paths = group.querySelectorAll('path');
+        paths.forEach((p) => {
+          p.setAttribute('fill', '#FF0000');
+          p.style.fill = '#FF0000';
+        });
+        if (textEl) textEl.setAttribute('fill', '#FF0000');
+      }
+    });
+  }, [externalSelectedTeeth]);
   // Seçili dişlerin id'lerini tutan dizi
   const selectedTeeth = useRef<string[]>([]);
 
