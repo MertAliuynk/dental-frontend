@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { FixedSizeList as List } from "react-window";
 import { useRouter } from "next/navigation";
 
 import { useEffect } from "react";
@@ -63,17 +64,39 @@ export default function PatientSearchCard() {
         {loading && <div style={{ color: "#888", textAlign: "center", fontWeight: 500 }}>Yükleniyor...</div>}
         {error && <div style={{ color: "#e53935", textAlign: "center", fontWeight: 500 }}>{error}</div>}
         {!loading && !error && filtered.length === 0 && <div style={{ color: "#888", textAlign: "center", fontWeight: 500 }}>Hasta bulunamadı</div>}
-        {!loading && !error && filtered.map((p) => (
-          <div
-            key={p.patient_id}
-            style={{ padding: "8px 0", borderBottom: "1px solid #f0f0f0", fontSize: 16, color: "#1a237e", fontWeight: 600, cursor: "pointer", transition: "background 0.2s" }}
-            onClick={() => router.push(`/patients/card/?id=${p.patient_id}`)}
-            onMouseOver={e => (e.currentTarget.style.background = "#e3eafc")}
-            onMouseOut={e => (e.currentTarget.style.background = "")}
+        {!loading && !error && (
+          <List
+            height={340}
+            itemCount={filtered.length}
+            itemSize={44}
+            width={"100%"}
+            style={{ overflowX: "hidden" }}
           >
-            {p.first_name} {p.last_name}
-          </div>
-        ))}
+            {({ index, style }: { index: number; style: React.CSSProperties }) => {
+              const p = filtered[index];
+              return (
+                <div
+                  key={p.patient_id}
+                  style={{
+                    ...style,
+                    padding: "8px 0",
+                    borderBottom: "1px solid #f0f0f0",
+                    fontSize: 16,
+                    color: "#1a237e",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    transition: "background 0.2s"
+                  }}
+                  onClick={() => router.push(`/patients/card/?id=${p.patient_id}`)}
+                  onMouseOver={e => (e.currentTarget.style.background = "#e3eafc")}
+                  onMouseOut={e => (e.currentTarget.style.background = "")}
+                >
+                  {p.first_name} {p.last_name}
+                </div>
+              );
+            }}
+          </List>
+        )}
       </div>
     </div>
   );

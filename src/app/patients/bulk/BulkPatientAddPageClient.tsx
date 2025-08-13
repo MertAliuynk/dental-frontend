@@ -62,7 +62,12 @@ export default function BulkPatientAddPageClient() {
       }
     }
     // Sadece dolu satırları gönder
-    const validRows = rows.filter(r => r.firstName && r.lastName && r.tc && r.phone && r.birthDate && r.doctor);
+    const validRows = rows
+      .filter(r => r.firstName && r.lastName && r.tc && r.phone && r.birthDate && r.doctor)
+      .map(r => ({
+        ...r,
+        doctors: [r.doctor] // Backend çoklu doktor bekliyor
+      }));
     if (validRows.length === 0) {
       setMessage("En az bir hasta bilgisi girilmelidir.");
       setLoading(false);
@@ -72,12 +77,10 @@ export default function BulkPatientAddPageClient() {
       // Token'ı localStorage'dan al
       const token = localStorage.getItem('token');
       const headers: Record<string, string> = { "Content-Type": "application/json" };
-      
       if (token) {
         headers.Authorization = `Bearer ${token}`;
       }
-
-  const res = await fetch("https://dentalapi.karadenizdis.com/api/patient/bulk", {
+      const res = await fetch("https://dentalapi.karadenizdis.com/api/patient/bulk", {
         method: "POST",
         headers,
         body: JSON.stringify({ patients: validRows })

@@ -20,6 +20,7 @@
     "react-dnd-touch-backend": "^16.0.1",
     "react-dom": "19.1.0",
     "react-error-boundary": "^6.0.0",
+    "react-virtualized-auto-sizer": "^1.0.26",
     "react-window": "^1.8.11"
   },
   "devDependencies": {
@@ -28,6 +29,7 @@
     "@types/react": "^19",
     "@types/react-big-calendar": "^1.16.2",
     "@types/react-dom": "^19",
+    "@types/react-window": "^1.8.8",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

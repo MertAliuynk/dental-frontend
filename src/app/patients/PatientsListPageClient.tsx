@@ -1,9 +1,12 @@
 
 "use client";
 // import Topbar kaldırıldı
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import AppLayout from "../components/AppLayout";
+
+import { FixedSizeList as List, ListChildComponentProps } from "react-window";
+import AutoSizer from "react-virtualized-auto-sizer";
 
 
 
@@ -112,168 +115,181 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
   };
 
   return (
-    <>
-  {/* <Topbar fullWidth /> kaldırıldı, AppLayout kullanılmalı */}
-      <AppLayout>
-        <main style={{ padding: 24, minHeight: "100vh" }}>
-          <h2 style={{ fontWeight: 800, fontSize: 24, marginBottom: 24, color: "#0a2972" }}>
-            Hasta Listesi ({filtered.length} hasta)
-          </h2>
-          
-          {/* Arama ve Sıralama Kontrolleri */}
-          <div style={{ display: "flex", gap: 16, marginBottom: 24, alignItems: "center", flexWrap: "wrap" }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <input
-                type="text"
-                placeholder="İsme göre hasta ara..."
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                style={{
-                  width: 320,
-                  padding: "8px 12px",
-                  borderRadius: 6,
-                  border: "2px solid #0a2972",
-                  fontSize: 16,
-                  background: "#e3eafc",
-                  color: "#1a237e",
-                  fontWeight: 600
-                }}
-              />
-              <span style={{ fontSize: 13, color: '#555', background: '#f3f6fa', borderRadius: 6, padding: '2px 8px', fontWeight: 500, border: '1px solid #e3eafc' }}>
-                Toplam: {patients.length}
-              </span>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ 
-                fontSize: 16, 
-                fontWeight: 600, 
-                color: "#0a2972",
-                minWidth: "fit-content"
-              }}>
-                Sırala:
-              </span>
-              <select
-                value={sortOption}
-                onChange={e => setSortOption(e.target.value)}
-                style={{
-                  padding: "8px 12px",
-                  borderRadius: 6,
-                  border: "2px solid #0a2972",
-                  fontSize: 16,
-                  background: "#e3eafc",
-                  color: "#1a237e",
-                  fontWeight: 600,
-                  minWidth: 200,
-                  cursor: "pointer"
-                }}
-              >
-                <option value="name-asc">Ad-Soyad (A-Z)</option>
-                <option value="name-desc">Ad-Soyad (Z-A)</option>
-                <option value="surname-asc">Soyad (A-Z)</option>
-                <option value="surname-desc">Soyad (Z-A)</option>
-              </select>
-            </div>
+    <AppLayout>
+      <main style={{ padding: 24, minHeight: "100vh" }}>
+        <h2 style={{ fontWeight: 800, fontSize: 24, marginBottom: 24, color: "#0a2972" }}>
+          Hasta Listesi ({filtered.length} hasta)
+        </h2>
+        {/* Arama ve Sıralama Kontrolleri */}
+        <div style={{ display: "flex", gap: 16, marginBottom: 24, alignItems: "center", flexWrap: "wrap" }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <input
+              type="text"
+              placeholder="İsme göre hasta ara..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              style={{
+                width: 320,
+                padding: "8px 12px",
+                borderRadius: 6,
+                border: "2px solid #0a2972",
+                fontSize: 16,
+                background: "#e3eafc",
+                color: "#1a237e",
+                fontWeight: 600
+              }}
+            />
+            <span style={{ fontSize: 13, color: '#555', background: '#f3f6fa', borderRadius: 6, padding: '2px 8px', fontWeight: 500, border: '1px solid #e3eafc' }}>
+              Toplam: {patients.length}
+            </span>
           </div>
-          
-          <div style={{ background: "#fff", borderRadius: 12, boxShadow: "0 2px 8px #0001", overflow: "hidden" }}>
-            <div style={{ width: "100%", overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 720 }}>
-              <thead>
-                <tr style={{ background: "#e3eafc" }}>
-                  <th style={thStyle}>
-                    Ad-Soyad{getSortIcon("name")}
-                  </th>
-                  <th style={thStyle}>
-                    Soyad{getSortIcon("surname")}
-                  </th>
-                  <th style={thStyle}>
-                    Telefon
-                  </th>
-                  <th style={thStyle}>
-                    TC Kimlik No
-                  </th>
-                  <th style={thStyle}>Şube</th>
-                  <th style={thStyle}>Oluşturma Tarihi</th>
-                  <th style={thStyle}>İşlemler</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.length === 0 ? (
-                  <tr><td colSpan={7} style={{ textAlign: "center", color: "#888", padding: 32 }}>Kayıtlı hasta bulunamadı.</td></tr>
-                ) : (
-                  filtered.map((p, i) => (
-                    <tr
-                      key={p.patient_id || i}
-                      style={{ borderBottom: "1px solid #f0f0f0", cursor: "pointer", transition: "background 0.2s" }}
-                      onClick={() => router.push(`/patients/card/?id=${p.patient_id}`)}
-                      onMouseOver={e => (e.currentTarget.style.background = "#e3eafc")}
-                      onMouseOut={e => (e.currentTarget.style.background = "")}
-                    >
-                      <td style={tdStyle}>{p.first_name}</td>
-                      <td style={tdStyle}>{p.last_name}</td>
-                      <td style={tdStyle}>{role === 'doctor' ? '•••' : (p.phone || '-')}</td>
-                      <td style={tdStyle}>{role === 'doctor' ? '•••' : (p.tc_number || '-')}</td>
-                      <td style={tdStyle}>{p.branch_name || '-'}</td>
-                      <td style={tdStyle}>{p.created_at ? new Date(p.created_at).toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
-                      <td style={tdStyle}>
-                        <button
-                          onClick={(e) => handleEditClick(e, p)}
-                          style={{
-                            padding: "6px 12px",
-                            backgroundColor: "#0a2972",
-                            color: "white",
-                            border: "none",
-                            borderRadius: 6,
-                            cursor: "pointer",
-                            fontSize: 14,
-                            fontWeight: 600,
-                            transition: "background 0.2s",
-                            marginRight: 8
-                          }}
-                          onMouseOver={e => (e.currentTarget.style.backgroundColor = "#1a237e")}
-                          onMouseOut={e => (e.currentTarget.style.backgroundColor = "#0a2972")}
-                        >
-                          Düzenle
-                        </button>
-                        <button
-                          onClick={(e) => handleDelete(e, p)}
-                          title="Sil"
-                          style={{
-                            padding: "6px 10px",
-                            backgroundColor: "#e53935",
-                            color: "white",
-                            border: "none",
-                            borderRadius: 6,
-                            cursor: "pointer",
-                            fontSize: 16,
-                            fontWeight: 700,
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            transition: "background 0.2s"
-                          }}
-                          onMouseOver={e => (e.currentTarget.style.backgroundColor = "#b71c1c")}
-                          onMouseOut={e => (e.currentTarget.style.backgroundColor = "#e53935")}
-                        >
-                          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6 8V15M10 8V15M14 8V15M3 5H5H17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <path d="M8 5V3C8 2.44772 8.44772 2 9 2H11C11.5523 2 12 2.44772 12 3V5M5 5V17C5 17.5523 5.44772 18 6 18H14C14.5523 18 15 17.5523 15 17V5H5Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                        </button>
-                      </td>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ 
+              fontSize: 16, 
+              fontWeight: 600, 
+              color: "#0a2972",
+              minWidth: "fit-content"
+            }}>
+              Sırala:
+            </span>
+            <select
+              value={sortOption}
+              onChange={e => setSortOption(e.target.value)}
+              style={{
+                padding: "8px 12px",
+                borderRadius: 6,
+                border: "2px solid #0a2972",
+                fontSize: 16,
+                background: "#e3eafc",
+                color: "#1a237e",
+                fontWeight: 600,
+                minWidth: 200,
+                cursor: "pointer"
+              }}
+            >
+              <option value="name-asc">Ad-Soyad (A-Z)</option>
+              <option value="name-desc">Ad-Soyad (Z-A)</option>
+              <option value="surname-asc">Soyad (A-Z)</option>
+              <option value="surname-desc">Soyad (Z-A)</option>
+            </select>
+          </div>
+        </div>
+        <div style={{ background: "#fff", borderRadius: 12, boxShadow: "0 2px 8px #0001", overflow: "hidden", height: "70vh", minHeight: 400 }}>
+          <div style={{ width: "100%", height: "100%" }}>
+            <AutoSizer>
+              {({ height, width }) => (
+                <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 720, tableLayout: "fixed" }}>
+                  <thead>
+                    <tr style={{ background: "#e3eafc" }}>
+                      <th style={thStyle}>
+                        Ad-Soyad{getSortIcon("name")}
+                      </th>
+                      <th style={thStyle}>
+                        Soyad{getSortIcon("surname")}
+                      </th>
+                      <th style={thStyle}>
+                        Telefon
+                      </th>
+                      <th style={thStyle}>
+                        TC Kimlik No
+                      </th>
+                      <th style={thStyle}>Şube</th>
+                      <th style={thStyle}>Oluşturma Tarihi</th>
+                      <th style={thStyle}>İşlemler</th>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {filtered.length === 0 ? (
+                      <tr><td colSpan={7} style={{ textAlign: "center", color: "#888", padding: 32 }}>Kayıtlı hasta bulunamadı.</td></tr>
+                    ) : (
+                      <List
+                        height={height - 40}
+                        itemCount={filtered.length}
+                        itemSize={56}
+                        width={width}
+                        outerElementType={CustomTBody as any}
+                      >
+                        {({ index, style }: ListChildComponentProps) => {
+                          const p = filtered[index];
+                          return (
+                            <tr
+                              key={p.patient_id || index}
+                              style={{ ...style, borderBottom: "1px solid #f0f0f0", cursor: "pointer", transition: "background 0.2s", display: "table", tableLayout: "fixed", width: "100%" }}
+                              onClick={() => router.push(`/patients/card/?id=${p.patient_id}`)}
+                              onMouseOver={e => (e.currentTarget.style.background = "#e3eafc")}
+                              onMouseOut={e => (e.currentTarget.style.background = "")}
+                            >
+                              <td style={tdStyle}>{p.first_name}</td>
+                              <td style={tdStyle}>{p.last_name}</td>
+                              <td style={tdStyle}>{role === 'doctor' ? '•••' : (p.phone || '-')}</td>
+                              <td style={tdStyle}>{role === 'doctor' ? '•••' : (p.tc_number || '-')}</td>
+                              <td style={tdStyle}>{p.branch_name || '-'}</td>
+                              <td style={tdStyle}>{p.created_at ? new Date(p.created_at).toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
+                              <td style={tdStyle}>
+                                <button
+                                  onClick={(e) => handleEditClick(e, p)}
+                                  style={{
+                                    padding: "6px 12px",
+                                    backgroundColor: "#0a2972",
+                                    color: "white",
+                                    border: "none",
+                                    borderRadius: 6,
+                                    cursor: "pointer",
+                                    fontSize: 14,
+                                    fontWeight: 600,
+                                    transition: "background 0.2s",
+                                    marginRight: 8
+                                  }}
+                                  onMouseOver={e => (e.currentTarget.style.backgroundColor = "#1a237e")}
+                                  onMouseOut={e => (e.currentTarget.style.backgroundColor = "#0a2972")}
+                                >
+                                  Düzenle
+                                </button>
+                                <button
+                                  onClick={(e) => handleDelete(e, p)}
+                                  title="Sil"
+                                  style={{
+                                    padding: "6px 10px",
+                                    backgroundColor: "#e53935",
+                                    color: "white",
+                                    border: "none",
+                                    borderRadius: 6,
+                                    cursor: "pointer",
+                                    fontSize: 16,
+                                    fontWeight: 700,
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    transition: "background 0.2s"
+                                  }}
+                                  onMouseOver={e => (e.currentTarget.style.backgroundColor = "#b71c1c")}
+                                  onMouseOut={e => (e.currentTarget.style.backgroundColor = "#e53935")}
+                                >
+                                  <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6 8V15M10 8V15M14 8V15M3 5H5H17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M8 5V3C8 2.44772 8.44772 2 9 2H11C11.5523 2 12 2.44772 12 3V5M5 5V17C5 17.5523 5.44772 18 6 18H14C14.5523 18 15 17.5523 15 17V5H5Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </svg>
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        }}
+                      </List>
+                    )}
+                  </tbody>
+                </table>
+              )}
+            </AutoSizer>
           </div>
-          
-          {/* Edit modal kaldırıldı; düzenleme artık /patients/new?id=... sayfasında yapılır */}
-        </main>
-      </AppLayout>
-    </>
+        </div>
+      </main>
+    </AppLayout>
   );
+
+// react-window ile tbody yerine kullanılacak özel component
+const CustomTBody = React.forwardRef<HTMLTableSectionElement, React.HTMLProps<HTMLTableSectionElement>>(
+  (props, ref) => <tbody ref={ref} {...props} />
+);
 }
 
 const thStyle = {
