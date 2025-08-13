@@ -179,11 +179,11 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
           <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
             <thead>
               <tr style={{ background: "#e3eafc" }}>
-                <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>Ad-Soyad{getSortIcon("name")}</th>
+                <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>Ad{getSortIcon("name")}</th>
                 <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>Soyad{getSortIcon("surname")}</th>
                 <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>Telefon</th>
                 <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>TC Kimlik No</th>
-                <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>Ad{getSortIcon("name")}</th>
+                <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>Şube</th>
                 <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>Oluşturma Tarihi</th>
                 <th style={{ ...thStyle, textAlign: "center", verticalAlign: "middle", minWidth: 120, fontSize: 15, padding: "12px 16px" }}>İşlemler</th>
               </tr>

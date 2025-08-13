@@ -91,9 +91,24 @@ export default function BulkPatientAddPageClient() {
       const data = await res.json();
       if (data.success) {
         setMessage("Tüm hastalar başarıyla eklendi!");
-  setRows(Array.from({ length: MAX_ROWS }, () => ({ firstName: "", lastName: "", tc: "", phone: "", birthDate: "", doctors: [] })));
+        setRows(Array.from({ length: MAX_ROWS }, () => ({ firstName: "", lastName: "", tc: "", phone: "", birthDate: "", doctors: [] })));
       } else {
-        setMessage(data.message || "Kayıt sırasında hata oluştu.");
+        // Duplicate TC error için satır numarası bul
+        let rowNum = null;
+        if (data.message && data.message.includes("duplicate key value")) {
+          // Backend'den dönen hata mesajında tc_number varsa, satırı bul
+          const match = /\"tc_number\":\"(\d{11})\"/.exec(JSON.stringify(data));
+          if (match) {
+            const tc = match[1];
+            const idx = rows.findIndex(r => r.tc === tc);
+            if (idx !== -1) rowNum = idx + 1;
+          }
+        }
+        if (rowNum) {
+          setMessage(`${rowNum}. satırda TC kimlik numarası başka bir hastada mevcut!`);
+        } else {
+          setMessage(data.message || "Kayıt sırasında hata oluştu.");
+        }
       }
     } catch (err) {
       setMessage("Sunucu hatası. Lütfen tekrar deneyin.");
