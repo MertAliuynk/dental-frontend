@@ -179,25 +179,25 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
           <div style={{ width: "100%", height: "100%" }}>
             <AutoSizer>
                {({ height, width }) => (
-                 <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 900, tableLayout: "fixed" }}>
+                 <table style={{ width: width, borderCollapse: "collapse", tableLayout: "fixed" }}>
                   <colgroup>
-                    <col style={{ width: '18%' }} />
-                    <col style={{ width: '14%' }} />
-                    <col style={{ width: '16%' }} />
-                    <col style={{ width: '16%' }} />
-                    <col style={{ width: '12%' }} />
-                    <col style={{ width: '16%' }} />
-                    <col style={{ width: '8%' }} />
+                    <col style={{ width: `${width * 0.16}px` }} />
+                    <col style={{ width: `${width * 0.14}px` }} />
+                    <col style={{ width: `${width * 0.16}px` }} />
+                    <col style={{ width: `${width * 0.16}px` }} />
+                    <col style={{ width: `${width * 0.12}px` }} />
+                    <col style={{ width: `${width * 0.16}px` }} />
+                    <col style={{ width: '120px' }} />
                   </colgroup>
                   <thead>
                     <tr style={{ background: "#e3eafc" }}>
-                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 8px" }}>Ad-Soyad{getSortIcon("name")}</th>
-                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 8px" }}>Soyad{getSortIcon("surname")}</th>
-                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 8px" }}>Telefon</th>
-                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 8px" }}>TC Kimlik No</th>
-                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 8px" }}>Şube</th>
-                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 8px" }}>Oluşturma Tarihi</th>
-                      <th style={{ ...thStyle, textAlign: "center", verticalAlign: "middle", minWidth: 120, fontSize: 15, padding: "12px 8px" }}>İşlemler</th>
+                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>Ad-Soyad{getSortIcon("name")}</th>
+                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>Soyad{getSortIcon("surname")}</th>
+                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>Telefon</th>
+                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>TC Kimlik No</th>
+                       <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>Ad{getSortIcon("name")}</th>
+                      <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>Oluşturma Tarihi</th>
+                      <th style={{ ...thStyle, textAlign: "center", verticalAlign: "middle", minWidth: 120, fontSize: 15, padding: "12px 16px" }}>İşlemler</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -221,13 +221,13 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
                                onMouseOver={e => (e.currentTarget.style.background = "#e3eafc")}
                                onMouseOut={e => (e.currentTarget.style.background = "")}
                              >
-                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px" }}>{p.first_name + ' ' + p.last_name}</td>
-                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px" }}>{p.last_name}</td>
-                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px" }}>{role === 'doctor' ? '•••' : (p.phone || '-')}</td>
-                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px" }}>{role === 'doctor' ? '•••' : (p.tc_number || '-')}</td>
-                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px" }}>{p.branch_name || '-'}</td>
-                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px" }}>{p.created_at ? new Date(p.created_at).toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
-                               <td style={{ ...tdStyle, textAlign: "center", verticalAlign: "middle", minWidth: 120, fontSize: 15, padding: "10px 8px" }}>
+                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 16px" }}>{p.first_name}</td>
+                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 16px" }}>{p.last_name}</td>
+                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 16px" }}>{role === 'doctor' ? '•••' : (p.phone || '-')}</td>
+                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 16px" }}>{role === 'doctor' ? '•••' : (p.tc_number || '-')}</td>
+                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 16px" }}>{p.branch_name || '-'}</td>
+                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 16px" }}>{p.created_at ? new Date(p.created_at).toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
+                               <td style={{ ...tdStyle, textAlign: "center", verticalAlign: "middle", minWidth: 120, fontSize: 15, padding: "10px 16px" }}>
                                  <div style={{ display: "flex", gap: 8, justifyContent: "center", alignItems: "center" }}>
                                    <button
                                      onClick={(e) => handleEditClick(e, p)}
