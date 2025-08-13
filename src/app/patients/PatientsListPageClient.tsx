@@ -210,71 +210,71 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
                         width={width}
                         outerElementType={CustomTBody as any}
                       >
-                        {({ index, style }: { index: number; style: React.CSSProperties }) => {
-                          const p = filtered[index];
-                          return (
-                            <tr
-                              key={p.patient_id || index}
-                              style={{ ...style, borderBottom: "1px solid #f0f0f0", cursor: "pointer", transition: "background 0.2s", display: "table", tableLayout: "fixed", width: "100%" }}
-                              onClick={() => router.push(`/patients/card/?id=${p.patient_id}`)}
-                              onMouseOver={e => (e.currentTarget.style.background = "#e3eafc")}
-                              onMouseOut={e => (e.currentTarget.style.background = "")}
-                            >
-                              <td style={tdStyle}>{p.first_name}</td>
-                              <td style={tdStyle}>{p.last_name}</td>
-                              <td style={tdStyle}>{role === 'doctor' ? '•••' : (p.phone || '-')}</td>
-                              <td style={tdStyle}>{role === 'doctor' ? '•••' : (p.tc_number || '-')}</td>
-                              <td style={tdStyle}>{p.branch_name || '-'}</td>
-                              <td style={tdStyle}>{p.created_at ? new Date(p.created_at).toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
-                              <td style={tdStyle}>
-                                <button
-                                  onClick={(e) => handleEditClick(e, p)}
-                                  style={{
-                                    padding: "6px 12px",
-                                    backgroundColor: "#0a2972",
-                                    color: "white",
-                                    border: "none",
-                                    borderRadius: 6,
-                                    cursor: "pointer",
-                                    fontSize: 14,
-                                    fontWeight: 600,
-                                    transition: "background 0.2s",
-                                    marginRight: 8
-                                  }}
-                                  onMouseOver={e => (e.currentTarget.style.backgroundColor = "#1a237e")}
-                                  onMouseOut={e => (e.currentTarget.style.backgroundColor = "#0a2972")}
-                                >
-                                  Düzenle
-                                </button>
-                                <button
-                                  onClick={(e) => handleDelete(e, p)}
-                                  title="Sil"
-                                  style={{
-                                    padding: "6px 10px",
-                                    backgroundColor: "#e53935",
-                                    color: "white",
-                                    border: "none",
-                                    borderRadius: 6,
-                                    cursor: "pointer",
-                                    fontSize: 16,
-                                    fontWeight: 700,
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    transition: "background 0.2s"
-                                  }}
-                                  onMouseOver={e => (e.currentTarget.style.backgroundColor = "#b71c1c")}
-                                  onMouseOut={e => (e.currentTarget.style.backgroundColor = "#e53935")}
-                                >
-                                  <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6 8V15M10 8V15M14 8V15M3 5H5H17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                    <path d="M8 5V3C8 2.44772 8.44772 2 9 2H11C11.5523 2 12 2.44772 12 3V5M5 5V17C5 17.5523 5.44772 18 6 18H14C14.5523 18 15 17.5523 15 17V5H5Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                  </svg>
-                                </button>
-                              </td>
-                            </tr>
-                          );
-                        }}
+                         {({ index, style }: { index: number; style: React.CSSProperties }) => {
+                           const p = filtered[index];
+                           return (
+                             <tr
+                               key={p.patient_id || index}
+                               style={{ ...style, borderBottom: "1px solid #f0f0f0", cursor: "pointer", transition: "background 0.2s", display: "table-row", width: "auto" }}
+                               onClick={() => router.push(`/patients/card/?id=${p.patient_id}`)}
+                               onMouseOver={e => (e.currentTarget.style.background = "#e3eafc")}
+                               onMouseOut={e => (e.currentTarget.style.background = "")}
+                             >
+                               <td style={tdStyle}>{p.first_name}</td>
+                               <td style={tdStyle}>{p.last_name}</td>
+                               <td style={tdStyle}>{role === 'doctor' ? '•••' : (p.phone || '-')}</td>
+                               <td style={tdStyle}>{role === 'doctor' ? '•••' : (p.tc_number || '-')}</td>
+                               <td style={tdStyle}>{p.branch_name || '-'}</td>
+                               <td style={tdStyle}>{p.created_at ? new Date(p.created_at).toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
+                               <td style={tdStyle}>
+                                 <button
+                                   onClick={(e) => handleEditClick(e, p)}
+                                   style={{
+                                     padding: "6px 12px",
+                                     backgroundColor: "#0a2972",
+                                     color: "white",
+                                     border: "none",
+                                     borderRadius: 6,
+                                     cursor: "pointer",
+                                     fontSize: 14,
+                                     fontWeight: 600,
+                                     transition: "background 0.2s",
+                                     marginRight: 8
+                                   }}
+                                   onMouseOver={e => (e.currentTarget.style.backgroundColor = "#1a237e")}
+                                   onMouseOut={e => (e.currentTarget.style.backgroundColor = "#0a2972")}
+                                 >
+                                   Düzenle
+                                 </button>
+                                 <button
+                                   onClick={(e) => handleDelete(e, p)}
+                                   title="Sil"
+                                   style={{
+                                     padding: "6px 10px",
+                                     backgroundColor: "#e53935",
+                                     color: "white",
+                                     border: "none",
+                                     borderRadius: 6,
+                                     cursor: "pointer",
+                                     fontSize: 16,
+                                     fontWeight: 700,
+                                     display: 'inline-flex',
+                                     alignItems: 'center',
+                                     justifyContent: 'center',
+                                     transition: "background 0.2s"
+                                   }}
+                                   onMouseOver={e => (e.currentTarget.style.backgroundColor = "#b71c1c")}
+                                   onMouseOut={e => (e.currentTarget.style.backgroundColor = "#e53935")}
+                                 >
+                                   <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                     <path d="M6 8V15M10 8V15M14 8V15M3 5H5H17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                     <path d="M8 5V3C8 2.44772 8.44772 2 9 2H11C11.5523 2 12 2.44772 12 3V5M5 5V17C5 17.5523 5.44772 18 6 18H14C14.5523 18 15 17.5523 15 17V5H5Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                   </svg>
+                                 </button>
+                               </td>
+                             </tr>
+                           );
+                         }}
                       </List>
                     )}
                   </tbody>
