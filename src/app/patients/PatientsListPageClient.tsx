@@ -5,7 +5,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import AppLayout from "../components/AppLayout";
 
-// Hasta silme fonksiyonu
+
+
+export default function PatientsListPageClient() {
+  // Hasta silme fonksiyonu
 const handleDelete = async (e: React.MouseEvent, patient: any) => {
   e.stopPropagation();
   if (!window.confirm(`${patient.first_name} ${patient.last_name} adlı hastayı silmek istediğinize emin misiniz?`)) return;
@@ -28,8 +31,6 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
     alert('Sunucu hatası!');
   }
 };
-
-export default function PatientsListPageClient() {
   const [patients, setPatients] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   // Modal yerine edit sayfasına yönlendirme kullanılacak
