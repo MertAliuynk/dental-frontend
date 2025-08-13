@@ -7,7 +7,9 @@ import AppLayout from "../components/AppLayout";
 import { FixedSizeList as List } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 
-
+const CustomTBody = React.forwardRef<HTMLTableSectionElement, React.HTMLProps<HTMLTableSectionElement>>(
+  (props, ref) => <tbody ref={ref} {...props} />
+);
 
 export default function PatientsListPageClient() {
   // Hasta silme fonksiyonu
@@ -286,9 +288,6 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
   );
 
 // react-window ile tbody yerine kullanılacak özel component
-const CustomTBody = React.forwardRef<HTMLTableSectionElement, React.HTMLProps<HTMLTableSectionElement>>(
-  (props, ref) => <tbody ref={ref} {...props} />
-);
 }
 
 const thStyle = {
