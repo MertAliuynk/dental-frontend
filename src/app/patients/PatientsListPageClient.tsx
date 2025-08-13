@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import AppLayout from "../components/AppLayout";
 
-import { FixedSizeList as List, ListChildComponentProps } from "react-window";
+import { FixedSizeList as List } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 
 
@@ -209,7 +209,7 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
                         width={width}
                         outerElementType={CustomTBody as any}
                       >
-                        {({ index, style }: ListChildComponentProps) => {
+                        {({ index, style }: { index: number; style: React.CSSProperties }) => {
                           const p = filtered[index];
                           return (
                             <tr

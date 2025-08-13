@@ -1,12 +1,10 @@
-
-
 "use client";
+
+
 import AppLayout from "../../components/AppLayout";
 // import Topbar kaldırıldı
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-
-
 
 
 export default function PatientCardPageClient() {
@@ -28,42 +26,6 @@ export default function PatientCardPageClient() {
   const [role, setRole] = useState<string>("");
   const [branchId, setBranchId] = useState<number>(1);
   const [priceMap, setPriceMap] = useState<Record<number, { base: number; upper: number; lower: number; isPerTooth: boolean; isJawSpecific: boolean }>>({});
-
-  // Onaylanan tedavileri tekrar önerilen olarak güncelleyen fonksiyon
-  const handleRevertToSuggested = async () => {
-    if (selectedApprovedTreatments.length === 0) {
-      alert("Lütfen önerilene döndürülecek tedavileri seçin");
-      return;
-    }
-    if (!window.confirm(`${selectedApprovedTreatments.length} tedavi tekrar önerilen olarak işaretlenecek. Emin misiniz?`)) return;
-    try {
-      const promises = selectedApprovedTreatments.map((treatmentId: number) =>
-        fetch(`https://dentalapi.karadenizdis.com/api/treatment/${treatmentId}/status`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: 'önerilen' })
-        }).then(res => res.json())
-      );
-      const results = await Promise.all(promises);
-      const allSuccessful = results.every((result: any) => result.success);
-      if (allSuccessful) {
-        alert(`${selectedApprovedTreatments.length} tedavi tekrar önerilen olarak işaretlendi!`);
-        // Tedavi listesini yenile
-        const treatmentsRes = await fetch(`https://dentalapi.karadenizdis.com/api/treatment/patient/${patientId}`);
-        const treatmentsData = await treatmentsRes.json();
-        if (treatmentsData.success) {
-          setTreatments(treatmentsData.data);
-        }
-        setSelectedApprovedTreatments([]);
-      } else {
-        alert("Bazı tedaviler güncellenemedi. Lütfen tekrar deneyin.");
-      }
-    } catch (error) {
-      console.error('Revert to suggested error:', error);
-      alert("Tedaviler güncellenirken hata oluştu");
-    }
-  };
-
 
   useEffect(() => {
     if (!patientId) return;
@@ -190,39 +152,7 @@ export default function PatientCardPageClient() {
   };
   const suggestedTotal = suggestedTreatments.reduce((sum, tr) => sum + getLineTotal(tr), 0);
 
-  // Tedavi silme fonksiyonu
-  const handleDeleteTreatments = async () => {
-    if (selectedTreatments.length === 0) {
-      alert("Lütfen silinecek tedavileri seçin");
-      return;
-    }
-    if (!window.confirm(`${selectedTreatments.length} tedavi silinecek. Emin misiniz?`)) return;
-    try {
-      // Seçilen tedavileri sil
-      const promises = selectedTreatments.map(treatmentId =>
-        fetch(`https://dentalapi.karadenizdis.com/api/treatment/${treatmentId}`, {
-          method: 'DELETE',
-        }).then(res => res.json())
-      );
-      const results = await Promise.all(promises);
-      const allSuccessful = results.every(result => result.success);
-      if (allSuccessful) {
-        alert(`${selectedTreatments.length} tedavi başarıyla silindi!`);
-        // Tedavi listesini yenile
-        const treatmentsRes = await fetch(`https://dentalapi.karadenizdis.com/api/treatment/patient/${patientId}`);
-        const treatmentsData = await treatmentsRes.json();
-        if (treatmentsData.success) {
-          setTreatments(treatmentsData.data);
-        }
-        setSelectedTreatments([]);
-      } else {
-        alert("Bazı tedaviler silinemedi. Lütfen tekrar deneyin.");
-      }
-    } catch (error) {
-      console.error('Delete treatments error:', error);
-      alert("Tedaviler silinirken hata oluştu");
-    }
-  };
+  // Tedavi onaylama fonksiyonu
   const handleApproveTreatments = async () => {
     if (selectedTreatments.length === 0) {
       alert("Lütfen onaylanacak tedavileri seçin");
@@ -413,7 +343,13 @@ export default function PatientCardPageClient() {
                 <div style={{ fontWeight: 700, fontSize: 18, color: "#0a2972" }}>
                   {patient.first_name} {patient.last_name}
                 </div>
-                <div style={{ fontSize: 15, color: "#2d3a4a" }}>İlgili doktor: {doctorName || "-"}</div>
+                <div style={{ fontSize: 15, color: "#2d3a4a" }}>
+                  İlgili doktor(lar): {
+                    Array.isArray(patient.doctors) && patient.doctors.length > 0
+                      ? patient.doctors.map((d: any) => `${d.first_name} ${d.last_name}`).join(", ")
+                      : doctorName || "-"
+                  }
+                </div>
                 <div style={{ fontSize: 15, color: "#2d3a4a" }}>TC No: {role === 'doctor' ? '•••' : (patient.tc_number || "-")}</div>
                 <div style={{ fontSize: 15, color: "#2d3a4a" }}>Tel: {role === 'doctor' ? '•••' : (patient.phone || "-")}</div>
                 <div style={{ fontSize: 15, color: "#2d3a4a" }}>Doğum Tarihi: {patient.birth_date ? patient.birth_date.slice(0,10) : "-"}</div>
@@ -529,9 +465,9 @@ export default function PatientCardPageClient() {
                     </div>
                   )}
                   
-                  {/* Onayla ve Sil Butonları - En altta sabit */}
+                  {/* Onayla Butonu - En altta sabit */}
                   {suggestedTreatments.length > 0 && (
-                    <div style={{ width: "100%", paddingTop: 16, borderTop: "1px solid #e0e0e0", display: 'flex', gap: 8 }}>
+                    <div style={{ width: "100%", paddingTop: 16, borderTop: "1px solid #e0e0e0" }}>
                       <button
                         onClick={handleApproveTreatments}
                         disabled={selectedTreatments.length === 0 || approvingTreatments}
@@ -548,23 +484,6 @@ export default function PatientCardPageClient() {
                         }}
                       >
                         {approvingTreatments ? "Onaylanıyor..." : `Onayla (${selectedTreatments.length})`}
-                      </button>
-                      <button
-                        onClick={handleDeleteTreatments}
-                        disabled={selectedTreatments.length === 0}
-                        style={{
-                          background: selectedTreatments.length === 0 ? "#ccc" : "#d32f2f",
-                          color: "white",
-                          border: "none",
-                          borderRadius: 8,
-                          padding: "10px 20px",
-                          fontSize: 14,
-                          fontWeight: 600,
-                          cursor: selectedTreatments.length === 0 ? "not-allowed" : "pointer",
-                          width: "100%"
-                        }}
-                      >
-                        {`Sil (${selectedTreatments.length})`}
                       </button>
                     </div>
                   )}
@@ -660,9 +579,9 @@ export default function PatientCardPageClient() {
                     )}
                   </div>
                   
-                  {/* Tamamla ve Önerilene Geri Al Butonları - En altta sabit */}
+                  {/* Tamamla Butonu - En altta sabit */}
                   {approvedTreatments.length > 0 && (
-                    <div style={{ width: "100%", paddingTop: 16, borderTop: "1px solid #e0e0e0", display: 'flex', gap: 8 }}>
+                    <div style={{ width: "100%", paddingTop: 16, borderTop: "1px solid #e0e0e0" }}>
                       <button
                         onClick={handleCompleteTreatments}
                         disabled={selectedApprovedTreatments.length === 0 || completingTreatments}
@@ -679,23 +598,6 @@ export default function PatientCardPageClient() {
                         }}
                       >
                         {completingTreatments ? "Tamamlanıyor..." : `Tamamla (${selectedApprovedTreatments.length})`}
-                      </button>
-                      <button
-                        onClick={handleRevertToSuggested}
-                        disabled={selectedApprovedTreatments.length === 0}
-                        style={{
-                          background: selectedApprovedTreatments.length === 0 ? "#ccc" : "#1976d2",
-                          color: "white",
-                          border: "none",
-                          borderRadius: 8,
-                          padding: "10px 20px",
-                          fontSize: 14,
-                          fontWeight: 600,
-                          cursor: selectedApprovedTreatments.length === 0 ? "not-allowed" : "pointer",
-                          width: "100%"
-                        }}
-                      >
-                        {`Önerilene Geri Al (${selectedApprovedTreatments.length})`}
                       </button>
                     </div>
                   )}

@@ -15,7 +15,7 @@ export default function BulkPatientAddPageClient() {
       tc: "",
       phone: "",
       birthDate: "",
-      doctor: ""
+      doctors: [] as string[]
     }))
   );
   const [loading, setLoading] = useState(false);
@@ -32,8 +32,15 @@ export default function BulkPatientAddPageClient() {
       .catch(() => setDoctors([]));
   }, []);
 
-  const handleChange = (idx: number, field: string, value: string) => {
-    setRows(prev => prev.map((row, i) => i === idx ? { ...row, [field]: value } : row));
+  const handleChange = (idx: number, field: string, value: any) => {
+    setRows(prev => prev.map((row, i) => {
+      if (i !== idx) return row;
+      if (field === "doctors") {
+        // Çoklu select
+        return { ...row, doctors: value };
+      }
+      return { ...row, [field]: value };
+    }));
   };
 
   const handleSubmit = async (e: any) => {
@@ -42,8 +49,8 @@ export default function BulkPatientAddPageClient() {
     setLoading(true);
     // Zorunlu alan ve format kontrolü
     for (let i = 0; i < rows.length; i++) {
-      const { firstName, lastName, tc, phone, birthDate, doctor } = rows[i];
-      if ((firstName || lastName || tc || phone || birthDate || doctor) && (!firstName || !lastName || !tc || !phone || !birthDate || !doctor)) {
+      const { firstName, lastName, tc, phone, birthDate, doctors } = rows[i];
+      if ((firstName || lastName || tc || phone || birthDate || (doctors && doctors.length)) && (!firstName || !lastName || !tc || !phone || !birthDate || !doctors || doctors.length === 0)) {
         setMessage(`${i + 1}. satırda eksik bilgi var. Tüm alanlar zorunlu.`);
         setLoading(false);
         return;
@@ -63,11 +70,7 @@ export default function BulkPatientAddPageClient() {
     }
     // Sadece dolu satırları gönder
     const validRows = rows
-      .filter(r => r.firstName && r.lastName && r.tc && r.phone && r.birthDate && r.doctor)
-      .map(r => ({
-        ...r,
-        doctors: [r.doctor] // Backend çoklu doktor bekliyor
-      }));
+      .filter(r => r.firstName && r.lastName && r.tc && r.phone && r.birthDate && r.doctors && r.doctors.length > 0)
     if (validRows.length === 0) {
       setMessage("En az bir hasta bilgisi girilmelidir.");
       setLoading(false);
@@ -88,7 +91,7 @@ export default function BulkPatientAddPageClient() {
       const data = await res.json();
       if (data.success) {
         setMessage("Tüm hastalar başarıyla eklendi!");
-        setRows(Array.from({ length: MAX_ROWS }, () => ({ firstName: "", lastName: "", tc: "", phone: "", birthDate: "", doctor: "" })));
+  setRows(Array.from({ length: MAX_ROWS }, () => ({ firstName: "", lastName: "", tc: "", phone: "", birthDate: "", doctors: [] })));
       } else {
         setMessage(data.message || "Kayıt sırasında hata oluştu.");
       }
@@ -127,8 +130,18 @@ export default function BulkPatientAddPageClient() {
                 <td><input className="bulk-patient-input" value={row.phone} onChange={e => handleChange(i, "phone", e.target.value)} required={false} /></td>
                 <td><input className="bulk-patient-input" type="date" value={row.birthDate} onChange={e => handleChange(i, "birthDate", e.target.value)} required={false} /></td>
                 <td>
-                  <select className="bulk-patient-select" value={row.doctor} onChange={e => handleChange(i, "doctor", e.target.value)} required={false}>
-                    <option value="">Doktor seçiniz</option>
+                  <select
+                    className="bulk-patient-select"
+                    multiple
+                    value={row.doctors}
+                    onChange={e => {
+                      const options = e.target.options;
+                      const selected: string[] = Array.from(options).filter((o: any) => o.selected).map((o: any) => o.value);
+                      handleChange(i, "doctors", selected);
+                    }}
+                    required={false}
+                    style={{ minWidth: 120, height: 38 }}
+                  >
                     {doctors.map((d: any) => (
                       <option key={d.user_id} value={d.user_id}>{d.first_name} {d.last_name}</option>
                     ))}
