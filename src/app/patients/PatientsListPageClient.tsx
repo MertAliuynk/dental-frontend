@@ -1,7 +1,6 @@
 
 "use client";
-// import Topbar kaldırıldı
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import AppLayout from "../components/AppLayout";
 
