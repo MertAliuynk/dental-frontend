@@ -60,7 +60,7 @@ export default function NewPatientPageClient() {
     let decoded = null;
     if (token) {
       try {
-        decoded = jwtDecode(token);
+        decoded = jwtDecode<any>(token);
         branchId = decoded.branch_id || decoded.branchId || null;
       } catch (e) {
         console.log("JWT decode error:", e);
