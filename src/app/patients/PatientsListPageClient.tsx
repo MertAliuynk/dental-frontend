@@ -221,13 +221,13 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
                                onMouseOver={e => (e.currentTarget.style.background = "#e3eafc")}
                                onMouseOut={e => (e.currentTarget.style.background = "")}
                              >
-                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 16px" }}>{p.first_name}</td>
-                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 16px" }}>{p.last_name}</td>
-                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 16px" }}>{role === 'doctor' ? '•••' : (p.phone || '-')}</td>
-                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 16px" }}>{role === 'doctor' ? '•••' : (p.tc_number || '-')}</td>
-                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 16px" }}>{p.branch_name || '-'}</td>
-                               <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 16px" }}>{p.created_at ? new Date(p.created_at).toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
-                               <td style={{ ...tdStyle, textAlign: "center", verticalAlign: "middle", minWidth: 120, fontSize: 15, padding: "10px 16px" }}>
+                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px", width: `${width * 0.16}px` }}>{p.first_name}</td>
+                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px", width: `${width * 0.14}px` }}>{p.last_name}</td>
+                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px", width: `${width * 0.16}px` }}>{role === 'doctor' ? '•••' : (p.phone || '-')}</td>
+                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px", width: `${width * 0.16}px` }}>{role === 'doctor' ? '•••' : (p.tc_number || '-')}</td>
+                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px", width: `${width * 0.12}px` }}>{p.branch_name || '-'}</td>
+                                 <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px", width: `${width * 0.16}px` }}>{p.created_at ? new Date(p.created_at).toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
+                                 <td style={{ ...tdStyle, textAlign: "center", verticalAlign: "middle", minWidth: 120, fontSize: 15, padding: "10px 8px", width: '120px' }}>
                                  <div style={{ display: "flex", gap: 8, justifyContent: "center", alignItems: "center" }}>
                                    <button
                                      onClick={(e) => handleEditClick(e, p)}
