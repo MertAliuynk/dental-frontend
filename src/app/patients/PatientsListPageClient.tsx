@@ -12,6 +12,19 @@ const CustomTBody = React.forwardRef<HTMLTableSectionElement, React.HTMLProps<HT
 );
 
 export default function PatientsListPageClient() {
+  // Tablo başlık ve hücre stilleri
+  const thStyle = {
+    background: "#e3eafc",
+    fontWeight: 700,
+    color: "#0a2972",
+    borderBottom: "2px solid #cfd8dc"
+  };
+  const tdStyle = {
+    background: "#fff",
+    fontWeight: 500,
+    color: "#1a237e",
+    borderBottom: "1px solid #f0f0f0"
+  };
   // Hasta silme fonksiyonu
 const handleDelete = async (e: React.MouseEvent, patient: any) => {
   e.stopPropagation();
@@ -35,19 +48,24 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
     alert('Sunucu hatası!');
   }
 };
+
   const [patients, setPatients] = useState<any[]>([]);
   const [search, setSearch] = useState("");
-  // Modal yerine edit sayfasına yönlendirme kullanılacak
   const [sortOption, setSortOption] = useState<string>("name-asc");
   const router = useRouter();
   const [role, setRole] = useState<string>("");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(50);
+  const [total, setTotal] = useState(0);
 
   const fetchPatients = () => {
-  fetch("https://dentalapi.karadenizdis.com/api/patient")
+    fetch(`https://dentalapi.karadenizdis.com/api/patient?limit=${pageSize}&offset=${(page-1)*pageSize}`)
       .then(res => res.json())
       .then(data => {
-        if (data.success) setPatients(data.data);
-        else setPatients([]);
+        if (data.success) {
+          setPatients(data.data);
+          setTotal(data.total || 0);
+        } else setPatients([]);
       })
       .catch(() => setPatients([]));
   };
@@ -55,7 +73,15 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
   useEffect(() => {
     fetchPatients();
     try { setRole(localStorage.getItem("role") || ""); } catch {}
-  }, []);
+  }, [page, pageSize]);
+  // Sayfa değiştirici
+  const Pagination = () => (
+    <div style={{ margin: "16px 0", textAlign: "center" }}>
+      <button disabled={page === 1} onClick={() => setPage(page - 1)}>Önceki</button>
+      <span style={{ margin: "0 12px" }}>{page} / {Math.max(1, Math.ceil(total / pageSize))}</span>
+      <button disabled={page * pageSize >= total} onClick={() => setPage(page + 1)}>Sonraki</button>
+    </div>
+  );
 
   const handleEditClick = (e: React.MouseEvent, patient: any) => {
     e.stopPropagation();
@@ -280,24 +306,7 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
           </table>
         </div>
       </main>
+
     </AppLayout>
   );
-
-// react-window ile tbody yerine kullanılacak özel component
 }
-
-const thStyle = {
-  fontWeight: 700,
-  color: "#1a237e",
-  fontSize: 15,
-  padding: "12px 8px",
-  borderBottom: "2px solid #dbeafe",
-  textAlign: "left" as const
-};
-
-const tdStyle = {
-  fontWeight: 500,
-  color: "#2d3a4a",
-  fontSize: 15,
-  padding: "10px 8px"
-};
