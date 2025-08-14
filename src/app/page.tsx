@@ -21,6 +21,15 @@ export default function Home() {
     setRole(localStorage.getItem("role") || "doctor");
   }, [router]);
 
+    // Şube değişimini dinle, sayfayı otomatik yenile
+    useEffect(() => {
+      const handleBranchChange = (event: any) => {
+        router.replace("/");
+      };
+      window.addEventListener('branchChanged', handleBranchChange);
+      return () => window.removeEventListener('branchChanged', handleBranchChange);
+    }, [router]);
+
   return (
     <AppLayout>
       <main style={{ flex: 1, padding: "24px 24px 0 24px", display: "flex", flexDirection: "column" }}>

@@ -194,11 +194,14 @@ function TreatmentAddPageClient() {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
+      const userStr = localStorage.getItem("user");
+      const user = userStr ? JSON.parse(userStr) : null;
+      const doctorId = user?.user_id || patient?.doctor_id;
       for (const it of pending) {
         const body = {
           patientId: patient.patient_id,
           treatmentTypeId: it.treatmentTypeId,
-          doctorId: patient.doctor_id,
+          doctorId: doctorId,
           status: "önerilen",
           toothCount: it.toothNumbers?.length || 1,
           toothNumbers: it.toothNumbers,
@@ -206,7 +209,7 @@ function TreatmentAddPageClient() {
           isUpperJaw: it.isUpperJaw,
           notes: it.notes || "",
         };
-  const res = await fetch("https://dentalapi.karadenizdis.com/api/treatment", {
+        const res = await fetch("https://dentalapi.karadenizdis.com/api/treatment", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
