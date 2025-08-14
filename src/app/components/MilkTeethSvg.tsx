@@ -849,10 +849,12 @@ export default function MilkTeethSvg({
             onClick={handleToothClick}
             d="M718.29,30.66c0.57-0.44,1.01-1.04,1.42-1.02c0.71,0.04,0.99,0.71,0.63,1.36c-0.25,0.44-0.43,1.3-1.27,0.77
             C718.78,31.59,718.64,31.18,718.29,30.66z"/>
-        </g>
+
           <text x="716" y="200" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
             63
           </text>
+        </g>
+          
 
 
         {/* Tooth10 - Onuncu Diş - Tamamen Otantik SVG Verisiyle */}
