@@ -305,8 +305,9 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
             </tbody>
           </table>
         </div>
+        {/* Tablo altına pagination butonları */}
+        <Pagination />
       </main>
-
     </AppLayout>
   );
 }
