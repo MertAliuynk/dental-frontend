@@ -76,10 +76,64 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
   }, [page, pageSize]);
   // Sayfa değiştirici
   const Pagination = () => (
-    <div style={{ margin: "16px 0", textAlign: "center" }}>
-      <button disabled={page === 1} onClick={() => setPage(page - 1)}>Önceki</button>
-      <span style={{ margin: "0 12px" }}>{page} / {Math.max(1, Math.ceil(total / pageSize))}</span>
-      <button disabled={page * pageSize >= total} onClick={() => setPage(page + 1)}>Sonraki</button>
+    <div style={{
+      margin: "32px 0 24px 0",
+      textAlign: "center",
+      position: "relative",
+      zIndex: 20,
+      background: "#f3f6fa",
+      borderRadius: 12,
+      boxShadow: "0 2px 8px #0002",
+      padding: "18px 0",
+      border: "1px solid #e3eafc",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 18,
+      minHeight: 56
+    }}>
+      <button
+        disabled={page === 1}
+        onClick={() => setPage(page - 1)}
+        style={{
+          background: page === 1 ? "#cfd8dc" : "#0a2972",
+          color: "white",
+          border: "none",
+          borderRadius: 8,
+          padding: "10px 22px",
+          fontWeight: 700,
+          fontSize: 16,
+          cursor: page === 1 ? "not-allowed" : "pointer",
+          boxShadow: "0 1px 4px #0001",
+          transition: "background 0.2s"
+        }}
+      >Önceki</button>
+      <span style={{
+        margin: "0 18px",
+        fontWeight: 700,
+        fontSize: 18,
+        color: "#0a2972",
+        background: "#e3eafc",
+        borderRadius: 8,
+        padding: "8px 18px",
+        border: "1px solid #cfd8dc"
+      }}>{page} / {Math.max(1, Math.ceil(total / pageSize))}</span>
+      <button
+        disabled={page * pageSize >= total}
+        onClick={() => setPage(page + 1)}
+        style={{
+          background: page * pageSize >= total ? "#cfd8dc" : "#0a2972",
+          color: "white",
+          border: "none",
+          borderRadius: 8,
+          padding: "10px 22px",
+          fontWeight: 700,
+          fontSize: 16,
+          cursor: page * pageSize >= total ? "not-allowed" : "pointer",
+          boxShadow: "0 1px 4px #0001",
+          transition: "background 0.2s"
+        }}
+      >Sonraki</button>
     </div>
   );
 
@@ -167,7 +221,7 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
               }}
             />
             <span style={{ fontSize: 13, color: '#555', background: '#f3f6fa', borderRadius: 6, padding: '2px 8px', fontWeight: 500, border: '1px solid #e3eafc' }}>
-              Toplam: {patients.length}
+              Toplam: {total}
             </span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -305,8 +359,41 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
             </tbody>
           </table>
         </div>
-        {/* Tablo altına pagination butonları */}
-        <Pagination />
+        {/* Tablo altına sade ve uyumlu pagination butonları */}
+        <div style={{ display: "flex", justifyContent: "center", gap: 24, margin: "24px 0 0 0" }}>
+          <button
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+            style={{
+              background: page === 1 ? "#cfd8dc" : "#0a2972",
+              color: "white",
+              border: "none",
+              borderRadius: 8,
+              padding: "10px 22px",
+              fontWeight: 700,
+              fontSize: 16,
+              cursor: page === 1 ? "not-allowed" : "pointer",
+              boxShadow: "0 1px 4px #0001",
+              transition: "background 0.2s"
+            }}
+          >Önceki</button>
+          <button
+            disabled={page * pageSize >= total}
+            onClick={() => setPage(page + 1)}
+            style={{
+              background: page * pageSize >= total ? "#cfd8dc" : "#0a2972",
+              color: "white",
+              border: "none",
+              borderRadius: 8,
+              padding: "10px 22px",
+              fontWeight: 700,
+              fontSize: 16,
+              cursor: page * pageSize >= total ? "not-allowed" : "pointer",
+              boxShadow: "0 1px 4px #0001",
+              transition: "background 0.2s"
+            }}
+          >Sonraki</button>
+        </div>
       </main>
     </AppLayout>
   );

@@ -4,10 +4,12 @@
 import AppLayout from "../../components/AppLayout";
 // import Topbar kaldırıldı
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 
 
 export default function PatientCardPageClient() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const patientId = searchParams.get("id");
   const [patient, setPatient] = useState<any>(null);
@@ -315,6 +317,7 @@ export default function PatientCardPageClient() {
                 }}
                 className="pc-btn"
                 type="button"
+                onClick={() => router.push("/calendar")}
               >
                 Yeni Randevu
               </button>
