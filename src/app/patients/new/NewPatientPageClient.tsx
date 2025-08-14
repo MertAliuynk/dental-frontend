@@ -196,20 +196,24 @@ export default function NewPatientPageClient() {
       }
 
       const isEdit = Boolean(editingPatientId);
-  const url = isEdit ? `https://dentalapi.karadenizdis.com/api/patient/${editingPatientId}` : "https://dentalapi.karadenizdis.com/api/patient";
+      const url = isEdit ? `https://dentalapi.karadenizdis.com/api/patient/${editingPatientId}` : "https://dentalapi.karadenizdis.com/api/patient";
       const method = isEdit ? "PUT" : "POST";
+      // Sadece yeni hasta eklerken TC gönder
+      const bodyObj: any = {
+        firstName: form.firstName,
+        lastName: form.lastName,
+        phone: form.phone,
+        doctors: form.doctors,
+        birthDate: form.birthDate,
+        anamnez: form.anamnez
+      };
+      if (!isEdit) {
+        bodyObj.tc = form.tc;
+      }
       const res = await fetch(url, {
         method,
         headers,
-        body: JSON.stringify({
-          firstName: form.firstName,
-          lastName: form.lastName,
-          phone: form.phone,
-          tc: form.tc,
-          doctors: form.doctors,
-          birthDate: form.birthDate,
-          anamnez: form.anamnez
-        })
+        body: JSON.stringify(bodyObj)
       });
       const data = await res.json();
       if (data.success) {
