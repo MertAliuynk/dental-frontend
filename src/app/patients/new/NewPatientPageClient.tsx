@@ -170,16 +170,25 @@ export default function NewPatientPageClient() {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
+    const isEdit = Boolean(editingPatientId);
     // Zorunlu alan kontrolü (frontend)
-    if (!form.firstName || !form.lastName || !form.phone || !form.tc || !form.birthDate || !Array.isArray(form.doctors) || form.doctors.length === 0) {
+    if (!form.firstName || !form.lastName || !form.phone || !form.birthDate || !Array.isArray(form.doctors) || form.doctors.length === 0) {
       setMessage("Lütfen tüm hasta bilgilerini ve en az bir doktoru seçin.");
       setLoading(false);
       return;
     }
-    if (form.tc.length !== 11) {
-      setMessage("TC Kimlik No 11 haneli olmalı.");
-      setLoading(false);
-      return;
+    // Sadece yeni hasta eklerken TC zorunlu
+    if (!isEdit) {
+      if (!form.tc) {
+        setMessage("TC Kimlik No zorunlu.");
+        setLoading(false);
+        return;
+      }
+      if (form.tc.length !== 11) {
+        setMessage("TC Kimlik No 11 haneli olmalı.");
+        setLoading(false);
+        return;
+      }
     }
     if (form.phone.length !== 10 && form.phone.length !== 11) {
       setMessage("Telefon numarası 10 veya 11 haneli olmalı.");
@@ -289,12 +298,14 @@ export default function NewPatientPageClient() {
                   name="tc"
                   value={form.tc}
                   onChange={handleChange}
-                  required
+                  required={!editingPatientId}
                   maxLength={11}
+                  disabled={!!editingPatientId}
                   style={{
                     ...inputStyle,
                     border: tcError ? '2px solid #dc2626' : inputStyle.border,
-                    background: tcError ? '#fef2f2' : inputStyle.background
+                    background: tcError ? '#fef2f2' : inputStyle.background,
+                    color: editingPatientId ? '#888' : undefined
                   }}
                 />
                 {tcError && <span style={{ color: '#dc2626', fontSize: 13 }}>{tcError}</span>}
