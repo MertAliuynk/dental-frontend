@@ -175,17 +175,37 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
             </select>
           </div>
         </div>
-        <div style={{ background: "#fff", borderRadius: 12, boxShadow: "0 2px 8px #0001", overflow: "auto", height: "70vh", minHeight: 400, width: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
+        <div
+          style={{
+            background: "#fff",
+            borderRadius: 12,
+            boxShadow: "0 2px 8px #0001",
+            overflowX: "auto",
+            height: "70vh",
+            minHeight: 400,
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start"
+          }}
+        >
+          <table
+            style={{
+              width: "100%",
+              minWidth: 600,
+              borderCollapse: "collapse",
+              tableLayout: "fixed"
+            }}
+          >
             <thead>
               <tr style={{ background: "#e3eafc" }}>
-                <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>Ad{getSortIcon("name")}</th>
-                <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>Soyad{getSortIcon("surname")}</th>
-                <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>Telefon</th>
-                <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>TC Kimlik No</th>
-                <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>Şube</th>
-                <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "12px 16px" }}>Oluşturma Tarihi</th>
-                <th style={{ ...thStyle, textAlign: "center", verticalAlign: "middle", minWidth: 120, fontSize: 15, padding: "12px 16px" }}>İşlemler</th>
+                <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: "clamp(12px,2.8vw,15px)", padding: "clamp(6px,2vw,12px) clamp(8px,3vw,16px)" }}>Ad{getSortIcon("name")}</th>
+                <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: "clamp(12px,2.8vw,15px)", padding: "clamp(6px,2vw,12px) clamp(8px,3vw,16px)" }}>Soyad{getSortIcon("surname")}</th>
+                <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: "clamp(12px,2.8vw,15px)", padding: "clamp(6px,2vw,12px) clamp(8px,3vw,16px)" }}>Telefon</th>
+                <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: "clamp(12px,2.8vw,15px)", padding: "clamp(6px,2vw,12px) clamp(8px,3vw,16px)" }}>TC Kimlik No</th>
+                <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: "clamp(12px,2.8vw,15px)", padding: "clamp(6px,2vw,12px) clamp(8px,3vw,16px)" }}>Şube</th>
+                <th style={{ ...thStyle, textAlign: "left", verticalAlign: "middle", fontSize: "clamp(12px,2.8vw,15px)", padding: "clamp(6px,2vw,12px) clamp(8px,3vw,16px)" }}>Oluşturma Tarihi</th>
+                <th style={{ ...thStyle, textAlign: "center", verticalAlign: "middle", minWidth: 90, fontSize: "clamp(12px,2.8vw,15px)", padding: "clamp(6px,2vw,12px) clamp(8px,3vw,16px)" }}>İşlemler</th>
               </tr>
             </thead>
             <tbody>
@@ -200,13 +220,13 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
                     onMouseOver={e => (e.currentTarget.style.background = "#e3eafc")}
                     onMouseOut={e => (e.currentTarget.style.background = "")}
                   >
-                    <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px" }}>{p.first_name}</td>
-                    <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px" }}>{p.last_name}</td>
-                    <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px" }}>{role === 'doctor' ? '•••' : (p.phone || '-')}</td>
-                    <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px" }}>{role === 'doctor' ? '•••' : (p.tc_number || '-')}</td>
-                    <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px" }}>{p.branch_name || '-'}</td>
-                    <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: 15, padding: "10px 8px" }}>{p.created_at ? new Date(p.created_at).toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
-                    <td style={{ ...tdStyle, textAlign: "center", verticalAlign: "middle", minWidth: 120, fontSize: 15, padding: "10px 8px" }}>
+                    <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: "clamp(11px,2.5vw,15px)", padding: "clamp(5px,1.5vw,10px) clamp(6px,2vw,8px)" }}>{p.first_name}</td>
+                    <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: "clamp(11px,2.5vw,15px)", padding: "clamp(5px,1.5vw,10px) clamp(6px,2vw,8px)" }}>{p.last_name}</td>
+                    <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: "clamp(11px,2.5vw,15px)", padding: "clamp(5px,1.5vw,10px) clamp(6px,2vw,8px)" }}>{role === 'doctor' ? '•••' : (p.phone || '-')}</td>
+                    <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: "clamp(11px,2.5vw,15px)", padding: "clamp(5px,1.5vw,10px) clamp(6px,2vw,8px)" }}>{role === 'doctor' ? '•••' : (p.tc_number || '-')}</td>
+                    <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: "clamp(11px,2.5vw,15px)", padding: "clamp(5px,1.5vw,10px) clamp(6px,2vw,8px)" }}>{p.branch_name || '-'}</td>
+                    <td style={{ ...tdStyle, textAlign: "left", verticalAlign: "middle", fontSize: "clamp(11px,2.5vw,15px)", padding: "clamp(5px,1.5vw,10px) clamp(6px,2vw,8px)" }}>{p.created_at ? new Date(p.created_at).toLocaleDateString('tr-TR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '-'}</td>
+                    <td style={{ ...tdStyle, textAlign: "center", verticalAlign: "middle", minWidth: 90, fontSize: "clamp(11px,2.5vw,15px)", padding: "clamp(5px,1.5vw,10px) clamp(6px,2vw,8px)" }}>
                       <div style={{ display: "flex", gap: 8, justifyContent: "center", alignItems: "center" }}>
                         <button
                           onClick={(e) => handleEditClick(e, p)}

@@ -453,25 +453,28 @@ export default function UpcomingAppointments({ role }: { role: string }) {
   }
 
   return (
-    <div style={{ 
-      display: "grid", 
-      gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-      gap: 20, 
-      marginTop: 32, 
-      maxWidth: 1200,
-      margin: "32px auto 0"
-    }}>
+    <div
+      style={{
+        display: "flex",
+        gap: 20,
+        marginTop: 32,
+        padding: "0 12px",
+        overflowX: "auto",
+        maxWidth: "100vw",
+        boxSizing: "border-box"
+      }}
+    >
       {doctors.map((doctor) => {
         const nextAppointment = getDoctorNextAppointment(doctor.user_id);
-        
         return (
-          <AppointmentCard 
-            key={doctor.user_id}
-            doctor={doctor}
-            appointment={nextAppointment}
-            onStatusUpdate={handleStatusUpdate}
-            role={role}
-          />
+          <div style={{ minWidth: 280, flex: "0 0 auto" }} key={doctor.user_id}>
+            <AppointmentCard
+              doctor={doctor}
+              appointment={nextAppointment}
+              onStatusUpdate={handleStatusUpdate}
+              role={role}
+            />
+          </div>
         );
       })}
     </div>

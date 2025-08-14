@@ -314,16 +314,10 @@ export default function FullAppointmentCalendar() {
     }
   }
 
-
-  useEffect(() => {
+  useEffect(() => { 
     loadUserInfo();
-  }, []); // İlk yüklemede sadece kullanıcıyı yükle
-
-  useEffect(() => {
-    if (currentUser) {
-      fetchAvailableDoctors();
-    }
-  }, [currentUser]); // currentUser değişince doktorları getir
+    fetchAvailableDoctors();
+  }, []); // İlk yüklemede çalış
 
   useEffect(() => { 
     fetchAppointments(); 
@@ -363,16 +357,10 @@ export default function FullAppointmentCalendar() {
   // Mevcut doktorları getir (admin/manager/receptionist için)
   const fetchAvailableDoctors = async () => {
     try {
-      const res = await fetch("https://dentalapi.karadenizdis.com/api/user/doctors");
+  const res = await fetch("https://dentalapi.karadenizdis.com/api/user/doctors");
       const data = await res.json();
       if (data.success) {
-        // Giriş yapan kullanıcının şube bilgisini tek bir değişkende topla
-        const userBranch = currentUser?.branch_id || currentUser?.branchId || currentUser?.branch;
-        // Sadece o şubedeki doktorları getir
-        const filtered = data.data.filter((doc: any) => {
-          return doc.branch_id == userBranch || doc.branch == userBranch || doc.branchId == userBranch;
-        });
-        setAvailableDoctors(filtered);
+        setAvailableDoctors(data.data);
       }
     } catch (err) {
       console.error('Doktorlar alınamadı:', err);
@@ -850,17 +838,11 @@ export default function FullAppointmentCalendar() {
                 }}
               >
                 <option value="all">Tüm Doktorlar</option>
-                {availableDoctors
-                  .filter(doc => {
-                    if (!currentUser?.branch_id) return true;
-                    // branch_id hem string hem number olabilir, ikili kontrol
-                    return doc.branch_id == currentUser.branch_id;
-                  })
-                  .map(doctor => (
-                    <option key={doctor.user_id} value={doctor.user_id.toString()}>
-                      Dr. {doctor.first_name} {doctor.last_name}
-                    </option>
-                  ))}
+                {availableDoctors.map(doctor => (
+                  <option key={doctor.user_id} value={doctor.user_id.toString()}>
+                    Dr. {doctor.first_name} {doctor.last_name}
+                  </option>
+                ))}
               </select>
             </div>
           )}
