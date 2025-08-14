@@ -14,7 +14,12 @@ export default function PatientSearchCard() {
   const router = useRouter();
 
   useEffect(() => {
-  fetch("https://dentalapi.karadenizdis.com/api/patient")
+    setLoading(true);
+    const params = new URLSearchParams();
+    if (search.trim() !== "") {
+      params.append("search", search.trim());
+    }
+    fetch(`https://dentalapi.karadenizdis.com/api/patient?${params.toString()}`)
       .then(res => res.json())
       .then(data => {
         if (data.success) setPatients(data.data);
@@ -25,13 +30,10 @@ export default function PatientSearchCard() {
         setError("Hasta verileri alınamadı");
         setLoading(false);
       });
-  }, []);
+  }, [search]);
 
-  const filtered = patients.filter((p) =>
-    ((p.first_name && p.last_name ? (p.first_name + " " + p.last_name) : "")
-      .toLowerCase()
-      .includes(search.toLowerCase()))
-  );
+  // Arama artık backend'den geldiği için, sadece gelen hastalar gösterilecek
+  const filtered = patients;
 
   return (
     <div style={{ background: "white", borderRadius: 12, padding: 20, boxShadow: "0 2px 8px #0001", minWidth: 280, maxWidth: 320, minHeight: 420, height: 420, display: "flex", flexDirection: "column" }}>

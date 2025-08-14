@@ -58,8 +58,18 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
   const [pageSize, setPageSize] = useState(50);
   const [total, setTotal] = useState(0);
 
+  // Arama kutusu değiştiğinde sayfa 1'e dön
+  useEffect(() => {
+    setPage(1);
+  }, [search]);
   const fetchPatients = () => {
-    fetch(`https://dentalapi.karadenizdis.com/api/patient?limit=${pageSize}&offset=${(page-1)*pageSize}`)
+    const params = new URLSearchParams();
+    params.append("limit", pageSize.toString());
+    params.append("offset", ((page-1)*pageSize).toString());
+    if (search.trim() !== "") {
+      params.append("search", search.trim());
+    }
+    fetch(`https://dentalapi.karadenizdis.com/api/patient?${params.toString()}`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {
@@ -73,7 +83,7 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
   useEffect(() => {
     fetchPatients();
     try { setRole(localStorage.getItem("role") || ""); } catch {}
-  }, [page, pageSize]);
+  }, [page, pageSize, search]);
   // Sayfa değiştirici
   const Pagination = () => (
     <div style={{
@@ -183,9 +193,8 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
   };
 
   const sorted = getSortedPatients();
-  const filtered = search.trim() === ""
-    ? sorted
-    : sorted.filter(p => (p.first_name + " " + p.last_name).toLowerCase().includes(search.toLowerCase()));
+  // Arama artık backend'den geldiği için, sadece sıralama uygulanacak
+  const filtered = sorted;
 
   // Sıralama okları için yardımcı fonksiyon
   const getSortIcon = (column: string) => {
