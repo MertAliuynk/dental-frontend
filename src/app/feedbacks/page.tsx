@@ -67,10 +67,7 @@ export default function FeedbacksPage() {
       return;
     }
     
-    if (userRole !== "admin" && userRole !== "doctor") {
-      router.replace("/");
-      return;
-    }
+  // Rol kontrolü kaldırıldı; tüm kullanıcılar erişebilir
     
     loadPendingFeedbacks();
   }, [router]);
