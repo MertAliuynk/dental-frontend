@@ -4,17 +4,25 @@ import { useEffect, useState } from "react";
 export default function PatientSelectModal({ open, onClose, onSelect }: { open: boolean, onClose: () => void, onSelect: (id: number) => void }) {
   const [patients, setPatients] = useState<any[]>([]);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(20);
+  const [total, setTotal] = useState(0);
   useEffect(() => {
     if (open) {
       const params = new URLSearchParams();
+      params.append("limit", pageSize.toString());
+      params.append("offset", ((page-1)*pageSize).toString());
       if (search.trim() !== "") {
         params.append("search", search.trim());
       }
       fetch(`https://dentalapi.karadenizdis.com/api/patient?${params.toString()}`)
         .then(res => res.json())
-        .then(data => setPatients(data.success ? data.data : []));
+        .then(data => {
+          setPatients(data.success ? data.data : []);
+          setTotal(data.total || 0);
+        });
     }
-  }, [open, search]);
+  }, [open, search, page, pageSize]);
   if (!open) return null;
   // Arama artık backend'den geldiği için, sadece gelen hastalar gösterilecek
   const filtered = patients;
@@ -36,6 +44,12 @@ export default function PatientSelectModal({ open, onClose, onSelect }: { open: 
                 {p.first_name} {p.last_name}
               </div>
             ))}
+        </div>
+        {/* Pagination */}
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, marginTop: 12 }}>
+          <button disabled={page === 1} onClick={() => setPage(page-1)} style={{ padding: "6px 14px", borderRadius: 6, border: "1px solid #dbeafe", background: page === 1 ? "#eee" : "#0a2972", color: "#fff", fontWeight: 600, cursor: page === 1 ? "not-allowed" : "pointer" }}>Önceki</button>
+          <span style={{ fontWeight: 600, color: "#1976d2" }}>{page} / {Math.max(1, Math.ceil(total / pageSize))}</span>
+          <button disabled={page * pageSize >= total} onClick={() => setPage(page+1)} style={{ padding: "6px 14px", borderRadius: 6, border: "1px solid #dbeafe", background: page * pageSize >= total ? "#eee" : "#0a2972", color: "#fff", fontWeight: 600, cursor: page * pageSize >= total ? "not-allowed" : "pointer" }}>Sonraki</button>
         </div>
         <button onClick={onClose} style={{ marginTop: 18, background: "#e53935", color: "white", border: 0, borderRadius: 8, padding: "8px 16px", fontWeight: 600, cursor: "pointer", width: "100%" }}>Vazgeç</button>
       </div>
