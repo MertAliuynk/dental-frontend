@@ -1,37 +1,4 @@
   // Onaylanan tedavileri önerilen olarak geri al
-  const handleUndoApprovedTreatments = async () => {
-    if (selectedApprovedTreatments.length === 0) {
-      alert("Lütfen geri alınacak tedavileri seçin");
-      return;
-    }
-    if (!window.confirm(`${selectedApprovedTreatments.length} tedavi önerilen olarak geri alınacak. Emin misiniz?`)) return;
-    try {
-      const promises = selectedApprovedTreatments.map(treatmentId =>
-        fetch(`https://dentalapi.karadenizdis.com/api/treatment/${treatmentId}/status`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: 'önerilen' })
-        }).then(res => res.json())
-      );
-      const results = await Promise.all(promises);
-      const allSuccessful = results.every(result => result.success);
-      if (allSuccessful) {
-        alert(`${selectedApprovedTreatments.length} tedavi başarıyla önerilen olarak geri alındı!`);
-        // Tedavi listesini yenile
-        const treatmentsRes = await fetch(`https://dentalapi.karadenizdis.com/api/treatment/patient/${patientId}`);
-        const treatmentsData = await treatmentsRes.json();
-        if (treatmentsData.success) {
-          setTreatments(treatmentsData.data);
-        }
-        setSelectedApprovedTreatments([]);
-      } else {
-        alert("Bazı tedaviler geri alınamadı. Lütfen tekrar deneyin.");
-      }
-    } catch (error) {
-      console.error('Undo approved treatments error:', error);
-      alert("Tedaviler geri alınırken hata oluştu");
-    }
-  };
 "use client";
 
 
@@ -43,40 +10,6 @@ import { useSearchParams } from "next/navigation";
 
 
 export default function PatientCardPageClient() {
-  // Onaylanan tedavileri önerilen olarak geri al
-  const handleUndoApprovedTreatments = async () => {
-    if (selectedApprovedTreatments.length === 0) {
-      alert("Lütfen geri alınacak tedavileri seçin");
-      return;
-    }
-    if (!window.confirm(`${selectedApprovedTreatments.length} tedavi geri alınacak. Emin misiniz?`)) return;
-    try {
-      const promises = selectedApprovedTreatments.map((treatmentId: number) =>
-        fetch(`https://dentalapi.karadenizdis.com/api/treatment/${treatmentId}/status`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: 'suggested' })
-        }).then(res => res.json())
-      );
-      const results = await Promise.all(promises);
-      const allSuccessful = results.every((result: any) => result.success);
-      if (allSuccessful) {
-        alert(`${selectedApprovedTreatments.length} tedavi başarıyla geri alındı!`);
-        // Tedavi listesini yenile
-        const treatmentsRes = await fetch(`https://dentalapi.karadenizdis.com/api/treatment/patient/${patientId}`);
-        const treatmentsData = await treatmentsRes.json();
-        if (treatmentsData.success) {
-          setTreatments(treatmentsData.data);
-        }
-        setSelectedApprovedTreatments([]);
-      } else {
-        alert("Bazı tedaviler geri alınamadı. Lütfen tekrar deneyin.");
-      }
-    } catch (error) {
-      console.error('Undo approved treatments error:', error);
-      alert("Tedaviler geri alınırken hata oluştu");
-    }
-  };
   const router = useRouter();
   const searchParams = useSearchParams();
   const patientId = searchParams.get("id");
@@ -369,7 +302,39 @@ export default function PatientCardPageClient() {
       alert("Tedaviler silinirken hata oluştu");
     }
   };
-
+  const handleUndoApprovedTreatments = async () => {
+    if (selectedApprovedTreatments.length === 0) {
+      alert("Lütfen geri alınacak tedavileri seçin");
+      return;
+    }
+    if (!window.confirm(`${selectedApprovedTreatments.length} tedavi önerilen olarak geri alınacak. Emin misiniz?`)) return;
+    try {
+      const promises = selectedApprovedTreatments.map(treatmentId =>
+        fetch(`https://dentalapi.karadenizdis.com/api/treatment/${treatmentId}/status`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'önerilen' })
+        }).then(res => res.json())
+      );
+      const results = await Promise.all(promises);
+      const allSuccessful = results.every(result => result.success);
+      if (allSuccessful) {
+        alert(`${selectedApprovedTreatments.length} tedavi başarıyla önerilen olarak geri alındı!`);
+        // Tedavi listesini yenile
+        const treatmentsRes = await fetch(`https://dentalapi.karadenizdis.com/api/treatment/patient/${patientId}`);
+        const treatmentsData = await treatmentsRes.json();
+        if (treatmentsData.success) {
+          setTreatments(treatmentsData.data);
+        }
+        setSelectedApprovedTreatments([]);
+      } else {
+        alert("Bazı tedaviler geri alınamadı. Lütfen tekrar deneyin.");
+      }
+    } catch (error) {
+      console.error('Undo approved treatments error:', error);
+      alert("Tedaviler geri alınırken hata oluştu");
+    }
+  };
 
   return (
       <main style={{ flex: 1, padding: 32 }}>
