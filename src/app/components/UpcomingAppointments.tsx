@@ -461,7 +461,8 @@ export default function UpcomingAppointments({ role }: { role: string }) {
         padding: "0 12px",
         overflowX: "auto",
         maxWidth: "100vw",
-        boxSizing: "border-box"
+        boxSizing: "border-box",
+        justifyContent: "center"
       }}
     >
       {doctors.map((doctor) => {
