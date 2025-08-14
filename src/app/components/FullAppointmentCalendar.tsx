@@ -242,6 +242,26 @@ export default function FullAppointmentCalendar() {
   const [doctorSearch, setDoctorSearch] = useState('');
   const [showPatientDropdown, setShowPatientDropdown] = useState(false);
   const [showDoctorDropdown, setShowDoctorDropdown] = useState(false);
+  const [searchedPatients, setSearchedPatients] = useState<any[]>([]);
+
+  // Hasta arama fonksiyonu (API'den)
+  const searchPatients = async (search: string) => {
+    if (!search) {
+      setSearchedPatients([]);
+      return;
+    }
+    try {
+      const res = await fetch(`https://dentalapi.karadenizdis.com/api/patient?search=${encodeURIComponent(search)}`);
+      const data = await res.json();
+      if (data.success) {
+        setSearchedPatients(data.data);
+      } else {
+        setSearchedPatients([]);
+      }
+    } catch (err) {
+      setSearchedPatients([]);
+    }
+  };
 
   async function fetchAppointments() {
     try {
@@ -1428,16 +1448,20 @@ export default function FullAppointmentCalendar() {
                     type="text"
                     value={(() => {
                       if (createForm.patientId) {
-                        const p = patients.find((x: any) => x.patient_id == createForm.patientId);
+                        const p = patients.find((x: any) => x.patient_id == createForm.patientId) || searchedPatients.find((x: any) => x.patient_id == createForm.patientId);
                         return p ? `${p.first_name} ${p.last_name}` : '';
                       }
                       return patientSearch;
                     })()}
-                    onChange={(e) => {
-                      setPatientSearch(e.target.value);
+                    onChange={async (e) => {
+                      const value = e.target.value;
+                      setPatientSearch(value);
                       setShowPatientDropdown(true);
-                      if (!e.target.value) {
+                      if (!value) {
                         clearPatientSelection();
+                        setSearchedPatients([]);
+                      } else {
+                        await searchPatients(value);
                       }
                     }}
                     readOnly={!!createForm.patientId}
@@ -1484,7 +1508,7 @@ export default function FullAppointmentCalendar() {
                   )}
                   
                   {/* Dropdown Listesi */}
-                  {showPatientDropdown && patients.length > 0 && (
+                  {showPatientDropdown && (
                     <div style={{
                       position: 'absolute',
                       top: '100%',
@@ -1498,15 +1522,7 @@ export default function FullAppointmentCalendar() {
                       zIndex: 1000,
                       boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
                     }}>
-                      {(patientSearch
-                        ? patients.filter((patient: any) =>
-                            (`${patient.first_name} ${patient.last_name}`.toLowerCase().includes(patientSearch.toLowerCase()) ||
-                             (patient.phone || '').includes(patientSearch) ||
-                             (patient.email || '').toLowerCase().includes(patientSearch.toLowerCase())
-                            )
-                          )
-                        : patients
-                      ).map((patient: any) => (
+                      {(patientSearch ? searchedPatients : patients).map((patient: any) => (
                         <div
                           key={patient.patient_id}
                           onClick={() => selectPatient(patient)}
