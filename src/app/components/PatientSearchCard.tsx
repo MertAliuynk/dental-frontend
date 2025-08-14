@@ -10,29 +10,36 @@ export default function PatientSearchCard() {
   const [patients, setPatients] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(20);
+  const [total, setTotal] = useState(0);
 
   const router = useRouter();
 
   useEffect(() => {
     setLoading(true);
     const params = new URLSearchParams();
+    params.append("limit", pageSize.toString());
+    params.append("offset", ((page-1)*pageSize).toString());
     if (search.trim() !== "") {
       params.append("search", search.trim());
     }
     fetch(`https://dentalapi.karadenizdis.com/api/patient?${params.toString()}`)
       .then(res => res.json())
       .then(data => {
-        if (data.success) setPatients(data.data);
-        else setPatients([]);
+        if (data.success) {
+          setPatients(data.data);
+          setTotal(data.total || 0);
+        } else setPatients([]);
         setLoading(false);
       })
       .catch(() => {
         setError("Hasta verileri alınamadı");
         setLoading(false);
       });
-  }, [search]);
+  }, [search, page, pageSize]);
 
-  // Arama artık backend'den geldiği için, sadece gelen hastalar gösterilecek
+  // Arama ve pagination backend'den geldiği için, sadece gelen hastalar gösterilecek
   const filtered = patients;
 
   return (
@@ -42,7 +49,7 @@ export default function PatientSearchCard() {
           type="text"
           placeholder="Hasta ara..."
           value={search}
-          onChange={e => setSearch(e.target.value)}
+          onChange={e => { setSearch(e.target.value); setPage(1); }}
           style={{ flex: 1, padding: 8, borderRadius: 6, border: "1.5px solid #dbeafe", fontWeight: 500, color: "#222", fontSize: 15, background: '#f8fafc' }}
         />
         <span style={{
@@ -59,7 +66,7 @@ export default function PatientSearchCard() {
           whiteSpace: 'nowrap',
           lineHeight: 1.2
         }}>
-          {patients.length} kişi
+          Toplam: {total}
         </span>
       </div>
       <div style={{ flex: 1, overflowY: "auto" }}>
@@ -99,6 +106,12 @@ export default function PatientSearchCard() {
             }}
           </List>
         )}
+      </div>
+      {/* Pagination */}
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, marginTop: 12 }}>
+        <button disabled={page === 1} onClick={() => setPage(page-1)} style={{ padding: "6px 14px", borderRadius: 6, border: "1px solid #dbeafe", background: page === 1 ? "#eee" : "#0a2972", color: "#fff", fontWeight: 600, cursor: page === 1 ? "not-allowed" : "pointer" }}>Önceki</button>
+        <span style={{ fontWeight: 600, color: "#1976d2" }}>{page} / {Math.max(1, Math.ceil(total / pageSize))}</span>
+        <button disabled={page * pageSize >= total} onClick={() => setPage(page+1)} style={{ padding: "6px 14px", borderRadius: 6, border: "1px solid #dbeafe", background: page * pageSize >= total ? "#eee" : "#0a2972", color: "#fff", fontWeight: 600, cursor: page * pageSize >= total ? "not-allowed" : "pointer" }}>Sonraki</button>
       </div>
     </div>
   );
