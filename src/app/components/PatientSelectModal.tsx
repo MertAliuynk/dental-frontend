@@ -6,13 +6,18 @@ export default function PatientSelectModal({ open, onClose, onSelect }: { open: 
   const [search, setSearch] = useState("");
   useEffect(() => {
     if (open) {
-  fetch("https://dentalapi.karadenizdis.com/api/patient")
+      const params = new URLSearchParams();
+      if (search.trim() !== "") {
+        params.append("search", search.trim());
+      }
+      fetch(`https://dentalapi.karadenizdis.com/api/patient?${params.toString()}`)
         .then(res => res.json())
         .then(data => setPatients(data.success ? data.data : []));
     }
-  }, [open]);
+  }, [open, search]);
   if (!open) return null;
-  const filtered = patients.filter(p => (p.first_name + " " + p.last_name).toLowerCase().includes(search.toLowerCase()));
+  // Arama artık backend'den geldiği için, sadece gelen hastalar gösterilecek
+  const filtered = patients;
   return (
     <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", background: "#0008", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center" }}>
       <div style={{ background: "#fff", borderRadius: 12, padding: 32, minWidth: 340, maxWidth: 400, width: "100%", boxShadow: "0 2px 16px #0003" }}>
