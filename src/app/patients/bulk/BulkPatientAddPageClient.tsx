@@ -23,11 +23,30 @@ export default function BulkPatientAddPageClient() {
   const [doctors, setDoctors] = useState<any[]>([]);
 
   useEffect(() => {
-  fetch("https://dentalapi.karadenizdis.com/api/user/doctors")
+    // branchId localStorage veya JWT'den alınır
+    let branchId = null;
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    if (token) {
+      try {
+        // jwtDecode fonksiyonu yoksa, basit decode ile alınabilir
+        const base64 = token.split('.')[1];
+        const decoded = JSON.parse(atob(base64));
+        branchId = decoded.branch_id || decoded.branchId || null;
+      } catch (e) {
+        // decode hatası
+      }
+    }
+    fetch("https://dentalapi.karadenizdis.com/api/user/doctors")
       .then(res => res.json())
       .then(data => {
-        if (data.success) setDoctors(data.data);
-        else setDoctors([]);
+        if (data.success) {
+          if (branchId !== null && branchId !== undefined && branchId !== "") {
+            const filtered = data.data.filter((d: any) => String(d.branch_id) === String(branchId));
+            setDoctors(filtered);
+          } else {
+            setDoctors(data.data);
+          }
+        } else setDoctors([]);
       })
       .catch(() => setDoctors([]));
   }, []);

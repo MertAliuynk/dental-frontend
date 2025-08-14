@@ -27,14 +27,26 @@ export default function QuickSmsPage() {
 
   // Hastaları getir
   useEffect(() => {
-    fetchPatients();
+    fetchPatients("");
     fetchTemplates();
   }, []);
 
-  const fetchPatients = async () => {
+  // Arama terimi değişince hastaları getir
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      fetchPatients(searchTerm);
+    }, 400);
+    return () => clearTimeout(delayDebounce);
+  }, [searchTerm]);
+
+  const fetchPatients = async (search: string) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("/api/patient", {
+      let url = "/api/patient";
+      if (search && search.trim().length > 0) {
+        url += `?search=${encodeURIComponent(search.trim())}`;
+      }
+      const response = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.ok) {
@@ -61,11 +73,8 @@ export default function QuickSmsPage() {
     }
   };
 
-  // Filtrelenmiş hasta listesi
-  const filteredPatients = patients.filter(patient =>
-    `${patient.first_name} ${patient.last_name}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    patient.tc_number.includes(searchTerm)
-  );
+  // API'den gelen hastalar zaten filtreli, ek filtreye gerek yok
+  const filteredPatients = patients;
 
   // Hasta seçme/seçimi kaldırma
   const togglePatientSelection = (patientId: number) => {

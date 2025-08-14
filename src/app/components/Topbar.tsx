@@ -105,9 +105,7 @@ export default function Topbar({ fullWidth = false, onHamburger }: { fullWidth?:
           </div>
         )}
       </div>
-      <div style={{ width: 40, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <span style={{ fontSize: 22, color: "#fff", cursor: "pointer" }}>⚙️</span>
-      </div>
+          {/* Sağdaki ayarlar ikonu kaldırıldı, arama çubuğu ortada kalacak */}
       <style>{`
         @media (max-width: 767.98px) {
           .topbar-hamburger { display: flex !important; }

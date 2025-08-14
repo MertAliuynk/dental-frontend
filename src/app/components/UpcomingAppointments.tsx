@@ -192,7 +192,7 @@ function AppointmentCard({ doctor, appointment, onStatusUpdate, role }: Appointm
             fontWeight: 500
           }}
         >
-          <option value="" style={{ color: '#888' }}>Tedavi seç (opsiyonel)</option>
+          <option value="" style={{ color: '#888' }}>Tedavi seç (isteğe bağlı)</option>
           {availableTreatments.map(treatment => (
             <option key={treatment.treatment_id} value={treatment.treatment_id} style={{ color: '#0d1333' }}>
               {treatment.treatment_type_name}

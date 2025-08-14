@@ -53,23 +53,26 @@ export default function PatientSearchCard() {
           style={{ flex: 1, padding: 8, borderRadius: 6, border: "1.5px solid #dbeafe", fontWeight: 500, color: "#222", fontSize: 15, background: '#f8fafc' }}
         />
         <span style={{
-          minWidth: 48,
+          minWidth: 40,
           textAlign: 'center',
-          fontSize: 13,
+          fontSize: 11,
           color: '#1976d2',
           background: '#e3eafc',
           borderRadius: 6,
-          padding: '4px 10px',
+          padding: '2px 6px',
           fontWeight: 700,
           border: '1.5px solid #b6c6e6',
           boxShadow: '0 1px 4px #e3eaff33',
           whiteSpace: 'nowrap',
-          lineHeight: 1.2
+          lineHeight: 1.1,
+          maxWidth: 70,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis'
         }}>
           Toplam: {total}
         </span>
       </div>
-      <div style={{ flex: 1, overflowY: "auto" }}>
+  <div style={{ flex: 1 }}>
         {loading && <div style={{ color: "#888", textAlign: "center", fontWeight: 500 }}>Yükleniyor...</div>}
         {error && <div style={{ color: "#e53935", textAlign: "center", fontWeight: 500 }}>{error}</div>}
         {!loading && !error && filtered.length === 0 && <div style={{ color: "#888", textAlign: "center", fontWeight: 500 }}>Hasta bulunamadı</div>}
