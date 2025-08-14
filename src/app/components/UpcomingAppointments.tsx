@@ -297,7 +297,10 @@ export default function UpcomingAppointments({ role }: { role: string }) {
   useEffect(() => {
     const handleBranchChange = (event: any) => {
       const newBranchId = event.detail.branchId;
-      setSelectedBranchId(newBranchId);
+    setSelectedBranchId(newBranchId);
+    // Şube değişince doktorlar ve randevuları otomatik getir
+    fetchDoctors();
+    fetchAppointments();
     };
 
     if (role === "admin" || role === "branch_manager" || role === "receptionist") {
