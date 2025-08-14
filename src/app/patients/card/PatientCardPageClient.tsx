@@ -248,9 +248,19 @@ export default function PatientCardPageClient() {
     }
   };
 
-  // Tedavi seçimi toggle fonksiyonu
+
+  // Önerilen tedaviler için seçim toggle
   const toggleTreatmentSelection = (treatmentId: number) => {
-    setSelectedTreatments(prev => 
+    setSelectedTreatments(prev =>
+      prev.includes(treatmentId)
+        ? prev.filter(id => id !== treatmentId)
+        : [...prev, treatmentId]
+    );
+  };
+
+  // Onaylanan tedaviler için seçim toggle
+  const toggleApprovedTreatmentSelection = (treatmentId: number) => {
+    setSelectedApprovedTreatments(prev =>
       prev.includes(treatmentId)
         ? prev.filter(id => id !== treatmentId)
         : [...prev, treatmentId]
@@ -573,7 +583,7 @@ export default function PatientCardPageClient() {
                           const isSelectable = tr.status === 'onaylanan';
                           const bgByStatus = tr.status === 'onaylanan' ? '#fff' : '#e6f4c8';
                           const borderByStatus = tr.status === 'onaylanan' ? 'transparent' : '#b6e6c6';
-                          
+
                           return (
                             <div className="pc-list-item"
                               key={tr.treatment_id}
@@ -588,13 +598,13 @@ export default function PatientCardPageClient() {
                                 cursor: isSelectable ? "pointer" : "default",
                                 border: isSelected ? "1px solid #1976d2" : `1px solid ${borderByStatus}`
                               }}
-                              onClick={() => { if (isSelectable) toggleTreatmentSelection(tr.treatment_id); }}
+                              onClick={() => { if (isSelectable) toggleApprovedTreatmentSelection(tr.treatment_id); }}
                             >
                               {isSelectable && (
                                 <input 
                                   type="checkbox" 
                                   checked={isSelected}
-                                  onChange={() => toggleTreatmentSelection(tr.treatment_id)}
+                                  onChange={() => toggleApprovedTreatmentSelection(tr.treatment_id)}
                                   style={{ cursor: "pointer" }}
                                 />
                               )}
