@@ -257,13 +257,39 @@ export default function PatientCardPageClient() {
     );
   };
 
-  // Onaylanan tedavi seçimi toggle fonksiyonu
-  const toggleApprovedTreatmentSelection = (treatmentId: number) => {
-    setSelectedApprovedTreatments(prev => 
-      prev.includes(treatmentId)
-        ? prev.filter(id => id !== treatmentId)
-        : [...prev, treatmentId]
-    );
+  // Seçili önerilen tedavileri sil
+  const handleDeleteSuggestedTreatments = async () => {
+    if (selectedTreatments.length === 0) {
+      alert("Lütfen silinecek tedavileri seçin");
+      return;
+    }
+    if (!window.confirm(`${selectedTreatments.length} tedavi silinecek. Emin misiniz?`)) return;
+    try {
+      // Silme işlemleri
+      const promises = selectedTreatments.map(treatmentId =>
+        fetch(`https://dentalapi.karadenizdis.com/api/treatment/${treatmentId}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' }
+        }).then(res => res.json())
+      );
+      const results = await Promise.all(promises);
+      const allSuccessful = results.every(result => result.success);
+      if (allSuccessful) {
+        alert(`${selectedTreatments.length} tedavi başarıyla silindi!`);
+        // Tedavi listesini yenile
+        const treatmentsRes = await fetch(`https://dentalapi.karadenizdis.com/api/treatment/patient/${patientId}`);
+        const treatmentsData = await treatmentsRes.json();
+        if (treatmentsData.success) {
+          setTreatments(treatmentsData.data);
+        }
+        setSelectedTreatments([]);
+      } else {
+        alert("Bazı tedaviler silinemedi. Lütfen tekrar deneyin.");
+      }
+    } catch (error) {
+      console.error('Delete treatments error:', error);
+      alert("Tedaviler silinirken hata oluştu");
+    }
   };
 
 
@@ -487,6 +513,24 @@ export default function PatientCardPageClient() {
                         }}
                       >
                         {approvingTreatments ? "Onaylanıyor..." : `Onayla (${selectedTreatments.length})`}
+                      </button>
+                      <button
+                        onClick={handleDeleteSuggestedTreatments}
+                        disabled={selectedTreatments.length === 0}
+                        style={{
+                          background: selectedTreatments.length === 0 ? "#ccc" : "#e53935",
+                          color: "white",
+                          border: "none",
+                          borderRadius: 8,
+                          padding: "10px 20px",
+                          fontSize: 14,
+                          fontWeight: 600,
+                          cursor: selectedTreatments.length === 0 ? "not-allowed" : "pointer",
+                          width: "100%",
+                          marginTop: 8
+                        }}
+                      >
+                        {`Sil (${selectedTreatments.length})`}
                       </button>
                     </div>
                   )}
