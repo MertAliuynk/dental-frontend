@@ -588,13 +588,13 @@ export default function PatientCardPageClient() {
                                 cursor: isSelectable ? "pointer" : "default",
                                 border: isSelected ? "1px solid #1976d2" : `1px solid ${borderByStatus}`
                               }}
-                              onClick={() => { if (isSelectable) toggleApprovedTreatmentSelection(tr.treatment_id); }}
+                              onClick={() => { if (isSelectable) toggleTreatmentSelection(tr.treatment_id); }}
                             >
                               {isSelectable && (
                                 <input 
                                   type="checkbox" 
                                   checked={isSelected}
-                                  onChange={() => toggleApprovedTreatmentSelection(tr.treatment_id)}
+                                  onChange={() => toggleTreatmentSelection(tr.treatment_id)}
                                   style={{ cursor: "pointer" }}
                                 />
                               )}
