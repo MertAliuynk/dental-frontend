@@ -1351,7 +1351,7 @@ export default function MilkTeethSvg({
         </g>
 
 
-        </g>
+        
         {/* Tooth14 - On Dördüncü Diş - Tamamen Otantik SVG Verisiyle */}
         <g 
           id="Tooth14_1_"
