@@ -32,8 +32,8 @@ export default function Topbar({ fullWidth = false, onHamburger }: { fullWidth?:
       background: "#3b5998",
       display: "flex",
       alignItems: "center",
-      justifyContent: "space-between",
-      padding: fullWidth ? "0 24px 0 0" : "0 32px 0 0",
+      justifyContent: "center",
+      padding: fullWidth ? "0 24px" : "0 32px",
       boxSizing: "border-box",
       boxShadow: "0 2px 8px #0002",
       top: 0,
@@ -42,7 +42,7 @@ export default function Topbar({ fullWidth = false, onHamburger }: { fullWidth?:
       borderBottom: "1px solid #dbeafe"
     }}>
       {/* Hamburger button for mobile */}
-      <div className="topbar-hamburger" style={{ display: 'none', width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}>
+      <div className="topbar-hamburger" style={{ display: 'none', width: 40, height: 40, alignItems: 'center', justifyContent: 'center', position: 'absolute', left: 16 }}>
         <button
           aria-label="Menüyü Aç"
           onClick={onHamburger}
@@ -64,7 +64,6 @@ export default function Topbar({ fullWidth = false, onHamburger }: { fullWidth?:
           <span style={{ fontSize: 28, lineHeight: 1 }}>☰</span>
         </button>
       </div>
-      <div style={{ width: fullWidth ? 0 : 240 }} />
       <div style={{ position: "relative", width: 320 }}>
         <input
           type="text"

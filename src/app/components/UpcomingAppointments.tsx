@@ -174,7 +174,7 @@ function AppointmentCard({ doctor, appointment, onStatusUpdate, role }: Appointm
       </div>
 
       <div style={{ fontSize: isDoctor ? 15 : 14, color: '#333', marginBottom: 8, fontWeight: 500 }}>
-        Biten Tedavi: <span style={{ color: '#1976d2', fontWeight: 700 }}>OPSİYONEL</span>
+        Biten Tedavi: <span style={{ color: '#1976d2', fontWeight: 700 }}>isteğe bağlı</span>
       </div>
 
       <div style={{ marginBottom: 8 }}>

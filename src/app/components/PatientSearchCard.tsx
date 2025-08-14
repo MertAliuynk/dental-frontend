@@ -69,7 +69,7 @@ export default function PatientSearchCard() {
           overflow: 'hidden',
           textOverflow: 'ellipsis'
         }}>
-          Toplam: {total}
+          {total}
         </span>
       </div>
   <div style={{ flex: 1 }}>
