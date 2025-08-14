@@ -24,6 +24,7 @@ interface Appointment {
   patient_last_name: string;
   doctor_first_name: string;
   doctor_last_name: string;
+  patient_name?: string;
 }
 
 interface AppointmentCardProps {
@@ -161,7 +162,11 @@ function AppointmentCard({ doctor, appointment, onStatusUpdate, role }: Appointm
       
 
       <div style={{ fontWeight: 700, marginBottom: 8, fontSize: isDoctor ? 15 : 15, color: '#0d1333', letterSpacing: 0.2 }}>
-        Hasta: <span style={{ color: '#1976d2' }}>{appointment.patient_first_name} {appointment.patient_last_name}</span>
+        Hasta: <span style={{ color: '#1976d2' }}>
+          {appointment.patient_first_name || appointment.patient_last_name
+            ? `${appointment.patient_first_name || ''} ${appointment.patient_last_name || ''}`.trim()
+            : appointment.patient_name || 'Bilinmiyor'}
+        </span>
       </div>
 
       <div style={{ fontSize: isDoctor ? 13 : 12, color: '#222', marginBottom: 8, fontWeight: 500 }}>
