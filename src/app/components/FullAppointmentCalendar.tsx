@@ -377,10 +377,26 @@ export default function FullAppointmentCalendar() {
   // Mevcut doktorları getir (admin/manager/receptionist için)
   const fetchAvailableDoctors = async () => {
     try {
-  const res = await fetch("https://dentalapi.karadenizdis.com/api/user/doctors");
+      const res = await fetch("https://dentalapi.karadenizdis.com/api/user/doctors");
       const data = await res.json();
       if (data.success) {
-        setAvailableDoctors(data.data);
+        let branchId = null;
+        if (currentUser && (currentUser.branch_id || currentUser.branchId)) {
+          branchId = currentUser.branch_id || currentUser.branchId;
+        } else {
+          // localStorage'dan al
+          const userStr = localStorage.getItem('user');
+          if (userStr) {
+            const user = JSON.parse(userStr);
+            branchId = user.branch_id || user.branchId;
+          }
+        }
+        if (branchId !== null && branchId !== undefined && branchId !== "") {
+          const filtered = data.data.filter((d: any) => String(d.branch_id) === String(branchId));
+          setAvailableDoctors(filtered);
+        } else {
+          setAvailableDoctors(data.data);
+        }
       }
     } catch (err) {
       console.error('Doktorlar alınamadı:', err);
