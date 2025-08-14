@@ -279,7 +279,7 @@ export default function MilkTeethSvg({
           
           {/* Diş numarası */}
           <text x="112" y="300" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            47
+            85
           </text>
         </g>
 
@@ -335,7 +335,7 @@ export default function MilkTeethSvg({
           
           {/* Diş numarası */}
           <text x="210" y="300" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            46
+            84
           </text>
         </g>
 
@@ -390,7 +390,7 @@ export default function MilkTeethSvg({
           
           {/* Diş numarası */}
           <text x="412" y="300" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            43
+            83
           </text>
         </g>
 
@@ -435,7 +435,7 @@ export default function MilkTeethSvg({
           
           {/* Diş numarası */}
           <text x="480" y="300" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            42
+            82
           </text>
         </g>
 
@@ -482,7 +482,7 @@ export default function MilkTeethSvg({
           
           {/* Diş numarası */}
           <text x="535" y="300" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            41
+            81
           </text>
         </g>
 
@@ -523,7 +523,7 @@ export default function MilkTeethSvg({
           
           {/* Diş numarası */}
           <text x="605" y="300" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            31
+            71
           </text>
         </g>
 
@@ -582,7 +582,7 @@ export default function MilkTeethSvg({
           
           {/* Diş numarası */}
           <text x="1025" y="300" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            37
+            75
           </text>
         </g>
 
@@ -650,7 +650,7 @@ export default function MilkTeethSvg({
           
           {/* Diş numarası */}
           <text x="925" y="300" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            36
+            74
           </text>
         </g>
 
@@ -696,7 +696,7 @@ export default function MilkTeethSvg({
           
           {/* Diş numarası */}
           <text x="705" y="300" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            33
+            73
           </text>
         </g>
 
@@ -756,7 +756,7 @@ export default function MilkTeethSvg({
           
           {/* Diş numarası */}
           <text x="1015" y="120" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            27
+            65
           </text>
         </g>
 
@@ -889,7 +889,7 @@ export default function MilkTeethSvg({
             C718.78,31.59,718.64,31.18,718.29,30.66z"/>
         </g>
           <text x="716" y="200" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            23
+            63
           </text>
 
 
@@ -934,7 +934,7 @@ export default function MilkTeethSvg({
           
           {/* Diş numarası */}
           <text x="660" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            22
+            62
           </text>
         </g>
 
@@ -990,7 +990,7 @@ export default function MilkTeethSvg({
           
           {/* Diş numarası */}
           <text x="600" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            21
+            61
           </text>
         </g>
 
@@ -1038,7 +1038,7 @@ export default function MilkTeethSvg({
           
           {/* Diş numarası */}
           <text x="530" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            11
+            51
           </text>
         </g>
 
@@ -1085,7 +1085,7 @@ export default function MilkTeethSvg({
           
           {/* Diş numarası */}
           <text x="470" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            12
+            52
           </text>
         </g>
 
@@ -1153,7 +1153,7 @@ export default function MilkTeethSvg({
           
           {/* Diş numarası */}
           <text x="410" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            13
+            53
           </text>
         </g>
 
@@ -1236,8 +1236,8 @@ export default function MilkTeethSvg({
             C228.26,66.52,227.78,66.88,227.3,67.25z"/>
           
           {/* Diş numarası */}
-          <text x="220" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            16
+          <text x="210" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
+            54
           </text>
         </g>
 
@@ -1299,8 +1299,8 @@ export default function MilkTeethSvg({
             c3.41,4.46,4.16,9.91,1.95,15.51C114.84,99.8,113.66,103.89,112,108.83z"/>
           
           {/* Diş numarası */}
-          <text x="130" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            17
+          <text x="120" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
+            55
           </text>
         </g>
 
@@ -1390,7 +1390,7 @@ export default function MilkTeethSvg({
 
           {/* Diş numarası */}
           <text x="915" y="160" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            26
+            64
           </text>
         </g>
         {/* Tooth23 - Onuncu Diş - Tamamen Otantik SVG Verisiyle */}
@@ -1438,7 +1438,7 @@ export default function MilkTeethSvg({
           
           {/* Diş numarası */}
           <text x="650" y="300" fontSize="18" textAnchor="middle" fill="#000" className="tooth-number">
-            32
+            72
           </text>
         </g>
       </svg>
