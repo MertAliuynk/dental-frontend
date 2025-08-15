@@ -1,4 +1,3 @@
-// ...existing code...
 "use client";
 // import Topbar kaldırıldı
 import AppLayout from "../../components/AppLayout";
@@ -21,6 +20,7 @@ export default function BulkPatientAddPageClient() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [doctors, setDoctors] = useState<any[]>([]);
+  const [errorList, setErrorList] = useState<{ index: number; tc: string; error: string }[]>([]);
 
   useEffect(() => {
     // branchId localStorage veya JWT'den alınır
@@ -66,6 +66,7 @@ export default function BulkPatientAddPageClient() {
     e.preventDefault();
     setMessage(null);
     setLoading(true);
+    setErrorList([]);
     // Zorunlu alan ve format kontrolü
     for (let i = 0; i < rows.length; i++) {
       const { firstName, lastName, tc, phone, birthDate, doctors } = rows[i];
@@ -111,26 +112,19 @@ export default function BulkPatientAddPageClient() {
       if (data.success) {
         setMessage("Tüm hastalar başarıyla eklendi!");
         setRows(Array.from({ length: MAX_ROWS }, () => ({ firstName: "", lastName: "", tc: "", phone: "", birthDate: "", doctors: [] })));
+        setErrorList([]);
       } else {
-        // Duplicate TC error için satır numarası bul
-        let rowNum = null;
-        if (data.message && data.message.includes("duplicate key value")) {
-          // Backend'den dönen hata mesajında tc_number varsa, satırı bul
-          const match = /\"tc_number\":\"(\d{11})\"/.exec(JSON.stringify(data));
-          if (match) {
-            const tc = match[1];
-            const idx = rows.findIndex(r => r.tc === tc);
-            if (idx !== -1) rowNum = idx + 1;
-          }
-        }
-        if (rowNum) {
-          setMessage(`${rowNum}. satırda TC kimlik numarası başka bir hastada mevcut!`);
+        if (Array.isArray(data.errors) && data.errors.length > 0) {
+          setErrorList(data.errors);
+          setMessage(null);
         } else {
+          setErrorList([]);
           setMessage(data.message || "Kayıt sırasında hata oluştu.");
         }
       }
     } catch (err) {
       setMessage("Sunucu hatası. Lütfen tekrar deneyin.");
+      setErrorList([]);
     } finally {
       setLoading(false);
     }
@@ -143,6 +137,18 @@ export default function BulkPatientAddPageClient() {
     <h2 className="bulk-patient-title">Toplu Hasta Ekleme</h2>
     <form onSubmit={handleSubmit} className="bulk-patient-form">
       {message && <div className={"bulk-patient-message" + (message.includes("başarı") ? " success" : "")}>{message}</div>}
+      {errorList.length > 0 && (
+        <div className="bulk-patient-message error">
+          <b>Hatalı Satırlar:</b>
+          <ul style={{ marginTop: 8 }}>
+            {errorList.map((err, i) => (
+              <li key={i}>
+                <b>{err.index}. satır</b> - TC: {err.tc || "-"} - <span style={{ color: "#c00" }}>{err.error}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <div className="bulk-patient-table-wrapper">
         <table className="bulk-patient-table">
           <thead>
