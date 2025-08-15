@@ -1,9 +1,10 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import AppLayout from "../components/AppLayout";
 import { useSearchParams } from "next/navigation";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 
-const formTemplates: Record<string, string> = {
+const formTemplates = {
   "Genel Bilgilendirme ve Onam Formu": `GENEL BİLGİLENDİRME VE ONAM FORMU\n\n...\nAdı-Soyadı : {name}\nT.C. Kimlik No’su : {tc}\nAdresi : ..............................................\nTelefon : {phone}\nİmza : .................................................`,
   "Ağız ve Çene Hastalıkları ve Cerrahisi Diş Çekimi Hasta Bilgilendirme ve Onam Formu": `AĞIZ VE ÇENE HASTALIKLARI ...\nAdı-Soyadı : {name}\nT.C. Kimlik No’su : {tc}\nAdresi : ..............................................\nTelefon : {phone}\nİmza : .................................................`,
   "Diş Hastalıkları ve Tedavisi Hasta Bilgilendirme ve Onam Formu": `DİŞ HASTALIKLARI ...\nAdı-Soyadı : {name}\nT.C. Kimlik No’su : {tc}\nAdresi : ..............................................\nTelefon : {phone}\nİmza : .................................................`,
@@ -36,7 +37,7 @@ export default function ConsentFormDownloadPage() {
   const handleDownload = async () => {
     if (!patient) return;
     // Şablonu doldur
-    const template = formTemplates[type] || formTemplates["Genel Bilgilendirme ve Onam Formu"];
+  const template = (formTemplates as any)[type] || formTemplates["Genel Bilgilendirme ve Onam Formu"];
     const filledText = template
       .replace("{name}", `${patient.first_name} ${patient.last_name}`)
       .replace("{tc}", patient.tc_number || "-")
