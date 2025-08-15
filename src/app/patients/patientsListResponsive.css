@@ -1,0 +1,38 @@
+.patients-list-controls {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.patients-pagination {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 24px;
+  margin: 24px 0 0 0;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .patients-list-controls {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  .patients-pagination {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+    margin-top: 16px;
+  }
+  .patients-pagination button {
+    width: 100%;
+    min-width: 120px;
+    max-width: 100%;
+    font-size: 16px;
+    margin: 0 auto;
+  }
+}

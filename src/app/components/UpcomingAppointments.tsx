@@ -470,7 +470,9 @@ export default function UpcomingAppointments({ role }: { role: string }) {
         overflowX: "auto",
         maxWidth: "100vw",
         boxSizing: "border-box",
-        justifyContent: "center"
+        justifyContent: "center",
+        flexDirection: typeof window !== 'undefined' && window.innerWidth <= 600 ? 'column' : 'row',
+        alignItems: typeof window !== 'undefined' && window.innerWidth <= 600 ? 'stretch' : 'flex-start'
       }}
     >
       {doctors.map((doctor) => {
