@@ -73,15 +73,15 @@ export default function ConsentFormSelectPatientPage() {
                 <tr><td colSpan={5} style={{ textAlign: "center", color: "#888", padding: 32 }}>Kayıtlı hasta bulunamadı.</td></tr>
               ) : (
                 patients.map((p: any) => (
-                  <tr key={p.patient_id} style={{ borderBottom: "1px solid #f0f0f0" }}>
-                    <td style={{ padding: "10px" }}>{p.first_name}</td>
-                    <td style={{ padding: "10px" }}>{p.last_name}</td>
-                    <td style={{ padding: "10px" }}>{p.phone}</td>
-                    <td style={{ padding: "10px" }}>{p.branch_name}</td>
+                  <tr key={p.patient_id} style={{ borderBottom: "1px solid #e3eafc" }}>
+                    <td style={{ padding: "10px", fontWeight: 700, color: "#1a237e", fontSize: 16 }}>{p.first_name}</td>
+                    <td style={{ padding: "10px", fontWeight: 700, color: "#1a237e", fontSize: 16 }}>{p.last_name}</td>
+                    <td style={{ padding: "10px", fontWeight: 700, color: "#1a237e", fontSize: 16 }}>{p.phone}</td>
+                    <td style={{ padding: "10px", fontWeight: 700, color: "#1a237e", fontSize: 16 }}>{p.branch_name}</td>
                     <td style={{ padding: "10px" }}>
                       <button
                         style={{ background: "#0a2972", color: "white", border: "none", borderRadius: 6, padding: "8px 18px", fontWeight: 700, cursor: "pointer" }}
-                        onClick={() => router.push(`/consent-forms?patient_id=${p.patient_id}`)}
+                        onClick={() => router.push(`/consent-forms/select-form-type?patient_id=${p.patient_id}`)}
                       >Seç</button>
                     </td>
                   </tr>
