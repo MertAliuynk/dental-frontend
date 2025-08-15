@@ -3,44 +3,22 @@ import AppLayout from "../components/AppLayout";
 import { useSearchParams } from "next/navigation";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 
-const formText = `GENEL BİLGİLENDİRME VE ONAM FORMU
-
-Aşağıda size verilen bilgileri okuyunuz. Bu bilgileri okuyup imzalayarak size ya da çocuğunuza uygulanacak tedavileri hakkında bilgi sahibi olacaksınız. Tedavi planlamasının fayda ve risklerini öğrenmek sizin tedavi sonunda memnun olmanızı sağlayacaktır. Sağlıklı ve mutlu bir yaşam dileğiyle.
-
-Tedaviler esnasında ağrı kontrolünü sağlamak amacıyla sınırlı uyuşturma uygulanmaktadır. Gerekli hallerde öncelikle topikal anestezik madde(sprey) ile dişeti veya yanağın iç kısmı uyuşturulur. Bölge uyuştuğunda anestezik sıvı enjektör ile enjekte edilerek, diş ve bulunduğu bölge bir süreliğine hissizleştirilir. Lokal anestezi uygulaması sonrası nadir de olsa hastalarda alerjik reaksiyonlar, his kaybı, kanama, geçici kas spazmları, geçici yüz felci görülebilir. Lokal anestezi uygulaması, bölgede anatomik farklılıklar veya akut enfeksiyonlar olmadığı sürece başarılı bir uygulamadır. Lokal anestezi uygulanan bölge yaklaşık 2–4 saat boyunca hissizdir. Bu nedenle, ısırmaya bağlı yanak içi ve dudakta yara oluşmaması için hissizlik geçene kadar yeme içme önerilmez. 2–4 saat sonrasında anestezinin etkisi ortadan kalkar. Tedavileriniz esnasında ileri tetkik için biyopsi alınması gerekebilir. Sağlık kuruluşumuzun, düzeninin ve tedavi programının aksamaması için randevularınıza sadık olmaya ve zamanında gelmeye özen gösteriniz. Gelmeniz mümkün olmadığında, randevunuzu 24 saat öncesinden iptal ettiriniz.
-
-GENEL ONAM FORMU
-
-Aşağıda imzası olan ben/hastanın vasisi/hastanın velisi, dişhekimi tarafından hastalığın teşhisi, tedavi planı ve alternatif tedaviler hakkında bilgilendirildim. Bana önerilen tedavileri kabul ettim.
-
-Şüpheli tedavilerde planlamanın değişebileceği anlatıldı, anladım ve kabul ettim. Tedavilerimle ya da çocuğumun/…………………….. tedavisi hakkında merak ettiğim tüm sorulara cevap verildi.
-
-Yapılacak tedavilerin başarısının bana da bağlı olduğu, evde üzerime düşen ağız temizliği ve diyet önerilerine uymam gerektiği anlatıldı, kabul ettim.
-
-Benim/çocuğumun/……………….. vazgeçmemiz gereken zararlı alışkanlıklarla ilgili önerileri yerine getirmem ve bana/çocuğuma/……………. yazılacak reçetelerdeki ilaçları tarife uygun doz ve sürelerde kullanmam gerekliliği anlatıldı ve kabul ettim.
-
-Bana/çocuğuma/……………………… uygulanacak tedavilerin uzun süreli garanti edilemeyeceği anlatıldı, anladım ve kabul ettim.
-
-Tedaviyi kabul ettikten sonra bana/çocuğuma/………………………. ait bilgi, radyografi, fotoğraf, video ve diğer dokümanların eğitim ve/veya bilimsel amaçlı çalışmalarda kullanılmasını kabul edip izin verdim.
-
-Tedavim sırasında kişisel eşyalarımın(para, mücevher, takı, giyecek, cep telefonu vb.) sorumluluğu ve güvenliğinin bana ait olduğu bildirildi, anladım ve kabul ettim.
-
-Yukarıda belirtildiği gibi tedavi planlaması sırasında bana/çocuğuma/…………………….. anlatılan ve benim tarafımdan kabul edilen diş tedavilerini onayladım ve kabul ettim.
-
-Hasta haklarıyla ilgili olarak bilgilendirildi.
-
-* Yasal Temsilci: Vesayet altındakiler için vasi, reşit olmayanlar için anne- baba, bunların bulunmadığı durumlarda 1. derece kanuni mirasçılardır.(Hasta yakınının isminin yanında yakınlık derecesini belirtiniz.)
-
-Hasta veya Hastanın Yasal Temsilcisi* - Yakınlık Derecesi
-Adı-Soyadı : {name}
-T.C. Kimlik No’su : {tc}
-Adresi : ..............................................
-Telefon : {phone}
-İmza : .................................................`;
+const formTemplates: Record<string, string> = {
+  "Genel Bilgilendirme ve Onam Formu": `GENEL BİLGİLENDİRME VE ONAM FORMU\n\n...\nAdı-Soyadı : {name}\nT.C. Kimlik No’su : {tc}\nAdresi : ..............................................\nTelefon : {phone}\nİmza : .................................................`,
+  "Ağız ve Çene Hastalıkları ve Cerrahisi Diş Çekimi Hasta Bilgilendirme ve Onam Formu": `AĞIZ VE ÇENE HASTALIKLARI ...\nAdı-Soyadı : {name}\nT.C. Kimlik No’su : {tc}\nAdresi : ..............................................\nTelefon : {phone}\nİmza : .................................................`,
+  "Diş Hastalıkları ve Tedavisi Hasta Bilgilendirme ve Onam Formu": `DİŞ HASTALIKLARI ...\nAdı-Soyadı : {name}\nT.C. Kimlik No’su : {tc}\nAdresi : ..............................................\nTelefon : {phone}\nİmza : .................................................`,
+  "Endodontik Tedavi Onam Formu": `ENDODONTİK TEDAVİ ...\nAdı-Soyadı : {name}\nT.C. Kimlik No’su : {tc}\nAdresi : ..............................................\nTelefon : {phone}\nİmza : .................................................`,
+  "Kron Köprü Protezleri İçin Hasta Bilgilendirme ve Onam Formu": `KRON KÖPRÜ PROTEZLERİ ...\nAdı-Soyadı : {name}\nT.C. Kimlik No’su : {tc}\nAdresi : ..............................................\nTelefon : {phone}\nİmza : .................................................`,
+  "Ortodontik Tedaviler İçin Hasta Bilgilendirme ve Onam Formu": `ORTODONTİK TEDAVİLER ...\nAdı-Soyadı : {name}\nT.C. Kimlik No’su : {tc}\nAdresi : ..............................................\nTelefon : {phone}\nİmza : .................................................`,
+  "İmplant Cerrahisi Hasta Bilgilendirme ve Onam Formu": `İMPLANT CERRAHİSİ ...\nAdı-Soyadı : {name}\nT.C. Kimlik No’su : {tc}\nAdresi : ..............................................\nTelefon : {phone}\nİmza : .................................................`,
+  "YENİ KORONOVİRÜS (COVID –19) İLE İLGİLİ ONAM FORMU": `COVID-19 ...\nAdı-Soyadı : {name}\nT.C. Kimlik No’su : {tc}\nAdresi : ..............................................\nTelefon : {phone}\nİmza : .................................................`,
+  "Kişisel Verilerin Aydınlatma ve Onam Metni": `KİŞİSEL VERİLER ...\nAdı-Soyadı : {name}\nT.C. Kimlik No’su : {tc}\nAdresi : ..............................................\nTelefon : {phone}\nİmza : .................................................`,
+};
 
 export default function ConsentFormDownloadPage() {
   const searchParams = useSearchParams();
   const patientId = searchParams.get("patient_id");
+  const type = searchParams.get("type") || "Genel Bilgilendirme ve Onam Formu";
   const [patient, setPatient] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -58,7 +36,8 @@ export default function ConsentFormDownloadPage() {
   const handleDownload = async () => {
     if (!patient) return;
     // Şablonu doldur
-    const filledText = formText
+    const template = formTemplates[type] || formTemplates["Genel Bilgilendirme ve Onam Formu"];
+    const filledText = template
       .replace("{name}", `${patient.first_name} ${patient.last_name}`)
       .replace("{tc}", patient.tc_number || "-")
       .replace("{address}", patient.address || "-")
@@ -91,7 +70,7 @@ export default function ConsentFormDownloadPage() {
     <AppLayout>
       <main style={{ padding: 24, minHeight: "100vh", maxWidth: 600, margin: "0 auto" }}>
         <h2 style={{ fontWeight: 800, fontSize: 24, marginBottom: 24, color: "#0a2972" }}>
-          Genel Bilgilendirme ve Onam Formu
+          {type}
         </h2>
         {loading ? <div>Yükleniyor...</div> : patient && (
           <div style={{ background: "#fff", borderRadius: 12, boxShadow: "0 2px 8px #0001", padding: 24 }}>
