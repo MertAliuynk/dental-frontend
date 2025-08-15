@@ -762,7 +762,7 @@ export default function PatientCardPageClient() {
                   <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
                     {appointments
                       .slice() // kopya
-                      .sort((a: any, b: any) => new Date(a.appointment_time).getTime() - new Date(b.appointment_time).getTime()) // en eski en altta
+                      .sort((a: any, b: any) => new Date(b.appointment_time).getTime() - new Date(a.appointment_time).getTime()) // en yeni en üstte
                       .map((ap: any, idx: number, arr: any[]) => {
                         // Seans numarası: en alttan yukarı doğru 1.seans, 2.seans...
                         const seansNo = arr.length - idx;
