@@ -1084,6 +1084,7 @@ export default function FullAppointmentCalendar() {
                     onEventDrop={moveEvent}
                     onEventResize={resizeEvent}
                     onSelectEvent={selectEvent}
+                    onSelectSlot={handleSelectSlot}
                     selectable={true}
                     longPressThreshold={10}
                   />
@@ -1200,8 +1201,11 @@ export default function FullAppointmentCalendar() {
                     format(date, 'MMMM yyyy', { locale: tr }),
                   weekdayFormat: (date) =>
                     format(date, 'EEE', { locale: tr }),
-                  timeGutterFormat: (date) =>
-                    format(date, 'HH:mm', { locale: tr }),
+                  timeGutterFormat: (date) => {
+                    // Sadece saat başlarında göster
+                    const minutes = date.getMinutes();
+                    return minutes === 0 ? format(date, 'HH:mm', { locale: tr }) : '';
+                  },
                   eventTimeRangeFormat: ({ start, end }) =>
                     `${format(start, 'HH:mm', { locale: tr })} - ${format(end, 'HH:mm', { locale: tr })}`,
                   agendaTimeFormat: (date) =>
