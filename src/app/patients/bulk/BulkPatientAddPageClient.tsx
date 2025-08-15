@@ -109,10 +109,18 @@ export default function BulkPatientAddPageClient() {
         body: JSON.stringify({ patients: validRows })
       });
       const data = await res.json();
+      // Başarı ve hata birlikte kontrol
       if (data.success) {
-        setMessage("Tüm hastalar başarıyla eklendi!");
-        setRows(Array.from({ length: MAX_ROWS }, () => ({ firstName: "", lastName: "", tc: "", phone: "", birthDate: "", doctors: [] })));
-        setErrorList([]);
+        if (Array.isArray(data.errors) && data.errors.length > 0) {
+          // Bazı hastalar eklendi, bazıları hata aldı
+          setMessage("Bazı hastalar başarıyla eklendi, aşağıdaki satırlarda hata var:");
+          setErrorList(data.errors);
+        } else {
+          // Tüm hastalar eksiksiz eklendi
+          setMessage("Tüm hastalar başarıyla eklendi!");
+          setRows(Array.from({ length: MAX_ROWS }, () => ({ firstName: "", lastName: "", tc: "", phone: "", birthDate: "", doctors: [] })));
+          setErrorList([]);
+        }
       } else {
         if (Array.isArray(data.errors) && data.errors.length > 0) {
           setErrorList(data.errors);
