@@ -1,9 +1,6 @@
-import React from 'react'
+import React from "react";
+import ConsentFormSelectPatientPage from "./SelectPatientPage";
 
-const page = () => {
-  return (
-    <div>Yakında Gelecek</div>
-  )
+export default function Page() {
+  return <ConsentFormSelectPatientPage />;
 }
-
-export default page
