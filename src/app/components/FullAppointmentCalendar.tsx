@@ -1087,6 +1087,13 @@ export default function FullAppointmentCalendar() {
                     onSelectSlot={handleSelectSlot}
                     selectable={true}
                     longPressThreshold={10}
+                    formats={{
+                      timeGutterFormat: (date) => {
+                        const minutes = date.getMinutes();
+                        // 24 saatlik Türk formatı
+                        return minutes === 0 ? date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', hour12: false }) : '';
+                      },
+                    }}
                   />
                 </div>
               );
