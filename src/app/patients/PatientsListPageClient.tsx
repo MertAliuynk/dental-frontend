@@ -51,7 +51,9 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
 
   const [patients, setPatients] = useState<any[]>([]);
   const [search, setSearch] = useState("");
-  const [sortOption, setSortOption] = useState<string>("name-asc");
+  // Sıralama: orderBy ve order
+  const [orderBy, setOrderBy] = useState<string>("first_name");
+  const [order, setOrder] = useState<string>("asc");
   const router = useRouter();
   const [role, setRole] = useState<string>("");
   const [page, setPage] = useState(1);
@@ -69,6 +71,8 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
     if (search.trim() !== "") {
       params.append("search", search.trim());
     }
+    params.append("orderBy", orderBy);
+    params.append("order", order);
     fetch(`https://dentalapi.karadenizdis.com/api/patient?${params.toString()}`)
       .then(res => res.json())
       .then(data => {
@@ -83,7 +87,7 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
   useEffect(() => {
     fetchPatients();
     try { setRole(localStorage.getItem("role") || ""); } catch {}
-  }, [page, pageSize, search]);
+  }, [page, pageSize, search, orderBy, order]);
   // Sayfa değiştirici
   const Pagination = () => (
     <div style={{
@@ -155,51 +159,13 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
   // Düzenleme sonrası geri dönüldüğünde sayfa yenileneceği için ek işleme gerek yok
 
   // Sıralama fonksiyonu
-  const getSortedPatients = () => {
-    const sortedPatients = [...patients];
-    
-    switch (sortOption) {
-      case "name-asc":
-        return sortedPatients.sort((a, b) => {
-          const nameA = (a.first_name + " " + a.last_name).toLowerCase();
-          const nameB = (b.first_name + " " + b.last_name).toLowerCase();
-          return nameA.localeCompare(nameB, "tr");
-        });
-      
-      case "name-desc":
-        return sortedPatients.sort((a, b) => {
-          const nameA = (a.first_name + " " + a.last_name).toLowerCase();
-          const nameB = (b.first_name + " " + b.last_name).toLowerCase();
-          return nameB.localeCompare(nameA, "tr");
-        });
-      
-      case "surname-asc":
-        return sortedPatients.sort((a, b) => {
-          const surnameA = a.last_name?.toLowerCase() || "";
-          const surnameB = b.last_name?.toLowerCase() || "";
-          return surnameA.localeCompare(surnameB, "tr");
-        });
-      
-      case "surname-desc":
-        return sortedPatients.sort((a, b) => {
-          const surnameA = a.last_name?.toLowerCase() || "";
-          const surnameB = b.last_name?.toLowerCase() || "";
-          return surnameB.localeCompare(surnameA, "tr");
-        });
-      
-      default:
-        return sortedPatients;
-    }
-  };
-
-  const sorted = getSortedPatients();
-  // Arama artık backend'den geldiği için, sadece sıralama uygulanacak
-  const filtered = sorted;
+  // Sıralama backend'den geldiği için ek frontend sıralama yok
+  const filtered = patients;
 
   // Sıralama okları için yardımcı fonksiyon
   const getSortIcon = (column: string) => {
-    if (sortOption.startsWith(column)) {
-      return sortOption.endsWith("-asc") ? " ↑" : " ↓";
+    if (orderBy === column) {
+      return order === "asc" ? " ↑" : " ↓";
     }
     return "";
   };
@@ -243,8 +209,12 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
               Sırala:
             </span>
             <select
-              value={sortOption}
-              onChange={e => setSortOption(e.target.value)}
+              value={orderBy + '-' + order}
+              onChange={e => {
+                const [by, ord] = e.target.value.split('-');
+                setOrderBy(by);
+                setOrder(ord);
+              }}
               style={{
                 padding: "8px 12px",
                 borderRadius: 6,
@@ -257,10 +227,14 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
                 cursor: "pointer"
               }}
             >
-              <option value="name-asc">Ad-Soyad (A-Z)</option>
-              <option value="name-desc">Ad-Soyad (Z-A)</option>
-              <option value="surname-asc">Soyad (A-Z)</option>
-              <option value="surname-desc">Soyad (Z-A)</option>
+              <option value="first_name-asc">Ad (A-Z)</option>
+              <option value="first_name-desc">Ad (Z-A)</option>
+              <option value="last_name-asc">Soyad (A-Z)</option>
+              <option value="last_name-desc">Soyad (Z-A)</option>
+              <option value="created_at-desc">Oluşturma Tarihi (Yeni → Eski)</option>
+              <option value="created_at-asc">Oluşturma Tarihi (Eski → Yeni)</option>
+              <option value="branch_name-asc">Şube (A-Z)</option>
+              <option value="branch_name-desc">Şube (Z-A)</option>
             </select>
           </div>
         </div>

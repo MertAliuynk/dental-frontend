@@ -430,10 +430,26 @@ export default function FullAppointmentCalendar() {
   // Doktorları getir
   const fetchDoctors = async () => {
     try {
-  const res = await fetch("https://dentalapi.karadenizdis.com/api/user/doctors");
+      const res = await fetch("https://dentalapi.karadenizdis.com/api/user/doctors");
       const data = await res.json();
       if (data.success) {
-        setDoctors(data.data);
+        let branchId = null;
+        if (currentUser && (currentUser.branch_id || currentUser.branchId)) {
+          branchId = currentUser.branch_id || currentUser.branchId;
+        } else {
+          // localStorage'dan al
+          const userStr = localStorage.getItem('user');
+          if (userStr) {
+            const user = JSON.parse(userStr);
+            branchId = user.branch_id || user.branchId;
+          }
+        }
+        if (branchId !== null && branchId !== undefined && branchId !== "") {
+          const filtered = data.data.filter((d: any) => String(d.branch_id) === String(branchId));
+          setDoctors(filtered);
+        } else {
+          setDoctors(data.data);
+        }
       }
     } catch (err) {
       console.error('Doktorlar alınamadı:', err);
@@ -1065,7 +1081,7 @@ export default function FullAppointmentCalendar() {
                     onView={() => {}}
                     onNavigate={setSelectedDate}
                     min={new Date(selectedDate.setHours(8, 0, 0, 0))}
-                    max={new Date(selectedDate.setHours(20, 0, 0, 0))}
+                    max={new Date(selectedDate.setHours(23, 0, 0, 0))}
                     step={15}
                     timeslots={2}
                     style={{ height: windowWidth <= 550 ? 600 : 700, background: 'white', borderRadius: 12, marginBottom: 24 }}
@@ -1110,8 +1126,8 @@ export default function FullAppointmentCalendar() {
                 date={selectedDate}
                 onView={(view) => setViewMode(view)}
                 onNavigate={setSelectedDate}
-                min={new Date(new Date().setHours(9, 0, 0, 0))}
-                max={new Date(new Date().setHours(23, 59, 0, 0))}
+                min={new Date(new Date().setHours(8, 0, 0, 0))}
+                max={new Date(new Date().setHours(23, 0, 0, 0))}
                 step={15}
                 timeslots={4}
                 style={{ height: windowWidth <= 550 ? (viewMode === "month" ? 320 : viewMode === "week" ? 350 : 400) : windowWidth <= 768 ? (viewMode === "month" ? 550 : viewMode === "week" ? 600 : 700) : (viewMode === "month" ? 600 : viewMode === "week" ? 700 : 800), width: "100%", background: "white" }}
