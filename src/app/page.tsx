@@ -33,7 +33,15 @@ export default function Home() {
   return (
     <AppLayout>
       <main style={{ flex: 1, padding: "24px 24px 0 24px", display: "flex", flexDirection: "column" }}>
-          <div style={{ display: "flex", gap: 16, alignItems: "stretch", marginBottom: 24, flexWrap: "wrap" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: 16,
+              alignItems: "stretch",
+              marginBottom: typeof window !== 'undefined' && window.innerWidth <= 600 ? 32 : 24,
+              flexWrap: "wrap"
+            }}
+          >
             <div style={{ flex: "1 1 320px", minWidth: 280, maxWidth: 460 }}>
               <PatientSearchCard />
             </div>
