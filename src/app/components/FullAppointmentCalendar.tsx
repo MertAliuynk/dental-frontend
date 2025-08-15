@@ -183,6 +183,25 @@ const CustomEvent = ({ event }: { event: CalendarEvent }) => {
 };
 
 export default function FullAppointmentCalendar() {
+  // Kullanıcı rolünü ve ID'sini al
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const role = localStorage.getItem('role');
+      const userStr = localStorage.getItem('user');
+      let userId = null;
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          userId = user.user_id;
+        } catch {}
+      }
+      setCurrentUser({ role, userId });
+      // Eğer doktor ise sadece kendi randevularını göster
+      if (role === 'doctor' && userId) {
+        setSelectedDoctorId(userId.toString());
+      }
+    }
+  }, []);
   // Doktor renk paleti (rastgele veya sabit)
   const doctorColors = [
     '#3174ad', '#e53935', '#43a047', '#fbc02d', '#8e24aa', '#00897b', '#fb8c00', '#3949ab', '#d81b60', '#00acc1', '#7cb342', '#c62828'
