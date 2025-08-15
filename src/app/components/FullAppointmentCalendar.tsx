@@ -1256,16 +1256,19 @@ export default function FullAppointmentCalendar() {
           justifyContent: "center",
           zIndex: 1000
         }}>
-          <div style={{
-            background: "white",
-            borderRadius: 16,
-            padding: 32,
-            maxWidth: 500,
-            width: "90%",
-            maxHeight: "80vh",
-            overflowY: "auto",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.2)"
-          }}>
+          <div
+            style={{
+              background: "white",
+              borderRadius: 16,
+              padding: window.innerWidth <= 550 ? 12 : window.innerWidth <= 768 ? 20 : 32,
+              maxWidth: 500,
+              width: "95%",
+              maxHeight: window.innerWidth <= 550 ? "95vh" : window.innerWidth <= 768 ? "90vh" : "80vh",
+              overflowY: "auto",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+              position: "relative"
+            }}
+          >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
               <h3 style={{ margin: 0, color: "#1a237e", fontSize: 20 }}>
                 📅 Randevu Düzenle
@@ -1366,51 +1369,63 @@ export default function FullAppointmentCalendar() {
 
             {/* Action Buttons */}
             <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
-              <button
-                onClick={closeEditModal}
-                style={{
-                  padding: "10px 20px",
-                  background: "#6c757d",
-                  color: "white",
-                  border: "none",
-                  borderRadius: 8,
-                  cursor: "pointer",
-                  fontWeight: 600,
-                  fontSize: 14
-                }}
-              >
-                İptal
-              </button>
-              <button
-                onClick={deleteAppointment}
-                style={{
-                  padding: "10px 20px",
-                  background: "#dc3545",
-                  color: "white",
-                  border: "none",
-                  borderRadius: 8,
-                  cursor: "pointer",
-                  fontWeight: 600,
-                  fontSize: 14
-                }}
-              >
-                🗑️ Sil
-              </button>
-              <button
-                onClick={updateAppointmentNotes}
-                style={{
-                  padding: "10px 20px",
-                  background: "#28a745",
-                  color: "white",
-                  border: "none",
-                  borderRadius: 8,
-                  cursor: "pointer",
-                  fontWeight: 600,
-                  fontSize: 14
-                }}
-              >
-                💾 Kaydet
-              </button>
+              <div style={{
+                display: "flex",
+                gap: 12,
+                justifyContent: "flex-end",
+                position: window.innerWidth <= 550 ? "sticky" : "static",
+                bottom: window.innerWidth <= 550 ? 0 : undefined,
+                background: window.innerWidth <= 550 ? "white" : undefined,
+                zIndex: 2,
+                paddingBottom: window.innerWidth <= 550 ? 8 : 0,
+                borderTop: window.innerWidth <= 550 ? "1px solid #e9ecef" : undefined
+              }}>
+                <button
+                  onClick={closeEditModal}
+                  style={{
+                    padding: "10px 20px",
+                    background: "#6c757d",
+                    color: "white",
+                    border: "none",
+                    borderRadius: 8,
+                    cursor: "pointer",
+                    fontWeight: 600,
+                    fontSize: 14
+                  }}
+                >
+                  İptal
+                </button>
+                <button
+                  onClick={deleteAppointment}
+                  style={{
+                    padding: "10px 20px",
+                    background: "#dc3545",
+                    color: "white",
+                    border: "none",
+                    borderRadius: 8,
+                    cursor: "pointer",
+                    fontWeight: 600,
+                    fontSize: 14
+                  }}
+                >
+                  🗑️ Sil
+                </button>
+                <button
+                  onClick={updateAppointmentNotes}
+                  style={{
+                    padding: "10px 20px",
+                    background: "#28a745",
+                    color: "white",
+                    border: "none",
+                    borderRadius: 8,
+                    cursor: "pointer",
+                    fontWeight: 600,
+                    fontSize: 14
+                  }}
+                >
+                  💾 Kaydet
+                </button>
+              </div>
             </div>
           </div>
         </div>
