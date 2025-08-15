@@ -342,8 +342,18 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
             </tbody>
           </table>
         </div>
-        {/* Tablo altına sade ve uyumlu pagination butonları */}
-        <div style={{ display: "flex", justifyContent: "center", gap: 24, margin: "24px 0 0 0" }}>
+        {/* Responsive pagination butonları */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            gap: 24,
+            margin: "24px 0 0 0",
+            width: "100%",
+            flexWrap: "wrap"
+          }}
+        >
           <button
             disabled={page === 1}
             onClick={() => setPage(page - 1)}
@@ -357,7 +367,10 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
               fontSize: 16,
               cursor: page === 1 ? "not-allowed" : "pointer",
               boxShadow: "0 1px 4px #0001",
-              transition: "background 0.2s"
+              transition: "background 0.2s",
+              minWidth: 120,
+              width: "100%",
+              maxWidth: 180
             }}
           >Önceki</button>
           <button
@@ -373,7 +386,10 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
               fontSize: 16,
               cursor: page * pageSize >= total ? "not-allowed" : "pointer",
               boxShadow: "0 1px 4px #0001",
-              transition: "background 0.2s"
+              transition: "background 0.2s",
+              minWidth: 120,
+              width: "100%",
+              maxWidth: 180
             }}
           >Sonraki</button>
         </div>
