@@ -183,6 +183,17 @@ const CustomEvent = ({ event }: { event: CalendarEvent }) => {
 };
 
 export default function FullAppointmentCalendar() {
+  // Doktor renk paleti (rastgele veya sabit)
+  const doctorColors = [
+    '#3174ad', '#e53935', '#43a047', '#fbc02d', '#8e24aa', '#00897b', '#fb8c00', '#3949ab', '#d81b60', '#00acc1', '#7cb342', '#c62828'
+  ];
+
+  // Hekim ID'sine göre renk seç
+  const getDoctorColor = (doctorId: string | number, idx: number) => {
+    if (typeof doctorId === 'undefined' || doctorId === null) return doctorColors[idx % doctorColors.length];
+    const idNum = parseInt(doctorId.toString(), 10);
+    return doctorColors[(idNum + idx) % doctorColors.length];
+  };
   const searchParams = useSearchParams();
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -1035,162 +1046,173 @@ export default function FullAppointmentCalendar() {
           )}
         </div>
         
-        {/* Calendar - Haftalık ve Aylık Görünümler İçin Tam İşlevli */}
-        <div style={{ 
-          width: "100%", 
-          overflowX: "auto", 
-          overflowY: "hidden", 
-          WebkitOverflowScrolling: "touch",
-          maxWidth: "100%",
-          touchAction: "pan-x", // Allow horizontal touch scrolling
-          userSelect: "none" // Prevent text selection while scrolling
-        }}>
-          <div style={{ 
-            minWidth: windowWidth <= 550 ? "100%" : calendarMinWidth, 
-            width: "100%",
-            overflow: windowWidth <= 550 ? "auto" : "visible"
-          }}>
-            <DragAndDropCalendar
-              localizer={localizer}
-              events={events}
-              view={viewMode as any}
-              views={{
-                day: true,
-                week: true,
-                month: true
-              }}
-              date={selectedDate}
-              onView={(view) => setViewMode(view)}
-              onNavigate={setSelectedDate}
-              min={new Date(new Date().setHours(9, 0, 0, 0))}
-              max={new Date(new Date().setHours(23, 59, 0, 0))}
-              step={15} // 15 dakikalık adımlar
-              timeslots={4} // Her saatte 4 slot (15 dakikalık)
-              style={{ 
-                height: windowWidth <= 550 
-                  ? (viewMode === "month" ? 320 : viewMode === "week" ? 350 : 400)
-                  : windowWidth <= 768
-                    ? (viewMode === "month" ? 550 : viewMode === "week" ? 600 : 700)
-                    : (viewMode === "month" ? 600 : viewMode === "week" ? 700 : 800),
-                width: "100%", 
-                background: "white"
-              }}
-              toolbar={false}
-              // Drag & Drop ve Resize ayarları - sadece gün ve hafta görünümlerinde
-              onEventDrop={viewMode !== "month" ? moveEvent : undefined}
-              onEventResize={viewMode !== "month" ? resizeEvent : undefined}
-              resizable={viewMode !== "month"}
-              draggableAccessor={() => viewMode !== "month"}
-              resizableAccessor={() => viewMode !== "month"}
-              // Touch optimization settings - enhanced for mobile
-              eventPropGetter={(event: any) => ({
-                className: 'calendar-event rbc-event-with-touch-support',
-                style: {
-                  backgroundColor: '#3174ad',
-                  touchAction: 'none', // Optimize for touch
-                  // Add border for better visibility on mobile
-                  border: windowWidth <= 768 ? '2px solid rgba(255, 255, 255, 0.3)' : undefined
-                }
-              })}
-              // Enhanced touch settings for mobile
-              longPressThreshold={10} // Lower threshold for mobile - makes dragging more responsive
-              startAccessor="start"
-              endAccessor="end"
-              // Mobile-friendly settings
-              // Custom event component
-              components={{
-                event: CustomEvent,
-                // Aylık görünümde daha küçük event gösterimi
-                month: {
-                  event: ({ event }: any) => {
-                    const raw = event.rawData || {};
-                    const session = raw.session_number || raw.session || null;
-                    const status = raw.status || raw.appointment_status || '';
-                    const statusMap: Record<string, string> = {
-                      pending: 'Bekliyor',
-                      approved: 'Onaylandı',
-                      completed: 'Tamamlandı',
-                      cancelled: 'İptal',
-                      ongoing: 'Devam Ediyor',
-                      missed: 'Kaçırıldı',
-                      'bekliyor': 'Bekliyor',
-                      'onaylandı': 'Onaylandı',
-                      'tamamlandı': 'Tamamlandı',
-                      'iptal': 'İptal',
-                      'devam': 'Devam Ediyor',
-                      'kaçırıldı': 'Kaçırıldı',
-                    };
-                    const statusLabel = statusMap[status?.toLowerCase?.()] || status;
-                    return (
-                      <div 
-                        style={{
-                          cursor: 'pointer',
-                          height: '100%',
-                          padding: '2px 4px',
-                          borderRadius: '2px',
-                          backgroundColor: '#3174ad',
-                          color: 'white',
-                          fontSize: '10px',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap'
-                        }}
-                      >
-                        {session && <span style={{ fontWeight: 700 }}>Seans {session} - </span>}
-                        {event.title}
-                        {statusLabel && (
-                          <span style={{ marginLeft: 4, fontWeight: 600, fontSize: 10, color: '#ffe082', background: '#1976d2', borderRadius: 4, padding: '0 4px' }}>
-                            {statusLabel}
-                          </span>
-                        )}
-                      </div>
-                    );
-                  }
-                }
-              }}
-              // Randevu tıklama eventi
-              onSelectEvent={selectEvent}
-              // Boş alana tıklama eventi - sadece gün ve hafta görünümlerinde yeni randevu oluşturma
-              onSelectSlot={viewMode !== "month" ? handleSelectSlot : undefined}
-              selectable={viewMode !== "month"}
-              // Haftalık görünümde Türkçe gün isimleri
-              messages={{
-                today: 'Bugün',
-                previous: 'Önceki',
-                next: 'Sonraki',
-                month: 'Ay',
-                week: 'Hafta',
-                day: 'Gün',
-                agenda: 'Ajanda',
-                date: 'Tarih',
-                time: 'Saat',
-                event: 'Randevu',
-                noEventsInRange: 'Bu aralıkta randevu yok.',
-                showMore: (total) => `+${total} daha fazla`
-              }}
-              // Haftalık ve aylık görünümler için ek ayarlar
-              formats={{
-                dayFormat: 'dd',
-                dayRangeHeaderFormat: ({ start }) =>
-                  format(start, 'MMMM yyyy', { locale: tr }),
-                dayHeaderFormat: (date) =>
-                  format(date, 'EEEE dd', { locale: tr }),
-                monthHeaderFormat: (date) =>
-                  format(date, 'MMMM yyyy', { locale: tr }),
-                weekdayFormat: (date) =>
-                  format(date, 'EEE', { locale: tr }),
-                timeGutterFormat: (date) =>
-                  format(date, 'HH:mm', { locale: tr }),
-                eventTimeRangeFormat: ({ start, end }) =>
-                  `${format(start, 'HH:mm', { locale: tr })} - ${format(end, 'HH:mm', { locale: tr })}`,
-                agendaTimeFormat: (date) =>
-                  format(date, 'HH:mm', { locale: tr }),
-                agendaDateFormat: (date) =>
-                  format(date, 'dd MMM yyyy', { locale: tr })
-              }}
-            />
+        {/* Calendar - Günlük görünümde tüm doktorlar için grid bölme */}
+        {viewMode === 'day' && selectedDoctorId === 'all' ? (
+          <div style={{ width: '100%', display: 'flex', gap: 18, overflowX: 'auto', maxWidth: '100vw', minHeight: 600 }}>
+            {availableDoctors.map((doctor, idx) => {
+              const doctorEvents = events.filter(ev => String(ev.rawData?.doctor_id) === String(doctor.user_id));
+              return (
+                <div key={doctor.user_id} style={{ minWidth: 340, flex: '1 1 0', background: '#fff', borderRadius: 12, boxShadow: '0 2px 8px #0001', padding: 8, border: `2px solid ${getDoctorColor(doctor.user_id, idx)}` }}>
+                  <div style={{ fontWeight: 700, fontSize: 17, color: getDoctorColor(doctor.user_id, idx), textAlign: 'center', marginBottom: 8 }}>
+                    Dr. {doctor.first_name} {doctor.last_name}
+                  </div>
+                  <DragAndDropCalendar
+                    localizer={localizer}
+                    events={doctorEvents}
+                    view={'day'}
+                    views={{ day: true }}
+                    date={selectedDate}
+                    onView={() => {}}
+                    onNavigate={setSelectedDate}
+                    min={new Date(selectedDate.setHours(8, 0, 0, 0))}
+                    max={new Date(selectedDate.setHours(20, 0, 0, 0))}
+                    step={15}
+                    timeslots={2}
+                    style={{ height: windowWidth <= 550 ? 600 : 700, background: 'white', borderRadius: 12, marginBottom: 24 }}
+                    toolbar={false}
+                    eventPropGetter={() => ({
+                      style: {
+                        backgroundColor: getDoctorColor(doctor.user_id, idx),
+                        color: 'white',
+                        borderRadius: 6,
+                        border: `1.5px solid ${getDoctorColor(doctor.user_id, idx)}`,
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                        fontWeight: 600,
+                      },
+                    })}
+                    components={{ event: CustomEvent }}
+                    onEventDrop={moveEvent}
+                    onEventResize={resizeEvent}
+                    onSelectEvent={selectEvent}
+                    selectable={true}
+                    longPressThreshold={10}
+                  />
+                </div>
+              );
+            })}
           </div>
-        </div>
+        ) : (
+          <div style={{ width: "100%", overflowX: "auto", overflowY: "hidden", WebkitOverflowScrolling: "touch", maxWidth: "100%", touchAction: "pan-x", userSelect: "none" }}>
+            <div style={{ minWidth: windowWidth <= 550 ? "100%" : calendarMinWidth, width: "100%", overflow: windowWidth <= 550 ? "auto" : "visible" }}>
+              <DragAndDropCalendar
+                localizer={localizer}
+                events={events}
+                view={viewMode as any}
+                views={{ day: true, week: true, month: true }}
+                date={selectedDate}
+                onView={(view) => setViewMode(view)}
+                onNavigate={setSelectedDate}
+                min={new Date(new Date().setHours(9, 0, 0, 0))}
+                max={new Date(new Date().setHours(23, 59, 0, 0))}
+                step={15}
+                timeslots={4}
+                style={{ height: windowWidth <= 550 ? (viewMode === "month" ? 320 : viewMode === "week" ? 350 : 400) : windowWidth <= 768 ? (viewMode === "month" ? 550 : viewMode === "week" ? 600 : 700) : (viewMode === "month" ? 600 : viewMode === "week" ? 700 : 800), width: "100%", background: "white" }}
+                toolbar={false}
+                onEventDrop={viewMode !== "month" ? moveEvent : undefined}
+                onEventResize={viewMode !== "month" ? resizeEvent : undefined}
+                resizable={viewMode !== "month"}
+                draggableAccessor={() => viewMode !== "month"}
+                resizableAccessor={() => viewMode !== "month"}
+                eventPropGetter={(event: any) => ({
+                  className: 'calendar-event rbc-event-with-touch-support',
+                  style: {
+                    backgroundColor: '#3174ad',
+                    touchAction: 'none',
+                    border: windowWidth <= 768 ? '2px solid rgba(255, 255, 255, 0.3)' : undefined
+                  }
+                })}
+                longPressThreshold={10}
+                startAccessor="start"
+                endAccessor="end"
+                components={{
+                  event: CustomEvent,
+                  month: {
+                    event: ({ event }: any) => {
+                      const raw = event.rawData || {};
+                      const session = raw.session_number || raw.session || null;
+                      const status = raw.status || raw.appointment_status || '';
+                      const statusMap: Record<string, string> = {
+                        pending: 'Bekliyor',
+                        approved: 'Onaylandı',
+                        completed: 'Tamamlandı',
+                        cancelled: 'İptal',
+                        ongoing: 'Devam Ediyor',
+                        missed: 'Kaçırıldı',
+                        'bekliyor': 'Bekliyor',
+                        'onaylandı': 'Onaylandı',
+                        'tamamlandı': 'Tamamlandı',
+                        'iptal': 'İptal',
+                        'devam': 'Devam Ediyor',
+                        'kaçırıldı': 'Kaçırıldı',
+                      };
+                      const statusLabel = statusMap[status?.toLowerCase?.()] || status;
+                      return (
+                        <div 
+                          style={{
+                            cursor: 'pointer',
+                            height: '100%',
+                            padding: '2px 4px',
+                            borderRadius: '2px',
+                            backgroundColor: '#3174ad',
+                            color: 'white',
+                            fontSize: '10px',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap'
+                          }}
+                        >
+                          {session && <span style={{ fontWeight: 700 }}>Seans {session} - </span>}
+                          {event.title}
+                          {statusLabel && (
+                            <span style={{ marginLeft: 4, fontWeight: 600, fontSize: 10, color: '#ffe082', background: '#1976d2', borderRadius: 4, padding: '0 4px' }}>
+                              {statusLabel}
+                            </span>
+                          )}
+                        </div>
+                      );
+                    }
+                  }
+                }}
+                onSelectEvent={selectEvent}
+                onSelectSlot={viewMode !== "month" ? handleSelectSlot : undefined}
+                selectable={viewMode !== "month"}
+                messages={{
+                  today: 'Bugün',
+                  previous: 'Önceki',
+                  next: 'Sonraki',
+                  month: 'Ay',
+                  week: 'Hafta',
+                  day: 'Gün',
+                  agenda: 'Ajanda',
+                  date: 'Tarih',
+                  time: 'Saat',
+                  event: 'Randevu',
+                  noEventsInRange: 'Bu aralıkta randevu yok.',
+                  showMore: (total) => `+${total} daha fazla`
+                }}
+                formats={{
+                  dayFormat: 'dd',
+                  dayRangeHeaderFormat: ({ start }) =>
+                    format(start, 'MMMM yyyy', { locale: tr }),
+                  dayHeaderFormat: (date) =>
+                    format(date, 'EEEE dd', { locale: tr }),
+                  monthHeaderFormat: (date) =>
+                    format(date, 'MMMM yyyy', { locale: tr }),
+                  weekdayFormat: (date) =>
+                    format(date, 'EEE', { locale: tr }),
+                  timeGutterFormat: (date) =>
+                    format(date, 'HH:mm', { locale: tr }),
+                  eventTimeRangeFormat: ({ start, end }) =>
+                    `${format(start, 'HH:mm', { locale: tr })} - ${format(end, 'HH:mm', { locale: tr })}`,
+                  agendaTimeFormat: (date) =>
+                    format(date, 'HH:mm', { locale: tr }),
+                  agendaDateFormat: (date) =>
+                    format(date, 'dd MMM yyyy', { locale: tr })
+                }}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Randevu Düzenleme Modalı */}
