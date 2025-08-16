@@ -261,15 +261,15 @@ export default function MiniAppointmentCalendar() {
               }}
               eventPropGetter={(event) => ({
                 style: {
-                  border: '1.5px solid #b6c6e6',
-                  borderRadius: '6px',
+                  border: '2px solid #fff', // Beyaz çerçeve
+                  borderRadius: '8px',
                   background: '#fff',
                   color: '#222',
                   fontWeight: 600,
-                  padding: '2px 6px',
-                  boxShadow: '0 1px 4px #0001',
+                  padding: '2px 8px',
+                  boxShadow: '0 1px 4px #e3eaff33',
                   fontSize: '13px',
-                  marginBottom: '2px'
+                  marginBottom: '4px'
                 }
               })}
 />
