@@ -1,5 +1,5 @@
-// MiniAppointmentCalendar.tsx - Şube bazlı doktor randevuları
 "use client";
+// MiniAppointmentCalendar.tsx - Şube bazlı doktor randevuları
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./mini-calendar-custom.css";
@@ -116,6 +116,24 @@ export default function MiniAppointmentCalendar() {
 
   // Doktor başına randevuları getir
   const fetchAppointmentsForDoctor = async (doctorId: number) => {
+// Custom event component: sadece hasta ismi ve not
+function MiniCalendarEvent({ event }: { event: any }) {
+  // event.title: "Hasta Adı Soyadı - Not" veya sadece "Not"
+  let hastaIsmi = "";
+  let not = "";
+  if (event.title) {
+    const parts = event.title.split(" - ");
+    hastaIsmi = parts[0] || "";
+    not = parts.slice(1).join(" - ");
+  }
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', width: '100%' }}>
+      <span style={{ fontWeight: 700, fontSize: 14, color: '#1976d2', marginBottom: not ? 2 : 0 }}>{hastaIsmi}</span>
+      {not && <span style={{ fontSize: 13, color: '#222' }}>{not}</span>}
+    </div>
+  );
+}
+
     try {
       // Haftanın başı (Pazartesi) ve sonu (Pazar) tarihlerini bul
       const now = new Date();
@@ -261,7 +279,7 @@ export default function MiniAppointmentCalendar() {
               }}
               eventPropGetter={(event) => ({
                 style: {
-                  border: '2px solid #1976d2', // Her zaman görünür mavi border
+                  border: '2px solid #1976d2',
                   borderRadius: '8px',
                   background: '#fff',
                   color: '#222',
@@ -270,9 +288,12 @@ export default function MiniAppointmentCalendar() {
                   boxShadow: '0 1px 4px #e3eaff33',
                   fontSize: '13px',
                   marginBottom: '4px',
-                  zIndex: 1 // Her zaman üstte ve görünür
+                  zIndex: 1
                 }
               })}
+              components={{
+                event: MiniCalendarEvent
+              }}
 />
       </div>
           </div>
