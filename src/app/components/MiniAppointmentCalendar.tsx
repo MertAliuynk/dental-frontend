@@ -19,17 +19,14 @@ const localizer = dateFnsLocalizer({
 
 // Custom event component: sadece hasta ismi ve not
 function MiniCalendarEvent({ event }: { event: any }) {
-  // event.title: "Hasta Adı Soyadı - Not" veya sadece "Not"
-  let hastaIsmi = "";
-  let not = "";
-  if (event.title) {
-    const parts = event.title.split(" - ");
-    hastaIsmi = parts[0] || "";
-    not = parts.slice(1).join(" - ");
-  }
+  // FullAppointmentCalendar'daki gibi event objesinden hasta ismi ve notu doğrudan al
+  const hastaIsmi = event.patient_first_name && event.patient_last_name
+    ? `${event.patient_first_name} ${event.patient_last_name}`
+    : "";
+  const not = event.notes || "";
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', width: '100%' }}>
-      <span style={{ fontWeight: 700, fontSize: 14, color: '#1976d2', marginBottom: not ? 2 : 0 }}>{hastaIsmi}</span>
+      {hastaIsmi && <span style={{ fontWeight: 700, fontSize: 14, color: '#1976d2', marginBottom: not ? 2 : 0 }}>{hastaIsmi}</span>}
       {not && <span style={{ fontSize: 13, color: '#222' }}>{not}</span>}
     </div>
   );
