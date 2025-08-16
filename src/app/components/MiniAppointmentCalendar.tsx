@@ -158,7 +158,9 @@ export default function MiniAppointmentCalendar() {
           })
           .map((item: any) => ({
             title: item.patient_first_name && item.patient_last_name 
-              ? `${item.patient_first_name} ${item.patient_last_name}${item.notes ? ` - ${item.notes}` : ''}`
+              ? item.notes
+                ? `${item.patient_first_name} ${item.patient_last_name} - ${item.notes}`
+                : `${item.patient_first_name} ${item.patient_last_name}`
               : (item.notes || "Randevu"),
             start: new Date(item.appointment_time),
             end: new Date(new Date(item.appointment_time).getTime() + (item.duration_minutes || 30) * 60000),
