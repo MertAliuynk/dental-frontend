@@ -43,7 +43,7 @@ export default function PatientSearchCard() {
   const filtered = patients;
 
   return (
-    <div style={{ background: "white", borderRadius: 12, padding: 20, boxShadow: "0 2px 8px #0001", minWidth: 280, maxWidth: 320, minHeight: 420, height: 420, display: "flex", flexDirection: "column" }}>
+  <div style={{ background: "white", borderRadius: 12, padding: 20, boxShadow: "0 2px 8px #0001", minWidth: 280, maxWidth: 320, minHeight: 480, height: 480, display: "flex", flexDirection: "column" }}>
       <div style={{ display: "flex", alignItems: "center", marginBottom: 12, gap: 8 }}>
         <input
           type="text"
@@ -110,11 +110,11 @@ export default function PatientSearchCard() {
           </List>
         )}
       </div>
-      {/* Pagination */}
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, marginTop: 12 }}>
-        <button disabled={page === 1} onClick={() => setPage(page-1)} style={{ padding: "6px 14px", borderRadius: 6, border: "1px solid #dbeafe", background: page === 1 ? "#eee" : "#0a2972", color: "#fff", fontWeight: 600, cursor: page === 1 ? "not-allowed" : "pointer" }}>Önceki</button>
-        <span style={{ fontWeight: 600, color: "#1976d2" }}>{page} / {Math.max(1, Math.ceil(total / pageSize))}</span>
-        <button disabled={page * pageSize >= total} onClick={() => setPage(page+1)} style={{ padding: "6px 14px", borderRadius: 6, border: "1px solid #dbeafe", background: page * pageSize >= total ? "#eee" : "#0a2972", color: "#fff", fontWeight: 600, cursor: page * pageSize >= total ? "not-allowed" : "pointer" }}>Sonraki</button>
+      {/* Pagination - kartın içinde, en altta ortalanmış */}
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, marginTop: "auto", paddingTop: 12 }}>
+        <button disabled={page === 1} onClick={() => setPage(page-1)} style={{ padding: "8px 18px", borderRadius: 8, border: "1.5px solid #dbeafe", background: page === 1 ? "#eee" : "#0a2972", color: "#fff", fontWeight: 600, cursor: page === 1 ? "not-allowed" : "pointer", fontSize: 15, boxShadow: page === 1 ? "none" : "0 2px 8px #0001" }}>Önceki</button>
+        <span style={{ fontWeight: 700, color: "#1976d2", fontSize: 15 }}>{page} / {Math.max(1, Math.ceil(total / pageSize))}</span>
+        <button disabled={page * pageSize >= total} onClick={() => setPage(page+1)} style={{ padding: "8px 18px", borderRadius: 8, border: "1.5px solid #dbeafe", background: page * pageSize >= total ? "#eee" : "#0a2972", color: "#fff", fontWeight: 600, cursor: page * pageSize >= total ? "not-allowed" : "pointer", fontSize: 15, boxShadow: page * pageSize >= total ? "none" : "0 2px 8px #0001" }}>Sonraki</button>
       </div>
     </div>
   );
