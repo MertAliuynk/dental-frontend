@@ -1172,7 +1172,7 @@ export default function FullAppointmentCalendar() {
                 min={new Date(new Date().setHours(8, 0, 0, 0))}
                 max={new Date(new Date().setHours(23, 0, 0, 0))}
                 step={15}
-                timeslots={4}
+                timeslots={1}
                 style={{ height: windowWidth <= 550 ? (viewMode === "month" ? 320 : viewMode === "week" ? 350 : 400) : windowWidth <= 768 ? (viewMode === "month" ? 550 : viewMode === "week" ? 600 : 700) : (viewMode === "month" ? 600 : viewMode === "week" ? 700 : 800), width: "100%", background: "white" }}
                 toolbar={false}
                 onEventDrop={viewMode !== "month" ? moveEvent : undefined}
