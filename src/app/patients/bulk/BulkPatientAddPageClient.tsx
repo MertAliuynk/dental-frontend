@@ -1,5 +1,5 @@
 "use client";
-// import Topbar kaldırıldı
+
 import AppLayout from "../../components/AppLayout";
 import { useState, useEffect } from "react";
 import "./bulk-patient.css";
@@ -23,17 +23,17 @@ export default function BulkPatientAddPageClient() {
   const [errorList, setErrorList] = useState<{ index: number; tc: string; error: string }[]>([]);
 
   useEffect(() => {
-    // branchId localStorage veya JWT'den alınır
+    
     let branchId = null;
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     if (token) {
       try {
-        // jwtDecode fonksiyonu yoksa, basit decode ile alınabilir
+        
         const base64 = token.split('.')[1];
         const decoded = JSON.parse(atob(base64));
         branchId = decoded.branch_id || decoded.branchId || null;
       } catch (e) {
-        // decode hatası
+        
       }
     }
     fetch("https://dentalapi.karadenizdis.com/api/user/doctors")
@@ -55,7 +55,7 @@ export default function BulkPatientAddPageClient() {
     setRows(prev => prev.map((row, i) => {
       if (i !== idx) return row;
       if (field === "doctors") {
-        // Çoklu select
+        
         return { ...row, doctors: value };
       }
       return { ...row, [field]: value };
@@ -67,7 +67,7 @@ export default function BulkPatientAddPageClient() {
     setMessage(null);
     setLoading(true);
     setErrorList([]);
-    // Zorunlu alan ve format kontrolü
+    
     for (let i = 0; i < rows.length; i++) {
       const { firstName, lastName, tc, phone, birthDate, doctors } = rows[i];
       if ((firstName || lastName || tc || phone || birthDate || (doctors && doctors.length)) && (!firstName || !lastName || !tc || !phone || !birthDate || !doctors || doctors.length === 0)) {
@@ -75,20 +75,20 @@ export default function BulkPatientAddPageClient() {
         setLoading(false);
         return;
       }
-      // TC kimlik kontrolü (11 hane, sadece rakam)
+      
       if (tc && (!/^\d{11}$/.test(tc))) {
         setMessage(`${i + 1}. satırda TC kimlik numarası 11 haneli olmalı ve sadece rakam içermeli.`);
         setLoading(false);
         return;
       }
-      // Telefon kontrolü (en az 10, en fazla 11 hane, sadece rakam)
+      
       if (phone && (!/^\d{10,11}$/.test(phone))) {
         setMessage(`${i + 1}. satırda telefon numarası 10 veya 11 haneli olmalı ve sadece rakam içermeli.`);
         setLoading(false);
         return;
       }
     }
-    // Sadece dolu satırları gönder
+    
     const validRows = rows
       .filter(r => r.firstName && r.lastName && r.tc && r.phone && r.birthDate && r.doctors && r.doctors.length > 0)
     if (validRows.length === 0) {
@@ -97,7 +97,7 @@ export default function BulkPatientAddPageClient() {
       return;
     }
     try {
-      // Token'ı localStorage'dan al
+      
       const token = localStorage.getItem('token');
       const headers: Record<string, string> = { "Content-Type": "application/json" };
       if (token) {
@@ -109,14 +109,14 @@ export default function BulkPatientAddPageClient() {
         body: JSON.stringify({ patients: validRows })
       });
       const data = await res.json();
-      // Başarı ve hata birlikte kontrol
+      
       if (data.success) {
         if (Array.isArray(data.errors) && data.errors.length > 0) {
-          // Bazı hastalar eklendi, bazıları hata aldı
+          
           setMessage("Bazı hastalar başarıyla eklendi, aşağıdaki satırlarda hata var:");
           setErrorList(data.errors);
         } else {
-          // Tüm hastalar eksiksiz eklendi
+          
           setMessage("Tüm hastalar başarıyla eklendi!");
           setRows(Array.from({ length: MAX_ROWS }, () => ({ firstName: "", lastName: "", tc: "", phone: "", birthDate: "", doctors: [] })));
           setErrorList([]);
@@ -140,7 +140,7 @@ export default function BulkPatientAddPageClient() {
 
   return (
     <AppLayout>
-  {/* <Topbar /> kaldırıldı, AppLayout kullanılmalı */}
+  
   <main className="bulk-patient-container">
     <h2 className="bulk-patient-title">Toplu Hasta Ekleme</h2>
     <form onSubmit={handleSubmit} className="bulk-patient-form">
