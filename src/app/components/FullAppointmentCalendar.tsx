@@ -142,11 +142,11 @@ const CustomEvent = ({ event }: { event: CalendarEvent }) => {
         height: '100%',
         padding: '4px 12px',
         borderRadius: '8px',
-        background: '#3174ad',
-        color: 'white',
+        background: '#fff',
+        color: '#222',
         fontSize: '13px',
         position: 'relative',
-        border: '2.5px solid #fff',
+        border: '2.5px solid #e3eafc',
         boxShadow: '0 1px 4px #e3eaff33',
         fontWeight: 600,
         userSelect: 'none',
@@ -168,6 +168,21 @@ const CustomEvent = ({ event }: { event: CalendarEvent }) => {
           </span>
         )}
       </div>
+      {/* Notu alt satırda göster */}
+      {event.rawData?.notes && (
+        <div style={{
+          marginTop: 2,
+          fontSize: '12px',
+          color: '#fff',
+          fontWeight: 400,
+          background: 'transparent',
+          whiteSpace: 'pre-line',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis'
+        }}>
+          {event.rawData.notes}
+        </div>
+      )}
     </div>
   );
 };
