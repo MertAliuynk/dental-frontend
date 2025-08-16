@@ -1,4 +1,10 @@
-  "use client";
+
+"use client";
+import { useState, useEffect } from "react";
+import { FixedSizeList as List } from "react-window";
+import { useRouter } from "next/navigation";
+
+export default function PatientSearchCard() {
   const [branches, setBranches] = useState<any[]>([]);
   const [selectedBranch, setSelectedBranch] = useState<number | null>(null);
   useEffect(() => {
@@ -8,13 +14,6 @@
         if (data.success) setBranches(data.data);
       });
   }, []);
-import { useState } from "react";
-import { FixedSizeList as List } from "react-window";
-import { useRouter } from "next/navigation";
-
-import { useEffect } from "react";
-
-export default function PatientSearchCard() {
   const [search, setSearch] = useState("");
   const [patients, setPatients] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
