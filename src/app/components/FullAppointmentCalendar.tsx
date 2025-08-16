@@ -2052,8 +2052,11 @@ export default function FullAppointmentCalendar() {
 
   /* Calendar time slots */
   .rbc-time-slot {
-    border-top: 1px solid #e8e8e8 !important;
-    transition: background-color 0.1s ease !important;
+  border-top: 1px solid #e8e8e8 !important;
+  transition: background-color 0.1s ease !important;
+  min-height: 40px !important;
+  height: 40px !important;
+  line-height: 40px !important;
   }
 
   .rbc-time-slot:hover {
