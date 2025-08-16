@@ -138,19 +138,19 @@ const CustomEvent = ({ event }: { event: CalendarEvent }) => {
     <div 
       className="custom-event"
       style={{
-        cursor: 'move',
-        height: '100%',
-        padding: '4px 12px',
-        borderRadius: '8px',
-        background: '#fff',
-        color: '#222',
-        fontSize: '13px',
-        position: 'relative',
-        border: '2.5px solid #e3eafc',
-        boxShadow: '0 1px 4px #e3eaff33',
-        fontWeight: 600,
-        userSelect: 'none',
-        touchAction: 'none'
+  cursor: 'move',
+  height: '100%',
+  padding: '4px 12px',
+  borderRadius: '8px',
+  background: '#1976d2', // dışardaki mavi ile aynı renk
+  color: '#fff', // yazı beyaz
+  fontSize: '13px',
+  position: 'relative',
+  border: '2.5px solid #1976d2', // border da aynı mavi
+  boxShadow: '0 1px 4px #e3eaff33',
+  fontWeight: 600,
+  userSelect: 'none',
+  touchAction: 'none'
       }}
     >
       <div style={{ 

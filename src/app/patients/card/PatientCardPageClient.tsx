@@ -506,8 +506,8 @@ export default function PatientCardPageClient() {
                 }}
                 onClick={async () => {
                   try {
-                    const res = await fetch(`/api/patient/${patient.patient_id}`, {
-                      method: 'PUT',
+                    const res = await fetch(`/api/patient/${patient.patient_id}/notes`, {
+                      method: 'PATCH',
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({ notes: editNoteValue })
                     });
