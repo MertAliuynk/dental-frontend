@@ -55,36 +55,34 @@ export default function PatientSearchCard() {
 
   return (
   <div style={{ background: "white", borderRadius: 12, padding: 20, boxShadow: "0 2px 8px #0001", minWidth: 280, maxWidth: 320, minHeight: 480, height: 480, display: "flex", flexDirection: "column" }}>
-      <div style={{ marginBottom: 8 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
         <select
           value={selectedBranch ?? ""}
           onChange={e => setSelectedBranch(e.target.value ? Number(e.target.value) : null)}
-          style={{ padding: 8, borderRadius: 6, border: "1.5px solid #dbeafe", fontWeight: 500, fontSize: 15, background: '#f8fafc', width: "100%" }}
+          style={{ padding: 8, borderRadius: 6, border: "1.5px solid #1976d2", fontWeight: 700, fontSize: 15, background: '#f8fafc', width: 120, color: '#1a237e', marginRight: 4 }}
         >
-          <option value="">Tüm Şubeler</option>
+          <option value="" style={{ color: '#1a237e', fontWeight: 700 }}>Tüm Şubeler</option>
           {branches.map(b => (
-            <option key={b.branch_id} value={b.branch_id}>{b.name}</option>
+            <option key={b.branch_id} value={b.branch_id} style={{ color: '#1a237e', fontWeight: 700 }}>{b.name}</option>
           ))}
         </select>
-      </div>
-      <div style={{ display: "flex", alignItems: "center", marginBottom: 12, gap: 8 }}>
         <input
           type="text"
           placeholder="Hasta ara..."
           value={search}
           onChange={e => { setSearch(e.target.value); setPage(1); }}
-          style={{ flex: 1, padding: 8, borderRadius: 6, border: "1.5px solid #dbeafe", fontWeight: 500, color: "#222", fontSize: 15, background: '#f8fafc' }}
+          style={{ flex: 1, padding: 8, borderRadius: 6, border: "1.5px solid #1976d2", fontWeight: 700, color: "#1a237e", fontSize: 15, background: '#f8fafc' }}
         />
         <span style={{
           minWidth: 40,
           textAlign: 'center',
-          fontSize: 11,
-          color: '#1976d2',
+          fontSize: 13,
+          color: '#0a2972',
           background: '#e3eafc',
           borderRadius: 6,
-          padding: '2px 6px',
+          padding: '2px 8px',
           fontWeight: 700,
-          border: '1.5px solid #b6c6e6',
+          border: '1.5px solid #1976d2',
           boxShadow: '0 1px 4px #e3eaff33',
           whiteSpace: 'nowrap',
           lineHeight: 1.1,
