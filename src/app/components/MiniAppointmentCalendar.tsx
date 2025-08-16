@@ -191,9 +191,7 @@ export default function MiniAppointmentCalendar() {
   };
 
   useEffect(() => {
-    // branch ve user hazır olmadan fetch başlatma
-    if (!selectedBranchId || !currentUserId) return;
-    if (selectedBranchId > 0) {
+    if (selectedBranchId && selectedBranchId > 0) {
       console.log("Fetching doctors for branch:", selectedBranchId);
       fetchDoctors();
     }

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import React, { useEffect, useState } from "react";
-import LoadingScreen from "./components/LoadingScreen";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,24 +17,17 @@ export const metadata: Metadata = {
   description: "Karadeniz Diş Ağız ve Diş Sağlığı Polikliniği web sitesi.",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Simülasyon: Giriş sonrası global veriler çekiliyor
-    // Burada gerçek API çağrıları yapılabilir
-    const fetchGlobalData = async () => {
-      // Örnek: kullanıcı, şube, doktorlar, vs. fetch
-      await new Promise((resolve) => setTimeout(resolve, 1800)); // Simülasyon için 1.8sn beklet
-      setLoading(false);
-    };
-    fetchGlobalData();
-  }, []);
-
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {loading ? <LoadingScreen /> : children}
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {children}
       </body>
     </html>
   );
