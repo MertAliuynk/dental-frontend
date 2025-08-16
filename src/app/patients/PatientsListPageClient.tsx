@@ -67,10 +67,10 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
   const [pageSize, setPageSize] = useState(50);
   const [total, setTotal] = useState(0);
 
-  // Arama kutusu değiştiğinde sayfa 1'e dön
+  // Arama veya şube değiştiğinde sayfa 1'e dön
   useEffect(() => {
     setPage(1);
-  }, [search]);
+  }, [search, selectedBranch]);
   const fetchPatients = () => {
     const params = new URLSearchParams();
     params.append("limit", pageSize.toString());
@@ -97,7 +97,7 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
   useEffect(() => {
     fetchPatients();
     try { setRole(localStorage.getItem("role") || ""); } catch {}
-  }, [page, pageSize, search, orderBy, order]);
+  }, [page, pageSize, search, orderBy, order, selectedBranch]);
   // Sayfa değiştirici
   const Pagination = () => (
     <div style={{

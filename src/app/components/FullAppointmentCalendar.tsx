@@ -1,3 +1,5 @@
+  "use client";
+  // ...existing imports and code...
 "use client";
 // SMS Gönderme Bölümü Bileşeni
 function SmsSendSection({ createForm, patients, currentUser }: any) {
@@ -183,6 +185,16 @@ const CustomEvent = ({ event }: { event: CalendarEvent }) => {
 };
 
 export default function FullAppointmentCalendar() {
+  // Şube filtreleme için state ve şube listesini çek
+  const [branches, setBranches] = useState<any[]>([]);
+  const [selectedBranch, setSelectedBranch] = useState<number | null>(null);
+  useEffect(() => {
+    fetch("https://dentalapi.karadenizdis.com/api/branch")
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) setBranches(data.data);
+      });
+  }, []);
   // Kullanıcı rolünü ve ID'sini al
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -281,7 +293,12 @@ export default function FullAppointmentCalendar() {
       return;
     }
     try {
-      const res = await fetch(`https://dentalapi.karadenizdis.com/api/patient?search=${encodeURIComponent(search)}`);
+      const params = new URLSearchParams();
+      params.append("search", search);
+      if (selectedBranch) {
+        params.append("branch_id", selectedBranch.toString());
+      }
+      const res = await fetch(`https://dentalapi.karadenizdis.com/api/patient?${params.toString()}`);
       const data = await res.json();
       if (data.success) {
         setSearchedPatients(data.data);
@@ -436,7 +453,11 @@ export default function FullAppointmentCalendar() {
   // Hastaları getir
   const fetchPatients = async () => {
     try {
-  const res = await fetch("https://dentalapi.karadenizdis.com/api/patient");
+      const params = new URLSearchParams();
+      if (selectedBranch) {
+        params.append("branch_id", selectedBranch.toString());
+      }
+      const res = await fetch(`https://dentalapi.karadenizdis.com/api/patient?${params.toString()}`);
       const data = await res.json();
       if (data.success) {
         setPatients(data.data);
@@ -1532,7 +1553,7 @@ export default function FullAppointmentCalendar() {
 
             {/* Form Alanları */}
             <div style={{ display: "grid", gap: 16 }}>
-              {/* Hasta Seçimi */}
+              {/* Hasta Seçimi + Şube Filtreleme */}
               <div style={{ position: 'relative' }}>
                 <label style={{ 
                   display: "block", 
@@ -1542,7 +1563,17 @@ export default function FullAppointmentCalendar() {
                 }}>
                   👤 Hasta Seçiniz *
                 </label>
-                <div style={{ position: 'relative' }}>
+                <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
+                  <select
+                    value={selectedBranch ?? ""}
+                    onChange={e => setSelectedBranch(e.target.value ? Number(e.target.value) : null)}
+                    style={{ padding: 8, borderRadius: 6, border: "2px solid #1976d2", fontWeight: 700, fontSize: 14, background: '#e3eafc', color: '#1a237e', minWidth: 90 }}
+                  >
+                    <option value="" style={{ color: '#1a237e', fontWeight: 700 }}>Tüm Şubeler</option>
+                    {branches.map(b => (
+                      <option key={b.branch_id} value={b.branch_id} style={{ color: '#1a237e', fontWeight: 700 }}>{b.name}</option>
+                    ))}
+                  </select>
                   <input
                     type="text"
                     value={(() => {
@@ -1568,7 +1599,7 @@ export default function FullAppointmentCalendar() {
                       setShowPatientDropdown(true);
                     }}
                     style={{
-                      width: "100%",
+                      flex: 1,
                       padding: 12,
                       border: "2px solid #e9ecef",
                       borderRadius: 8,
