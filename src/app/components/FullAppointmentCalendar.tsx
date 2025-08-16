@@ -389,11 +389,13 @@ export default function FullAppointmentCalendar() {
     fetchAvailableDoctors();
   }, []); // İlk yüklemede çalış
 
-  useEffect(() => { 
-    fetchAppointments(); 
+  useEffect(() => {
+    // branch ve currentUser hazır olmadan fetch başlatma
+    if (!selectedBranch || !currentUser) return;
+    fetchAppointments();
     fetchPatients();
     fetchDoctors();
-  }, [selectedDate, viewMode, startDate, endDate, selectedDoctorId]); // Doktor seçimi değiştiğinde de güncelle
+  }, [selectedDate, viewMode, startDate, endDate, selectedDoctorId, selectedBranch, currentUser]);
 
   // Events state'i değiştiğinde console'a yazdır
   useEffect(() => {
@@ -1172,7 +1174,7 @@ export default function FullAppointmentCalendar() {
                 min={new Date(new Date().setHours(8, 0, 0, 0))}
                 max={new Date(new Date().setHours(23, 0, 0, 0))}
                 step={15}
-                timeslots={1}
+                timeslots={4}
                 style={{ height: windowWidth <= 550 ? (viewMode === "month" ? 320 : viewMode === "week" ? 350 : 400) : windowWidth <= 768 ? (viewMode === "month" ? 550 : viewMode === "week" ? 600 : 700) : (viewMode === "month" ? 600 : viewMode === "week" ? 700 : 800), width: "100%", background: "white" }}
                 toolbar={false}
                 onEventDrop={viewMode !== "month" ? moveEvent : undefined}
