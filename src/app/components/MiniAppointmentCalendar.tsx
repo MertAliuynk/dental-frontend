@@ -261,7 +261,7 @@ export default function MiniAppointmentCalendar() {
               }}
               eventPropGetter={(event) => ({
                 style: {
-                  border: '2px solid #1976d2', // Belirgin mavi çerçeve
+                  border: '2px solid #1976d2', // Her zaman görünür mavi border
                   borderRadius: '8px',
                   background: '#fff',
                   color: '#222',
@@ -269,7 +269,8 @@ export default function MiniAppointmentCalendar() {
                   padding: '2px 8px',
                   boxShadow: '0 1px 4px #e3eaff33',
                   fontSize: '13px',
-                  marginBottom: '4px'
+                  marginBottom: '4px',
+                  zIndex: 1 // Her zaman üstte ve görünür
                 }
               })}
 />
