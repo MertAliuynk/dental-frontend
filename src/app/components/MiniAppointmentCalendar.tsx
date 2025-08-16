@@ -261,7 +261,7 @@ export default function MiniAppointmentCalendar() {
               }}
               eventPropGetter={(event) => ({
                 style: {
-                  border: '2px solid #fff', // Beyaz çerçeve
+                  border: '2px solid #1976d2', // Belirgin mavi çerçeve
                   borderRadius: '8px',
                   background: '#fff',
                   color: '#222',
