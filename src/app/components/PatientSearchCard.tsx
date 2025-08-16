@@ -54,12 +54,12 @@ export default function PatientSearchCard() {
   const filtered = patients;
 
   return (
-  <div style={{ background: "white", borderRadius: 12, padding: 20, boxShadow: "0 2px 8px #0001", minWidth: 280, maxWidth: 320, minHeight: 480, height: 480, display: "flex", flexDirection: "column" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+  <div style={{ background: "white", borderRadius: 12, padding: 20, boxShadow: "0 2px 8px #0001", minWidth: 280, maxWidth: 340, minHeight: 480, height: 480, display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 12, width: "100%" }}>
         <select
           value={selectedBranch ?? ""}
           onChange={e => setSelectedBranch(e.target.value ? Number(e.target.value) : null)}
-          style={{ padding: 8, borderRadius: 6, border: "1.5px solid #1976d2", fontWeight: 700, fontSize: 15, background: '#f8fafc', width: 120, color: '#1a237e', marginRight: 4 }}
+          style={{ padding: 8, borderRadius: 6, border: "1.5px solid #1976d2", fontWeight: 700, fontSize: 15, background: '#f8fafc', width: 100, color: '#1a237e', minWidth: 90 }}
         >
           <option value="" style={{ color: '#1a237e', fontWeight: 700 }}>Tüm Şubeler</option>
           {branches.map(b => (
@@ -71,22 +71,22 @@ export default function PatientSearchCard() {
           placeholder="Hasta ara..."
           value={search}
           onChange={e => { setSearch(e.target.value); setPage(1); }}
-          style={{ flex: 1, padding: 8, borderRadius: 6, border: "1.5px solid #1976d2", fontWeight: 700, color: "#1a237e", fontSize: 15, background: '#f8fafc' }}
+          style={{ flex: 1, padding: 8, borderRadius: 6, border: "1.5px solid #1976d2", fontWeight: 700, color: "#1a237e", fontSize: 15, background: '#f8fafc', minWidth: 0 }}
         />
         <span style={{
-          minWidth: 40,
+          minWidth: 32,
           textAlign: 'center',
           fontSize: 13,
           color: '#0a2972',
           background: '#e3eafc',
           borderRadius: 6,
-          padding: '2px 8px',
+          padding: '2px 6px',
           fontWeight: 700,
           border: '1.5px solid #1976d2',
           boxShadow: '0 1px 4px #e3eaff33',
           whiteSpace: 'nowrap',
           lineHeight: 1.1,
-          maxWidth: 70,
+          maxWidth: 40,
           overflow: 'hidden',
           textOverflow: 'ellipsis'
         }}>
