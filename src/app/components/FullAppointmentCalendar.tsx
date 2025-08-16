@@ -140,42 +140,30 @@ const CustomEvent = ({ event }: { event: CalendarEvent }) => {
       style={{
         cursor: 'move',
         height: '100%',
-        padding: '4px 8px 4px 18px', /* Added padding-left to make room for drag handle */
-        borderRadius: '4px',
-        backgroundColor: '#3174ad',
-        backgroundImage: 'none',
-        color: 'white',
-        fontSize: '12px',
+        padding: '4px 12px',
+        borderRadius: '8px',
+        background: '#fff',
+        color: '#222',
+        fontSize: '13px',
         position: 'relative',
-        border: 'none',
-        userSelect: 'none', /* Prevent text selection while dragging */
-        touchAction: 'none' /* Optimize for touch */
+        border: '2px solid #e3eafc',
+        boxShadow: '0 1px 4px #e3eaff33',
+        fontWeight: 600,
+        userSelect: 'none',
+        touchAction: 'none'
       }}
     >
-      {/* Drag handle indicator for mobile */}
-      <div className="drag-handle" style={{
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        bottom: 0,
-        width: '10px',
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        cursor: 'grab',
-        zIndex: 2
-      }} />
-      
       <div style={{ 
         pointerEvents: 'none', 
         overflow: 'hidden', 
         textOverflow: 'ellipsis', 
         whiteSpace: 'nowrap',
-        backgroundColor: 'transparent',
-        backgroundImage: 'none'
+        background: 'transparent'
       }}>
-        {session && <span style={{ fontWeight: 700 }}>Seans {session} - </span>}
+        {session && <span style={{ fontWeight: 700 }}>{`Seans ${session} - `}</span>}
         {event.title}
         {statusLabel && (
-          <span style={{ marginLeft: 6, fontWeight: 600, fontSize: 11, color: '#ffe082', background: '#1976d2', borderRadius: 4, padding: '1px 6px' }}>
+          <span style={{ marginLeft: 6, fontWeight: 600, fontSize: 11, color: '#1976d2', background: '#e3eafc', borderRadius: 4, padding: '1px 6px' }}>
             {statusLabel}
           </span>
         )}
