@@ -20,7 +20,7 @@ export default function PatientCardPageClient() {
   const [appointments, setAppointments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [doctorName, setDoctorName] = useState<string>("");
+  const [doctorNames, setDoctorNames] = useState<string[]>([]);
   const [anamnesisOpen, setAnamnesisOpen] = useState(false);
   const [selectedTreatments, setSelectedTreatments] = useState<number[]>([]);
   const [approvingTreatments, setApprovingTreatments] = useState(false);
@@ -43,31 +43,28 @@ export default function PatientCardPageClient() {
     } catch {}
     setLoading(true);
     Promise.all([
-  fetch(`https://dentalapi.karadenizdis.com/api/patient/${patientId}`).then(r => r.json()),
-  fetch(`https://dentalapi.karadenizdis.com/api/treatment/patient/${patientId}`).then(r => r.json()),
-  fetch(`https://dentalapi.karadenizdis.com/api/patient-anamnesis/${patientId}`).then(r => r.json()),
-  fetch(`https://dentalapi.karadenizdis.com/api/treatment-type`).then(r => r.json()),
-  fetch(`https://dentalapi.karadenizdis.com/api/appointment?patient_id=${patientId}`).then(r => r.json()),
+      fetch(`https://dentalapi.karadenizdis.com/api/patient/${patientId}`).then(r => r.json()),
+      fetch(`https://dentalapi.karadenizdis.com/api/treatment/patient/${patientId}`).then(r => r.json()),
+      fetch(`https://dentalapi.karadenizdis.com/api/patient-anamnesis/${patientId}`).then(r => r.json()),
+      fetch(`https://dentalapi.karadenizdis.com/api/treatment-type`).then(r => r.json()),
+      fetch(`https://dentalapi.karadenizdis.com/api/appointment?patient_id=${patientId}`).then(r => r.json()),
+      fetch(`https://dentalapi.karadenizdis.com/api/patient/all-doctors-relations`).then(r => r.json()),
+      fetch(`https://dentalapi.karadenizdis.com/api/user?role=doctor`).then(r => r.json()),
     ])
-      .then(async ([p, t, a, tt, ap]) => {
+      .then(async ([p, t, a, tt, ap, rel, docList]) => {
         if (!p.success) throw new Error("Hasta bulunamadı");
         setPatient(p.data);
         setTreatments((t.success && t.data) ? t.data : []);
         setAnamnesis((a.success && a.data) ? a.data : []);
         setTreatmentTypes((tt.success && tt.data) ? tt.data : []);
         setAppointments((ap.success && ap.data) ? ap.data : []);
-        // Doktor adı çek
-        if (p.data && p.data.doctor_id) {
-          const docRes = await fetch(`https://dentalapi.karadenizdis.com/api/user/${p.data.doctor_id}`);
-          const docData = await docRes.json();
-          if (docData.success && docData.data) {
-            setDoctorName(docData.data.first_name + " " + docData.data.last_name);
-          } else {
-            setDoctorName("");
-          }
-        } else {
-          setDoctorName("");
+        // İlgili doktorlar
+        let names: string[] = [];
+        if (rel.success && Array.isArray(rel.data) && docList.success && Array.isArray(docList.data)) {
+          const patientDoctorIds = rel.data.filter((r: any) => r.patient_id == patientId).map((r: any) => r.doctor_id);
+          names = docList.data.filter((d: any) => patientDoctorIds.includes(d.user_id)).map((d: any) => d.first_name + " " + d.last_name);
         }
+        setDoctorNames(names);
         setLoading(false);
       })
       .catch(() => {
@@ -416,11 +413,7 @@ export default function PatientCardPageClient() {
                   {patient.first_name} {patient.last_name}
                 </div>
                 <div style={{ fontSize: 15, color: "#2d3a4a" }}>
-                  İlgili doktor(lar): {
-                    Array.isArray(patient.doctors) && patient.doctors.length > 0
-                      ? patient.doctors.map((d: any) => `${d.first_name} ${d.last_name}`).join(", ")
-                      : doctorName || "-"
-                  }
+                  İlgili doktor(lar): {doctorNames.length > 0 ? doctorNames.join(", ") : "-"}
                 </div>
                 <div style={{ fontSize: 15, color: "#2d3a4a" }}>TC No: {role === 'doctor' ? '•••' : (patient.tc_number || "-")}</div>
                 <div style={{ fontSize: 15, color: "#2d3a4a" }}>Tel: {role === 'doctor' ? '•••' : (patient.phone || "-")}</div>
