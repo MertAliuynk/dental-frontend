@@ -162,6 +162,9 @@ export default function MiniAppointmentCalendar() {
             start: new Date(item.appointment_time),
             end: new Date(new Date(item.appointment_time).getTime() + (item.duration_minutes || 30) * 60000),
             id: item.appointment_id,
+            patient_first_name: item.patient_first_name,
+            patient_last_name: item.patient_last_name,
+            notes: item.notes
           }));
         return mapped;
       }
