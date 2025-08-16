@@ -1,4 +1,13 @@
-"use client";
+  "use client";
+  const [branches, setBranches] = useState<any[]>([]);
+  const [selectedBranch, setSelectedBranch] = useState<number | null>(null);
+  useEffect(() => {
+    fetch("https://dentalapi.karadenizdis.com/api/branch")
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) setBranches(data.data);
+      });
+  }, []);
 import { useState } from "react";
 import { FixedSizeList as List } from "react-window";
 import { useRouter } from "next/navigation";
@@ -24,6 +33,9 @@ export default function PatientSearchCard() {
     if (search.trim() !== "") {
       params.append("search", search.trim());
     }
+    if (selectedBranch) {
+      params.append("branch_id", selectedBranch.toString());
+    }
     fetch(`https://dentalapi.karadenizdis.com/api/patient?${params.toString()}`)
       .then(res => res.json())
       .then(data => {
@@ -37,13 +49,25 @@ export default function PatientSearchCard() {
         setError("Hasta verileri alınamadı");
         setLoading(false);
       });
-  }, [search, page, pageSize]);
+  }, [search, page, pageSize, selectedBranch]);
 
   // Arama ve pagination backend'den geldiği için, sadece gelen hastalar gösterilecek
   const filtered = patients;
 
   return (
   <div style={{ background: "white", borderRadius: 12, padding: 20, boxShadow: "0 2px 8px #0001", minWidth: 280, maxWidth: 320, minHeight: 480, height: 480, display: "flex", flexDirection: "column" }}>
+      <div style={{ marginBottom: 8 }}>
+        <select
+          value={selectedBranch ?? ""}
+          onChange={e => setSelectedBranch(e.target.value ? Number(e.target.value) : null)}
+          style={{ padding: 8, borderRadius: 6, border: "1.5px solid #dbeafe", fontWeight: 500, fontSize: 15, background: '#f8fafc', width: "100%" }}
+        >
+          <option value="">Tüm Şubeler</option>
+          {branches.map(b => (
+            <option key={b.branch_id} value={b.branch_id}>{b.name}</option>
+          ))}
+        </select>
+      </div>
       <div style={{ display: "flex", alignItems: "center", marginBottom: 12, gap: 8 }}>
         <input
           type="text"
