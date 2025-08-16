@@ -84,7 +84,6 @@ import { Calendar, dateFnsLocalizer, Event } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
-import "./doctor-calendar-slots.css";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import { tr } from "date-fns/locale";
 import { useEffect, useState } from "react";
@@ -1116,46 +1115,45 @@ export default function FullAppointmentCalendar() {
                   <div style={{ fontWeight: 700, fontSize: 17, color: getDoctorColor(doctor.user_id, idx), textAlign: 'center', marginBottom: 8 }}>
                     Dt. {doctor.first_name} {doctor.last_name}
                   </div>
-                    <DragAndDropCalendar
-                      localizer={localizer}
-                      events={doctorEvents}
-                      view={'day'}
-                      views={{ day: true }}
-                      date={selectedDate}
-                      onView={() => {}}
-                      onNavigate={setSelectedDate}
-                      min={new Date(selectedDate.setHours(8, 0, 0, 0))}
-                      max={new Date(selectedDate.setHours(23, 0, 0, 0))}
-                      step={15}
-                      timeslots={currentUser?.role === 'doctor' ? 1 : 4}
-                      className={currentUser?.role === 'doctor' ? 'doctor-calendar-slots' : ''}
-                      style={{ height: windowWidth <= 550 ? 600 : 700, background: 'white', borderRadius: 12, marginBottom: 24 }}
-                      toolbar={false}
-                      eventPropGetter={() => ({
-                        style: {
-                          backgroundColor: getDoctorColor(doctor.user_id, idx),
-                          color: 'white',
-                          borderRadius: 6,
-                          border: `1.5px solid ${getDoctorColor(doctor.user_id, idx)}`,
-                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                          fontWeight: 600,
-                        },
-                      })}
-                      components={{ event: CustomEvent }}
-                      onEventDrop={moveEvent}
-                      onEventResize={resizeEvent}
-                      onSelectEvent={selectEvent}
-                      onSelectSlot={handleSelectSlot}
-                      selectable={true}
-                      longPressThreshold={10}
-                      formats={{
-                        timeGutterFormat: (date) => {
-                          const minutes = date.getMinutes();
-                          // 24 saatlik Türk formatı
-                          return minutes === 0 ? date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', hour12: false }) : '';
-                        },
-                      }}
-                    />
+                  <DragAndDropCalendar
+                    localizer={localizer}
+                    events={doctorEvents}
+                    view={'day'}
+                    views={{ day: true }}
+                    date={selectedDate}
+                    onView={() => {}}
+                    onNavigate={setSelectedDate}
+                    min={new Date(selectedDate.setHours(8, 0, 0, 0))}
+                    max={new Date(selectedDate.setHours(23, 0, 0, 0))}
+                    step={15}
+                    timeslots={1}
+                    style={{ height: windowWidth <= 550 ? 600 : 700, background: 'white', borderRadius: 12, marginBottom: 24 }}
+                    toolbar={false}
+                    eventPropGetter={() => ({
+                      style: {
+                        backgroundColor: getDoctorColor(doctor.user_id, idx),
+                        color: 'white',
+                        borderRadius: 6,
+                        border: `1.5px solid ${getDoctorColor(doctor.user_id, idx)}`,
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                        fontWeight: 600,
+                      },
+                    })}
+                    components={{ event: CustomEvent }}
+                    onEventDrop={moveEvent}
+                    onEventResize={resizeEvent}
+                    onSelectEvent={selectEvent}
+                    onSelectSlot={handleSelectSlot}
+                    selectable={true}
+                    longPressThreshold={10}
+                    formats={{
+                      timeGutterFormat: (date) => {
+                        const minutes = date.getMinutes();
+                        // 24 saatlik Türk formatı
+                        return minutes === 0 ? date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', hour12: false }) : '';
+                      },
+                    }}
+                  />
                 </div>
               );
             })}
