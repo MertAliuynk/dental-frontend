@@ -240,14 +240,14 @@ export default function MiniAppointmentCalendar() {
               step={15}
               timeslots={1}
               className="mini-calendar-custom-slots"
-              style={{ 
+              style={{
                 height: 320,
                 minWidth: 360,
-                width: "100%", 
-                background: "white", 
-                borderRadius: 6, 
-                fontSize: 12, 
-                color: "#222" 
+                width: "100%",
+                background: "white",
+                borderRadius: 6,
+                fontSize: 12,
+                color: "#222"
               }}
               toolbar={false}
               showAllEvents={false}
@@ -259,7 +259,20 @@ export default function MiniAppointmentCalendar() {
                 },
                 eventTimeRangeFormat: ({ start, end }) => `${format(start, 'HH:mm', { locale: tr })} - ${format(end, 'HH:mm', { locale: tr })}`
               }}
-      />
+              eventPropGetter={(event) => ({
+                style: {
+                  border: '1.5px solid #b6c6e6',
+                  borderRadius: '6px',
+                  background: '#fff',
+                  color: '#222',
+                  fontWeight: 600,
+                  padding: '2px 6px',
+                  boxShadow: '0 1px 4px #0001',
+                  fontSize: '13px',
+                  marginBottom: '2px'
+                }
+              })}
+/>
       </div>
           </div>
         ))}
