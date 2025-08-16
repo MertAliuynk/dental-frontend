@@ -10,10 +10,20 @@ import { useSearchParams } from "next/navigation";
 
 
 export default function PatientCardPageClient() {
+  // Hasta notu güncelleme modalı için state
+  const [editNoteModal, setEditNoteModal] = useState(false);
+  const [editNoteValue, setEditNoteValue] = useState("");
+  const [patient, setPatient] = useState<any>(null);
+
+  // Modal açıldığında mevcut notu göster
+  useEffect(() => {
+    if (editNoteModal && patient) {
+      setEditNoteValue(patient.notes || "");
+    }
+  }, [editNoteModal, patient]);
   const router = useRouter();
   const searchParams = useSearchParams();
   const patientId = searchParams.get("id");
-  const [patient, setPatient] = useState<any>(null);
   const [anamnesis, setAnamnesis] = useState<any[]>([]);
   const [treatments, setTreatments] = useState<any[]>([]);
   const [treatmentTypes, setTreatmentTypes] = useState<any[]>([]);
@@ -405,7 +415,121 @@ export default function PatientCardPageClient() {
               >
                 Onam Formu Oluştur
               </button>
+              <button
+                style={{
+                  background: "#fffbe6",
+                  color: "#b68c00",
+                  border: "1.5px solid #e6e6b6",
+                  borderRadius: 18,
+                  padding: "8px 24px",
+                  fontWeight: 600,
+                  fontSize: 15,
+                  boxShadow: "0 1px 4px #e3eaff33",
+                  cursor: "pointer",
+                  transition: "background 0.2s"
+                }}
+                className="pc-btn"
+                type="button"
+                onClick={() => setEditNoteModal(true)}
+              >
+                Notu Güncelle
+              </button>
             </div>
+      {/* Not Güncelleme Modalı */}
+      {editNoteModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9999
+        }}>
+          <div style={{
+            background: '#fff',
+            borderRadius: 16,
+            padding: 24,
+            minWidth: 320,
+            maxWidth: 400,
+            boxShadow: '0 4px 24px #0002',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 16
+          }}>
+            <div style={{ fontWeight: 700, fontSize: 18, color: '#b68c00', marginBottom: 8 }}>Hasta Notunu Güncelle</div>
+            <textarea
+              value={editNoteValue}
+              onChange={e => setEditNoteValue(e.target.value)}
+              style={{
+                width: '100%',
+                minHeight: 80,
+                border: '1.5px solid #e3eafc',
+                borderRadius: 8,
+                padding: 10,
+                fontSize: 15,
+                fontFamily: 'inherit',
+                outline: 'none',
+                resize: 'vertical'
+              }}
+              placeholder="Not giriniz..."
+            />
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
+              <button
+                style={{
+                  padding: '8px 18px',
+                  background: '#6c757d',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: 8,
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  fontSize: 14
+                }}
+                onClick={() => setEditNoteModal(false)}
+              >
+                İptal
+              </button>
+              <button
+                style={{
+                  padding: '8px 18px',
+                  background: '#b68c00',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: 8,
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  fontSize: 14
+                }}
+                onClick={async () => {
+                  try {
+                    const res = await fetch(`/api/patient/${patient.patient_id}`, {
+                      method: 'PUT',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ notes: editNoteValue })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                      setPatient((prev: any) => ({ ...prev, notes: editNoteValue }));
+                      setEditNoteModal(false);
+                      alert('Not güncellendi!');
+                    } else {
+                      alert(data.message || 'Güncelleme başarısız!');
+                    }
+                  } catch (err) {
+                    alert('Sunucu hatası!');
+                  }
+                }}
+              >
+                Kaydet
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
             <div style={{ display: "flex", gap: 32, flexWrap: "wrap" }}>
               {/* Hasta Bilgileri Kartı */}
               <div style={{ background: "#fff", borderRadius: 16, boxShadow: "0 2px 8px #0001", padding: 24, minWidth: 260, maxWidth: 320, height: 420, flex: "1 1 260px", display: "flex", flexDirection: "column", gap: 12, position: "relative" }}>
