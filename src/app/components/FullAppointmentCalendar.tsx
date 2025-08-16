@@ -943,7 +943,7 @@ export default function FullAppointmentCalendar() {
                 <option value="all">Tüm Doktorlar</option>
                 {availableDoctors.map(doctor => (
                   <option key={doctor.user_id} value={doctor.user_id.toString()}>
-                    Dr. {doctor.first_name} {doctor.last_name}
+                    Dt. {doctor.first_name} {doctor.last_name}
                   </option>
                 ))}
               </select>
@@ -1110,7 +1110,7 @@ export default function FullAppointmentCalendar() {
               return (
                 <div key={doctor.user_id} style={{ minWidth: 340, flex: '1 1 0', background: '#fff', borderRadius: 12, boxShadow: '0 2px 8px #0001', padding: 8, border: `2px solid ${getDoctorColor(doctor.user_id, idx)}` }}>
                   <div style={{ fontWeight: 700, fontSize: 17, color: getDoctorColor(doctor.user_id, idx), textAlign: 'center', marginBottom: 8 }}>
-                    Dr. {doctor.first_name} {doctor.last_name}
+                    Dt. {doctor.first_name} {doctor.last_name}
                   </div>
                   <DragAndDropCalendar
                     localizer={localizer}
@@ -1491,7 +1491,12 @@ export default function FullAppointmentCalendar() {
             padding: 32,
             maxWidth: 500,
             width: "90%",
-            boxShadow: "0 20px 60px rgba(0,0,0,0.3)"
+            boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+            position: 'relative',
+            maxHeight: '95vh',
+            overflowY: 'auto',
+            display: 'flex',
+            flexDirection: 'column'
           }}>
             {/* Modal Header */}
             <div style={{ 
@@ -1789,7 +1794,7 @@ export default function FullAppointmentCalendar() {
                               onMouseOut={(e) => e.currentTarget.style.background = 'white'}
                             >
                               <div style={{ fontWeight: 600, color: '#212529' }}>
-                                Dr. {doctor.first_name} {doctor.last_name}
+                                Dt. {doctor.first_name} {doctor.last_name}
                               </div>
                               <div style={{ fontSize: 12, color: '#666' }}>
                                 👨‍⚕️ Doktor {doctor.username && `• @${doctor.username}`}
@@ -1883,38 +1888,52 @@ export default function FullAppointmentCalendar() {
                 patients={patients}
                 currentUser={currentUser}
               />
-              <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
-                <button
-                  onClick={closeCreateModal}
-                  style={{
-                    padding: "12px 24px",
-                    background: "#6c757d",
-                    color: "white",
-                    border: "none",
-                    borderRadius: 8,
-                    cursor: "pointer",
-                    fontWeight: 600,
-                    fontSize: 14
-                  }}
-                >
-                  İptal
-                </button>
-                <button
-                  onClick={createAppointment}
-                  style={{
-                    padding: "12px 24px",
-                    background: "#28a745",
-                    color: "white",
-                    border: "none",
-                    borderRadius: 8,
-                    cursor: "pointer",
-                    fontWeight: 600,
-                    fontSize: 14
-                  }}
-                >
-                  ➕ Randevu Oluştur
-                </button>
-              </div>
+              <div style={{ height: 60 }} />
+            </div>
+            {/* Sticky footer for mobile: action buttons */}
+            <div style={{
+              position: 'sticky',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              background: '#fff',
+              padding: '12px 0 0 0',
+              display: 'flex',
+              gap: 12,
+              justifyContent: 'flex-end',
+              borderTop: '1px solid #e9ecef',
+              zIndex: 10
+            }}>
+              <button
+                onClick={closeCreateModal}
+                style={{
+                  padding: "10px 20px",
+                  background: "#6c757d",
+                  color: "white",
+                  border: "none",
+                  borderRadius: 8,
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  fontSize: 14
+                }}
+              >
+                İptal
+              </button>
+              <button
+                onClick={createAppointment}
+                style={{
+                  padding: "10px 20px",
+                  background: "#28a745",
+                  color: "white",
+                  border: "none",
+                  borderRadius: 8,
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  fontSize: 14
+                }}
+              >
+                Randevu Oluştur
+              </button>
             </div>
           </div>
         </div>

@@ -28,7 +28,7 @@ function MiniCalendarEvent({ event }: { event: any }) {
   const not = event.notes || "";
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', width: '100%' }}>
-      {hastaIsmi && <span style={{ fontWeight: 700, fontSize: 14, color: '#1976d2', marginBottom: not ? 2 : 0 }}>{hastaIsmi}</span>}
+  {hastaIsmi && <span style={{ fontWeight: 700, fontSize: 14, color: '#fff', marginBottom: not ? 2 : 0 }}>{hastaIsmi}</span>}
       {not && <span style={{ fontSize: 13, color: '#fff' }}>{not}</span>}
     </div>
   );
@@ -254,7 +254,7 @@ export default function MiniAppointmentCalendar() {
               color: "#1a237e", 
               fontSize: 16 
             }}>
-              Dr. {doctor.first_name} {doctor.last_name}
+              Dt. {doctor.first_name} {doctor.last_name}
             </div>
       <div style={{ width: "100%", overflowX: "auto" }}>
   <Calendar
@@ -268,7 +268,7 @@ export default function MiniAppointmentCalendar() {
               timeslots={1}
               className="mini-calendar-custom-slots"
               style={{
-                height: 320,
+                height: 420, // Yüksekliği artırıldı
                 minWidth: 360,
                 width: "100%",
                 background: "white",
