@@ -1652,27 +1652,35 @@ export default function FullAppointmentCalendar() {
                       zIndex: 1000,
                       boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
                     }}>
-                      {(patientSearch ? searchedPatients : patients).map((patient: any) => (
-                        <div
-                          key={patient.patient_id}
-                          onClick={() => selectPatient(patient)}
-                          style={{
-                            padding: 12,
-                            cursor: 'pointer',
-                            borderBottom: '1px solid #f0f0f0',
-                            transition: 'background 0.2s'
-                          }}
-                          onMouseOver={(e) => e.currentTarget.style.background = '#f8f9fa'}
-                          onMouseOut={(e) => e.currentTarget.style.background = 'white'}
-                        >
-                          <div style={{ fontWeight: 600, color: '#212529' }}>
-                            {patient.first_name} {patient.last_name}
+                      {(patientSearch ? searchedPatients : patients)
+                        .filter((patient: any) => {
+                          // Eğer şube seçiliyse, sadece o şubedeki hastaları göster
+                          if (selectedBranch) {
+                            return String(patient.branch_id) === String(selectedBranch);
+                          }
+                          return true;
+                        })
+                        .map((patient: any) => (
+                          <div
+                            key={patient.patient_id}
+                            onClick={() => selectPatient(patient)}
+                            style={{
+                              padding: 12,
+                              cursor: 'pointer',
+                              borderBottom: '1px solid #f0f0f0',
+                              transition: 'background 0.2s'
+                            }}
+                            onMouseOver={(e) => e.currentTarget.style.background = '#f8f9fa'}
+                            onMouseOut={(e) => e.currentTarget.style.background = 'white'}
+                          >
+                            <div style={{ fontWeight: 600, color: '#212529' }}>
+                              {patient.first_name} {patient.last_name}
+                            </div>
+                            <div style={{ fontSize: 12, color: '#666' }}>
+                              📞 {patient.phone} {patient.email && `• ✉️ ${patient.email}`}
+                            </div>
                           </div>
-                          <div style={{ fontSize: 12, color: '#666' }}>
-                            📞 {patient.phone} {patient.email && `• ✉️ ${patient.email}`}
-                          </div>
-                        </div>
-                      ))}
+                        ))}
                     </div>
                   )}
                 </div>

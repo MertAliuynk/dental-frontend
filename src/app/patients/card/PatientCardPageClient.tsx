@@ -765,10 +765,17 @@ export default function PatientCardPageClient() {
                         else if (ap.status_tr === "Geldi") { bg = "#e6f4c8"; color = "#388e3c"; }
                         else if (ap.status_tr === "Planlandı") { bg = "#e3eafc"; color = "#1976d2"; }
                         else if (ap.status_tr === "İptal") { bg = "#f8d7da"; color = "#b71c1c"; }
+                        // Doktor adı
+                        const doctorName = ap.doctor_first_name && ap.doctor_last_name
+                          ? `Dr. ${ap.doctor_first_name} ${ap.doctor_last_name}`
+                          : (ap.doctor_name || "Doktor Bilgisi Yok");
                         return (
                           <li key={ap.appointment_id} style={{ background: bg, color, borderRadius: 8, marginBottom: 8, padding: "10px 14px", display: "flex", flexDirection: "column", boxShadow: "0 1px 4px #e3eaff33" }}>
                             <div style={{ fontWeight: 600, fontSize: 15 }}>
                               {seansNo}. Seans | {new Date(ap.appointment_time).toLocaleString("tr-TR")} - {ap.status_tr || (ap.status?.charAt(0).toUpperCase() + ap.status?.slice(1))}
+                            </div>
+                            <div style={{ fontSize: 14, color: "#1976d2", marginTop: 2 }}>
+                              👨‍⚕️ {doctorName}
                             </div>
                             {ap.notes && <div style={{ fontSize: 14, color: "#555", marginTop: 2 }}>Not: {ap.notes}</div>}
                           </li>
