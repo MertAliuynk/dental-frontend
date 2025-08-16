@@ -1,3 +1,12 @@
+  const [branches, setBranches] = useState<any[]>([]);
+  const [selectedBranch, setSelectedBranch] = useState<number | null>(null);
+  useEffect(() => {
+    fetch("https://dentalapi.karadenizdis.com/api/branch")
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) setBranches(data.data);
+      });
+  }, []);
 
 "use client";
 import React, { useEffect, useState, useRef } from "react";
@@ -70,6 +79,9 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
     params.append("offset", ((page-1)*pageSize).toString());
     if (search.trim() !== "") {
       params.append("search", search.trim());
+    }
+    if (selectedBranch) {
+      params.append("branch_id", selectedBranch.toString());
     }
     params.append("orderBy", orderBy);
     params.append("order", order);
@@ -179,13 +191,23 @@ const handleDelete = async (e: React.MouseEvent, patient: any) => {
         {/* Arama ve Sıralama Kontrolleri */}
         <div style={{ display: "flex", gap: 16, marginBottom: 24, alignItems: "center", flexWrap: "wrap" }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <select
+              value={selectedBranch ?? ""}
+              onChange={e => setSelectedBranch(e.target.value ? Number(e.target.value) : null)}
+              style={{ padding: 8, borderRadius: 6, border: "2px solid #0a2972", fontWeight: 700, fontSize: 16, background: '#e3eafc', color: '#1a237e', minWidth: 90, marginRight: 4 }}
+            >
+              <option value="" style={{ color: '#1a237e', fontWeight: 700 }}>Tüm Şubeler</option>
+              {branches.map(b => (
+                <option key={b.branch_id} value={b.branch_id} style={{ color: '#1a237e', fontWeight: 700 }}>{b.name}</option>
+              ))}
+            </select>
             <input
               type="text"
               placeholder="İsme göre hasta ara..."
               value={search}
               onChange={e => setSearch(e.target.value)}
               style={{
-                width: 320,
+                width: 220,
                 padding: "8px 12px",
                 borderRadius: 6,
                 border: "2px solid #0a2972",

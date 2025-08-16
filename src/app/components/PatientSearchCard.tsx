@@ -85,10 +85,7 @@ export default function PatientSearchCard() {
           border: '1.5px solid #1976d2',
           boxShadow: '0 1px 4px #e3eaff33',
           whiteSpace: 'nowrap',
-          lineHeight: 1.1,
-          maxWidth: 40,
-          overflow: 'hidden',
-          textOverflow: 'ellipsis'
+          lineHeight: 1.1
         }}>
           {total}
         </span>
