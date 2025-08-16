@@ -146,7 +146,7 @@ const CustomEvent = ({ event }: { event: CalendarEvent }) => {
   color: '#fff', // yazı beyaz
   fontSize: '13px',
   position: 'relative',
-  border: '2.5px solid #1976d2', // border da aynı mavi
+  border: 'none',
   boxShadow: '0 1px 4px #e3eaff33',
   fontWeight: 600,
   userSelect: 'none',
