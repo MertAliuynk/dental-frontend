@@ -52,7 +52,7 @@ function SmsSendSection({ createForm, patients, currentUser }: any) {
   return (
     <div style={{
       background: "#f8f9fa",
-      border: "1px solid #e3eafc",
+  border: "none",
       borderRadius: 8,
       padding: 16,
       marginBottom: 8
