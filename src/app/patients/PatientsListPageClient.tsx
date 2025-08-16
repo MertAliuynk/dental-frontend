@@ -1,3 +1,15 @@
+"use client";
+  import React, { useEffect, useState, useRef } from "react";
+  import { useRouter } from "next/navigation";
+  import AppLayout from "../components/AppLayout";
+  import { FixedSizeList as List } from "react-window";
+  import AutoSizer from "react-virtualized-auto-sizer";
+
+  const CustomTBody = React.forwardRef<HTMLTableSectionElement, React.HTMLProps<HTMLTableSectionElement>>(
+    (props, ref) => <tbody ref={ref} {...props} />
+  );
+
+export default function PatientsListPageClient() {
   const [branches, setBranches] = useState<any[]>([]);
   const [selectedBranch, setSelectedBranch] = useState<number | null>(null);
   useEffect(() => {
@@ -7,20 +19,6 @@
         if (data.success) setBranches(data.data);
       });
   }, []);
-
-"use client";
-import React, { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
-import AppLayout from "../components/AppLayout";
-
-import { FixedSizeList as List } from "react-window";
-import AutoSizer from "react-virtualized-auto-sizer";
-
-const CustomTBody = React.forwardRef<HTMLTableSectionElement, React.HTMLProps<HTMLTableSectionElement>>(
-  (props, ref) => <tbody ref={ref} {...props} />
-);
-
-export default function PatientsListPageClient() {
   // Tablo başlık ve hücre stilleri
   const thStyle = {
     background: "#e3eafc",
