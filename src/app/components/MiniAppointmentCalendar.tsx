@@ -268,7 +268,7 @@ export default function MiniAppointmentCalendar() {
               timeslots={1}
               className="mini-calendar-custom-slots"
               style={{
-                height: 600, // Yüksekliği daha da artırıldı
+                height: 450, // Yüksekliği daha da artırıldı
                 minWidth: 360,
                 width: "100%",
                 background: "white",
