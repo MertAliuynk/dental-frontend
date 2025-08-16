@@ -20,14 +20,16 @@ const localizer = dateFnsLocalizer({
 // Custom event component: sadece hasta ismi ve not
 function MiniCalendarEvent({ event }: { event: any }) {
   // FullAppointmentCalendar'daki gibi event objesinden hasta ismi ve notu doğrudan al
-  const hastaIsmi = event.patient_first_name && event.patient_last_name
-    ? `${event.patient_first_name} ${event.patient_last_name}`
-    : "";
+  const hastaIsmi = event.patient_name
+    ? event.patient_name
+    : (event.patient_first_name && event.patient_last_name
+      ? `${event.patient_first_name} ${event.patient_last_name}`
+      : "");
   const not = event.notes || "";
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', width: '100%' }}>
       {hastaIsmi && <span style={{ fontWeight: 700, fontSize: 14, color: '#1976d2', marginBottom: not ? 2 : 0 }}>{hastaIsmi}</span>}
-      {not && <span style={{ fontSize: 13, color: '#222' }}>{not}</span>}
+      {not && <span style={{ fontSize: 13, color: '#fff' }}>{not}</span>}
     </div>
   );
 }
@@ -154,14 +156,19 @@ export default function MiniAppointmentCalendar() {
             return itemDate === todayStr;
           })
           .map((item: any) => ({
-            title: item.patient_first_name && item.patient_last_name 
+            title: item.patient_name
               ? item.notes
-                ? `${item.patient_first_name} ${item.patient_last_name} - ${item.notes}`
-                : `${item.patient_first_name} ${item.patient_last_name}`
-              : (item.notes || "Randevu"),
+                ? `${item.patient_name} - ${item.notes}`
+                : `${item.patient_name}`
+              : (item.patient_first_name && item.patient_last_name
+                ? item.notes
+                  ? `${item.patient_first_name} ${item.patient_last_name} - ${item.notes}`
+                  : `${item.patient_first_name} ${item.patient_last_name}`
+                : (item.notes || "Randevu")),
             start: new Date(item.appointment_time),
             end: new Date(new Date(item.appointment_time).getTime() + (item.duration_minutes || 30) * 60000),
             id: item.appointment_id,
+            patient_name: item.patient_name,
             patient_first_name: item.patient_first_name,
             patient_last_name: item.patient_last_name,
             notes: item.notes
